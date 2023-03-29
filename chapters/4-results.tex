@@ -1,0 +1,95 @@
+\chapter{Results}
+
+This chapter presents the results of multiple experiments conducted on the datasets described in \autoref{sec:dataset}. The aim is to showcase some findings and give insight into the process of utilizing NeRFs. The results are both quantitative, measured by the metrics discussed in \autoref{sec:evaluating-nerfs}, and qualitative. The qualitative results are hard to visualize in this report because the only option would be to attach frames from the resulting render. Although this yields an indication of the resulting rendering's quality, a rendered video exposes greater details in terms of correspondences between frames, potential artifacts, and learned geometry. In order to showcase these results, there's a companion page found \href{https://absorbing-peace-5f6.notion.site/NeRF-Renders-1260636ed8e44f8e8e4d45bd9fc6dda4#1edb5c8c9f86444db1902a18243b6e51}{here} where different renders can be browsed and compared.
+
+\vspace{2mm} %5mm vertical space
+\noindent \textbf{\href{https://absorbing-peace-5f6.notion.site/NeRF-Renders-1260636ed8e44f8e8e4d45bd9fc6dda4\#1edb5c8c9f86444db1902a18243b6e51}{Link to companion page with video renders}}
+
+\begin{comment}
+
+Experiments:
+- Explore the impact of capturing
+    - Capturing NeRFs in different ways
+        - Walking, standing still, sparsely, densely, linearly, around an object
+    - Capturing video, images, polycam
+        - Better/worse quality with polycam or COLMAP
+    - Capturing different kind of scenes
+        - Bounded/Unbounded 
+    - Capturing in different conditions
+    - Capturing 
+    
+- Explore the impact of dataset size
+    - Extract different amounts of images from the video ✅
+        - Simulate driving by walking up and back a street multiple times ✅
+    - How much data is required until COLMAP becomes a bottleneck
+
+- Explore the impact of area-size
+    - Remember to point out that area is poorly defined since scale is perspective relative, depending on the level of detail you want. ✅
+    - Area must be defined for a certain scene type. E.g. street view, aerial view, unbounded in multiple directions, bounded in all directions
+
+- Explore the impact of different methods
+    - instant-npg, nerfacto, NeRF
+
+Metrics
+- Quantitative
+    - PSNR, LPIPS, SSIM
+- Qualitative
+    - Compare images side-by-side
+
+
+
+Research questions:
+- To what extent does a good capture impact the result of a NeRF
+- How much data is required until COLMAP becomes a bottleneck?
+- What is the capacity of a NeRF when optimizing a street view scene?
+
+SCENES:
+- Bounded scene
+- Unbounded scene
+- Walking
+- Standing still
+- Street-view
+\end{comment}
+
+
+
+\section{Different methods}
+There are multiple different methods proposed for reconstructing 3D scenes and rendering novel views. In this experiment we compare four of the methods that are currently implemented in Nerfstudio. Even though the original NeRF-implementation and mip-NeRF doesn't support unbounded scenes, we conduct an experiment with an unbounded scene to see the results, \autoref{fig:ohma-electra-result}. To make it fair across the methods, we also conduct a separate experiment with a forward-facing scene, and a last experiment on a Blender dataset, as seen in \autoref{fig:lego-result}, more appropriately set up for NeRF and mip-NeRF.
+
+\input{tables/method-comparison.tex}
+
+Using the different methods on Blender-data, as seen in \autoref{fig:lego-result} yield interesting results. The Nerfacto and instant-ngp models are designed to handle real captures and need some adjustment in order to learn the bounded Blender-scenes. Primarily this adjustment consists of defining the near- and far plane for the rays.
+
+
+
+\section{Dataset size}
+We explore the impact of sampling different number of images from a video. Leveraging FFMPEG we sample frames from the Ohma Electra dataset, portrayed in \autoref{fig:ohma-electra}, at 4 increasingly dense levels. We start with sampling 1 frame every 5 frames, resulting in 20\% of the frames. We decrease the sample spacing iteratively until we sample 50\% of the frames. Increasing the dataset size increases the amount of time required to retrieve the camera poses, given they're not known a priori. The outcome in quality and time consumption can be seen in \autoref{tab:colmap-dataset-size}.
+
+\input{tables/colmap-dataset-size.tex}
+
+
+\section{Capturing}
+\autoref{tab:colmap-polycam-comparison} shows the performance of two different methods for capturing data: COLMAP with vocabulary tree search and Polycam. Capturing data with Polycam uses LiDAR and enables the almost immediate extraction of images with the corresponding camera poses. An analysis of the quality and time consumption of different capturing processes can provide valuable insights into which methods produce the best results and which are most effective. By comparing the performance of different methods on metrics such as PSNR, SSIM, and LPIPS, it is possible to identify the strengths and weaknesses of each method and determine which is most suitable for a given application. Additionally, considering the time consumption of each method can help to evaluate the efficiency of the capturing process and determine which method is most effective in terms of the trade-off between quality and speed. Overall, this analysis can help to inform decisions about which capturing process to use in different scenarios.
+
+\input{tables/colmap-polymap-comparison.tex}
+
+
+\section{NeRFs in VR}
+NeRF has shown great capabilities in rendering novel views and enabling the generation of fly-through videos of learned scenes. Another field of interest has been to bring NeRFs into extended reality (XR). Immersive-ngp \cite{immersive-ngp} created a Unity-plugin that enables just this. With heavy utilization of already implemented functionality from instant-ngp, it enables 6 degrees of freedom (DoF) continuous locomotion in virtual reality (VR). The results from training on the tier-dataset, as portrayed in \autoref{fig:tier}, can be viewed in \autoref{fig:tier_vr} and here.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/tier_vr.png}
+    \caption{NeRF viewed in VR with the help of immersive-ngp \cite{immersive-ngp}}
+    \label{fig:tier_vr}
+\end{figure}
+
+
+% From Discord thread
+\begin{comment} 
+\textbf{Wavy artifacts in Nerfacto:}
+AFAIK those wavy artifacts are from how the nerfacto model does ray sampling. Sometimes for very thin objects, none of the samples across a ray will land on it, causing it not to be visible in the rendering 
+
+\textbf{Better results with another model?}
+One of the reasons nerfacto is so fast is because it learns the distribution of weight across a ray, then samples from that distribution to get the ray samples. This means you aren't sampling where you don't need to, but also you might miss thin structures. Other methods might use more simple ray samplers that would densely sample across the ray, but would end up being a good bit slower to train/render
+\end{comment}
