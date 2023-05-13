@@ -187,6 +187,9 @@
     \RequirePackage[noabbrev]{cleveref}
 \fi
 \RequirePackage[acronym]{glossaries}        % create a glossary and acronym list
+\RequirePackage{colortbl}
+\RequirePackage{algpseudocode}
+\RequirePackage{forest}
 
 %% CUSTOMISATION
 
@@ -321,3 +324,27 @@
        \@starttoc{lol}%
        \endgroup%
        }%
+
+% Define JSON for listings
+% Define colors for syntax highlighting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Define style for JSON syntax highlighting
+\lstdefinelanguage{json}{
+    basicstyle=\small\ttfamily,
+    numbers=left,
+    numberstyle=\tiny\color{codegray},
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{backcolour},
+    stringstyle=\color{codepurple},
+    keywordstyle=\color{blue},
+    commentstyle=\color{codegreen},
+    morecomment=[l][\color{magenta}]{\#},
+}

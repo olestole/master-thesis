@@ -1,0 +1,37 @@
+\begin{figure}[ht]
+\centering
+\begin{forest}
+for tree={
+      parent anchor=south west,
+      child anchor=west,
+      anchor=mid west,
+      inner ysep=1pt,
+      grow'=0,
+      align=left,
+      edge path={
+        \noexpand\path [draw, \forestoption{edge}] (!u.parent anchor) ++(1em,0) |- (.child anchor)\forestoption{edge label};
+      },
+      font=\sffamily,
+      if n children=0{}{
+        delay={
+          prepend={[,phantom, calign with current]}
+        }
+      },
+      fit=band,
+      before computing xy={
+        l=2em
+      }
+    }
+[ your\_nerf\_data/
+  [ images/
+    [ 0001.png ]
+    [ 0002.png ]
+    [ 0003.png ]
+    [ \ldots{} ]
+  ]
+  [ transforms.json ]
+]
+\end{forest}
+\caption{File structure expected by Nerfstudio}
+\label{fig:nerfstudio-file-structure}
+\end{figure}

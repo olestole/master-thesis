@@ -6,8 +6,14 @@ The chapter also discusses the use of Structure from Motion (SfM) and COLMAP \ci
 
 % --------------------- Volume rendering ---------------------
 \section{Volume rendering} \label{sec:volumerendering}
-Volume rendering is a technique for visualizing 3D data sets, such as those obtained from medical imaging scans. It works by computing a 2D projection of a 3D volume, using algorithms to assign colors and opacities to each point in the volume based on its physical characteristics, such as density or temperature. Many visual effects are volumetric in nature, e.g. fluids, clouds, flames, smoke, fog, and dust. These effects are challenging to simulate with geometric primitives like points, lines, triangles, or polygon meshes, and may be better simulated with volume rendering. A volume renderer may also be used to display not just the model's surfaces but all of its fine external and internal details, allowing the user to see inside the volume to get a better understanding of its internal structure. Because of this, volume rendering is a powerful tool for visualizing complex 3D data and can be used in a wide range of applications, including medical imaging, scientific visualization, and computer graphics \cite{max_optical_1995}.
+% OLD SECTION
+%Volume rendering is a technique for visualizing 3D data sets, such as those obtained from medical imaging scans. It works by computing a 2D projection of a 3D volume, using algorithms to assign colors and opacities to each point in the volume based on its physical characteristics, such as density or temperature. Many visual effects are volumetric in nature, e.g. fluids, clouds, flames, smoke, fog, and dust. These effects are challenging to simulate with geometric primitives like points, lines, triangles, or polygon meshes, and may be better simulated with volume rendering. A volume renderer may also be used to display not just the model's surfaces but all of its fine external and internal details, allowing the user to see inside the volume to get a better understanding of its internal structure. Because of this, volume rendering is a powerful tool for visualizing complex 3D data and can be used in a wide range of applications, including medical imaging, scientific visualization, and computer graphics \cite{max_optical_1995}.
 
+% REWRITTEN WITH AI AND FURTHER EDITING ✅
+Volume rendering is a powerful technique for visualizing 3D data sets, which is frequently used in a variety of fields, including medical imaging, scientific visualization, and computer graphics. The method involves the projection of a 3D volume onto a 2D plane, leveraging algorithms where colors and opacities are assigned to each point based on its physical characteristics, such as density or temperature. The resulting 2D image provides a representation of the entire 3D volume, allowing the user to visualize both the external and internal structure of the object. One of the main advantages of volume rendering is that it can simulate complex volumetric effects that are challenging to model using traditional geometric primitives, such as points, lines, triangles, or polygon meshes. Examples of such volumetric effects that may be better simulated with volume rendering include fluids, clouds, flames, smoke, fog, and dust \cite{max_optical_1995}.
+
+
+% COMMENTS FROM SPECIALIZATION-PROJECT
 %Volume rendering is a technique for visualizing 3D data sets, such as those obtained from medical imaging scans. It works by computing a 2D projection of a 3D volume, using algorithms to assign colors and opacities to each point in the volume based on its physical characteristics, such as density or temperature. A volume renderer may be used to display not just the model's surfaces but also all of its fine external and internal details, allowing the user to see inside the volume to get a better understanding of its internal structure. Many visual effects are volumetric in nature, and it is challenging to simulate fluids, clouds, flames, smoke, fog, and dust using geometric primitives. Such effects may be produced more effectively with volumetric models. \cite{ikits_chapter_2007}. Volume rendering is a powerful tool for visualizing complex 3D data and can be used in a wide range of applications, including medical imaging, scientific visualization, and computer graphics\cite{max_optical_1995}.
 
 %"Direct volume rendering refers to techniques which produce a projected image directly from the volume data, without intermediate constructs such as contour surface polygons" \cite{max_optical_1995}. It makes it possible to project 2D images from a series of discretely sampled 3D data. A volume renderer may be used to display not just the model's surfaces but also all of its fine details. Many visual effects are volumetric in nature. It is challenging to simulate fluids, clouds, flames, smoke, fog, and dust using geometric primitives. Such effects may be produced more effectively with volumetric models. These models presuppose that a high number of particles in the volume emit, absorb, and scatter light \cite{ikits_chapter_2007}.
@@ -15,16 +21,18 @@ Volume rendering is a technique for visualizing 3D data sets, such as those obta
 %After having acquired a 3D data set, rays are cast from the center of the viewing direction (camera origin), through the image plane and into the volume. As the ray enters the volume, an intensity profile is generated. The scalar value per the depth of the volume will be proportional with the density of the volume being traversed.
 %Volume rendering enables photorealistic novel view synthesis \cite{xie_neural_2022}.
 
-There are multiple ways of rendering a volume. Well-known techniques include ray casting or raymarching, resampling or shear-warp, texture slicing, and splatting. The basic algorithm, visualized in \autoref{fig:volume-rendering}, can be broken into four steps:
+% ALMOST NOTHING REWRITTEN ❌ It's already very good.
+There are multiple ways of rendering a volume. Well-known techniques include ray casting or raymarching, resampling or shear-warp, texture slicing, and splatting. The basic algorithm, depicted in \autoref{fig:volume-rendering}, can be broken into four steps:
 
 \begin{itemize}
     \item \textbf{Ray casting:} Cast rays from the image plane into the volume. The volume is often enclosed within a bounding primitive like a cuboid.
-    \item \textbf{Sampling:} As the ray enters the volume, sample equally spaced points from the volume. This equidistant sampling builds an intensity profile for the ray, density per volume depth. In the general case where the volume isn't aligned with the ray's direction, the sampling point will be positioned in between voxels, and the values must be interpolated from its adjacent voxels.
-    \item \textbf{Shading:} Utilizing the generated intensity profile and a transfer function, we compute the $RGB\alpha$-color and an illumination-value gradient. The gradient vector points in the direction of the greatest increase, indicating where the most rapid increase in illumination is. The samples are colored with their $RGB\alpha$ value and shaded according to the gradient vector and the location of the scene's light source.
+    \item \textbf{Sampling:} As the ray enters the volume, sample equally spaced points from the volume. This equidistant sampling builds an intensity profile for the ray; density per volume depth. In the general case where the volume isn't aligned with the ray's direction, the sampling point will be positioned in between voxels, and the values must be interpolated from its adjacent voxels.
+    \item \textbf{Shading:} Utilizing the generated intensity profile and a transfer function, compute the $RGB\alpha$-color and an illumination-value gradient. The gradient vector points in the direction of the greatest increase, indicating where the most rapid increase in illumination is. The samples are colored with their $RGB\alpha$ value and shaded according to the gradient vector and the location of the scene's light source.
     \item \textbf{Compositing:} The final color of the pixel is retrieved by compositing all the shaded samples along the ray. 
 \end{itemize}
 
 \input{figures/volume-rendering.tex}
+
 
 \begin{comment}
 \subsection{Alpha compositing}
@@ -37,9 +45,16 @@ Alpha compositing is the process of combining one image with a background to cre
 
 % --------------------- Neural Fields ---------------------
 \section{Neural Fields} % All text is taken from \cite{xie_neural_2022} - rewrite - have now paraphrased it
-A field that has been entirely or partially parameterized by a neural network is known as a neural field. The field is a quantity that may be defined for any set of temporal or spatial coordinates. By design, neural fields are both continuous and adaptable. Neural fields are commonly parameterized as MLPs with gradient-defined activation functions \cite{xie_neural_2022}.
+% ✅ SOMEWHAT REWRITTEN
+A neural field refers to a field that has been parameterized, either entirely or partially, by a neural network. The field is a quantity that may be defined for any set of temporal or spatial coordinates. By design, neural fields are both continuous and adaptable. Neural fields are commonly parameterized as multilayer perceptrons (MLPs) with gradient-defined activation functions \cite{xie_neural_2022}.
 
-A typical neural fields algorithm in visual computing would first, across space-time, sample coordinates and feed them into a neural network to produce field quantities. The field quantities are samples from the desired reconstruction domain of our problem. Then, we apply a forward map to relate the reconstruction to the sensor domain (e.g. RGB image), where supervision is available. Finally, we calculate the reconstruction error or loss that guides the neural network optimization process by comparing the reconstructed signal to the sensor measurement. Important parts from the neural field algorithm are visualized in \autoref{fig:neural-field}.
+A typical neural fields algorithm in visual computing would first, across space-time, sample coordinates and feed them into a neural network to produce field quantities. The field quantities are samples from the desired reconstruction domain of our problem, which defines how we represent the world, such as a radiance field or another appropriate representation. Then, we apply a forward map to relate the reconstruction to the sensor domain, which defines how we observe the world, such as through an RGB image. In the sensor domain, supervision is available and we calculate the reconstruction error that guides the neural network optimization process by comparing the reconstructed signal to the sensor measurement. Important parts from the neural field algorithm are visualized in \autoref{fig:neural-field}.
+
+
+% OLD
+%A field that has been entirely or partially parameterized by a neural network is known as a neural field. The field is a quantity that may be defined for any set of temporal or spatial coordinates. By design, neural fields are both continuous and adaptable. Neural fields are commonly parameterized as MLPs with gradient-defined activation functions \cite{xie_neural_2022}.
+
+%A typical neural fields algorithm in visual computing would first, across space-time, sample coordinates and feed them into a neural network to produce field quantities. The field quantities are samples from the desired reconstruction domain of our problem. Then, we apply a forward map to relate the reconstruction to the sensor domain (e.g. RGB image), where supervision is available. Finally, we calculate the reconstruction error or loss that guides the neural network optimization process by comparing the reconstructed signal to the sensor measurement. Important parts from the neural field algorithm are visualized in \autoref{fig:neural-field}.
 
 \input{figures/neural-field.tex}
 
@@ -47,11 +62,25 @@ A typical neural fields algorithm in visual computing would first, across space-
 
 % --------------------- Neural Radiance Fields (NeRFs) ---------------------
 \subsection{Neural Radiance Fields (NeRFs)}
-Most of the volumetric data we interact with through computer games, movies, and other computer graphic applications, are represented by meshes. A mesh is a collection of vertices, edges, and faces that can be combined in order to define the shape of objects. Meshes are easy to manipulate and interact with. Another common representation of volume is voxels, where a 3D point in space is represented by a value, e.g. a color. Both of these modeling techniques are explicit representations. As we want to increase the resolution of a scene, we have to model increasingly smaller regions of space, i.e. increase the number of voxels/triangle-meshes in the volume. This doesn't scale well as the memory requirements increase as we increase the number of voxels/triangle-meshes. We have to find another way to represent the scene, instead of representing it as explicit blocks in space. NeRF provides an implicit representation of the scene by utilizing a multi-layered perceptron (MLP).
+% ✅ Somewhat rewritten, but mostly old.
+The volumetric data we interact with through computer games, movies, and other computer graphic applications, are predominantly represented by meshes. A mesh is a collection of vertices, edges, and faces combined in order to define the shape of objects. Meshes are easy to manipulate and interact with. Another common representation of volume is voxels, where a 3D point in space is represented by a value, e.g. a color. Both of these modeling techniques are explicit representations. As we want to increase the resolution of a scene, we have to model increasingly smaller regions of space, i.e. increase the number of voxels/triangle-meshes in the volume. This doesn't scale well as the memory requirements increase as we increase the number of voxels/triangle-meshes. Due to memory constraints, we have to find another way to represent the scene, instead of representing it as explicit blocks in space. NeRF provides an implicit representation of the scene by utilizing a multi-layered perceptron (MLP).
 
 NeRF is a neural volumetric representation. The name, neural radiance fields, gives us a clue as to what it is. It is a field, a space full of particles, where each particle has a given radiance, a color emitted by the particle in a certain direction, and the field is represented with a neural network. NeRF parameterizes 3D scenes as 3D neural fields, mapping 3D coordinates to radiance and density. The 3D scene can subsequently be rendered via volume rendering, as discussed in \autoref{sec:volumerendering}.
 
-\subsection{Differentiable rendering} % Change this - a lot directly from the paper
+% OLD
+%Most of the volumetric data we interact with through computer games, movies, and other computer graphic applications, are represented by meshes. A mesh is a collection of vertices, edges, and faces that can be combined in order to define the shape of objects. Meshes are easy to manipulate and interact with. Another common representation of volume is voxels, where a 3D point in space is represented by a value, e.g. a color. Both of these modeling techniques are explicit representations. As we want to increase the resolution of a scene, we have to model increasingly smaller regions of space, i.e. increase the number of voxels/triangle-meshes in the volume. This doesn't scale well as the memory requirements increase as we increase the number of voxels/triangle-meshes. We have to find another way to represent the scene, instead of representing it as explicit blocks in space. NeRF provides an implicit representation of the scene by utilizing a multi-layered perceptron (MLP).
+
+%NeRF is a neural volumetric representation. The name, neural radiance fields, gives us a clue as to what it is. It is a field, a space full of particles, where each particle has a given radiance, a color emitted by the particle in a certain direction, and the field is represented with a neural network. NeRF parameterizes 3D scenes as 3D neural fields, mapping 3D coordinates to radiance and density. The 3D scene can subsequently be rendered via volume rendering, as discussed in \autoref{sec:volumerendering}.
+
+\subsection{Differentiable rendering} 
+% EXACTLY THE SAME AS THE OLD ONE
+NeRFs are made possible due to differentiable rendering, a major breakthrough in 3D reconstruction. With differentiable rendering, the rendering process is implemented in a way that is amenable to gradient-based optimization, allowing for the use of techniques such as backpropagation to optimize the parameters of a scene in order to produce a desired visual result. It allows reconstruction of 3D neural fields representing shape and/or appearance given only 2D images, instead of 3D supervision. Differentiable rendering has significant implications as 3D data often is expensive to obtain, while 2D images are omni-present. Suddenly, non-experts can become 3D content creators, without the barrier of specialized hardware; an important social implication \cite{xie_neural_2022}.
+
+% Differentiable rendering enables 3D content creation from omni-present 2D images, making it accessible to non-experts without specialized hardware. This has important social implications, as 3D data acquisition is often expensive. \cite{xie_neural_2022}.
+
+
+% OLD
+% Change this - a lot directly from the paper
 NeRFs are made possible due to differentiable rendering, a major breakthrough in 3D reconstruction. With differentiable rendering, the rendering process is implemented in a way that is amenable to gradient-based optimization, allowing for the use of techniques such as backpropagation to optimize the parameters of a scene in order to produce a desired visual result. It allows reconstruction of 3D neural fields representing shape and/or appearance given only 2D images, instead of 3D supervision. Differentiable rendering has significant implications as 3D data often is expensive to obtain, while 2D images are omni-present. Suddenly, non-experts can become 3D content creators, without the barrier of specialized hardware; an important social implication \cite{xie_neural_2022}.
 
 %A major breakthrough in 3D reconstruction was the adoption of differentiable rendering (Section 4), which allowed reconstruction of 3D neural fields representing shape and/or appearance given only 2D images, instead of 3D supervision. This has significant implications since 3D data is often expensive to obtain, while 2D images are omni-present. A particularly important social implication is that non-experts can become 3D content creators, without the barrier of specialized hardware. \cite{xie_neural_2022}
@@ -59,25 +88,26 @@ NeRFs are made possible due to differentiable rendering, a major breakthrough in
 
 
 % --------------------- NeRF ---------------------
-\section{NeRF - Representing Scenes as Neural Radiance Fields for View Synthesis}
-The first paper to present Neural Radiance Fields (NeRFs) was \textit{NeRF - Representing Scenes as Neural Radiance Fields for View Synthesis} \cite{mildenhall_nerf_2020}. NeRFs provides a method for reconstructing 3D scenes and synthesizing novel views. Given multiple 2D images and their corresponding camera poses, NeRF builds a dataset by sampling points in the volume. The points in the dataset are passed through an MLP in order to predict the given points' density and color. The predicted density and color values are then composited into a final color which is compared to the reference image pixel's color. The MLP is optimized to minimize the difference between the predicted and reference pixel color.
+% ✅ Somewhat rewritten
+\section{NeRF - Representing Scenes as Neural Radiance Fields for View Synthesis} \label{sec:nerf}
+The first paper to present Neural Radiance Fields (NeRFs) was \textit{NeRF - Representing Scenes as Neural Radiance Fields for View Synthesis} \cite{mildenhall_nerf_2020}. NeRFs provide a method for reconstructing 3D scenes and synthesizing novel views. Given multiple 2D images and their corresponding camera poses, NeRF builds a dataset by sampling points in the volume. The points in the dataset are passed through an MLP in order to predict the given points' density and color. The predicted density and color values are then composited into a final color which is compared to the reference image pixel's color. The MLP is optimized to minimize the difference between the predicted and reference pixel color.
 
 %NeRF does this by querying an underlying MLP overfit to a specific scene, which represents a continuous volumetric field.
 %NeRF renders pixels by emitting rays into the scene. The rays are represented by the ray equation $\pmb{r}(t) = \pmb{o} + t\pmb{d}$ where $\pmb{o}$ is the ray's origin, usually the center of the camera, and $\pmb{d}$ is the ray's direction.
 
-Given multiple 2D images and their corresponding camera poses, which can be approximated with Structure from motion techniques as discussed in \autoref{sec:sfm}, NeRF builds a dataset by sampling points in the volume. Points are sampled along a ray $\pmb{r}(t)$ with origin $\textbf{o}$, the camera's center of projection, and viewing direction $\textbf{d}$. As discussed in \autoref{sec:hierarchicalsampling}, the original paper leverages hierarchical sampling to increase the sampling rate of important parts of the volumetric scene.
+Given multiple 2D images and their corresponding camera poses, which can be retrieved from calibrated camera rigs or approximated with Structure from motion techniques as discussed in \autoref{sec:sfm}, NeRF builds a dataset by sampling points in the volume. Points are sampled along a ray $\pmb{r}(t)$ with origin $\textbf{o}$, the camera's center of projection, and viewing direction $\textbf{d}$. As discussed in \autoref{sec:hierarchicalsampling}, the original paper leverages hierarchical sampling to increase the sampling rate of significant parts of the volumetric scene.
 
 %Sample points along a ray $\pmb{r}(t)$, defined by the ray function \autoref{eq:ray-equation}.
 
 \input{equations/ray-equation.tex}
 
 %$\pmb{o}$ is the origin and $\pmb{d}$ is the ray's direction. 
-
-A point $\pmb{x} = \pmb{r}(t_k)$ where $t_k \in t$ is a 3D-coordinate. These 3D coordinates, in conjunction with their viewing direction \textbf{d}, make up the dataset that the MLP is trained on. It's been shown that MLPs have a hard time learning high-frequency signals given low-dimensional input \cite{tancik_fourier_2020}. In order to remedy this, we normalize $\textbf{x}$ to lie in the interval of $[-1, 1]$ and increase the signals' dimensionality by applying positional encoding, \autoref{sec:positionalencoding}. The dimensionality of $\pmb{x}$ and its corresponding viewing direction $\pmb{d}$ is increased by applying $\gamma(\cdot)$, shown in \autoref{eq:positionalencoding}, to both.
+% TODO: Make sure it's right to suffix the points with _k
+Points $\pmb{x}_k = \pmb{r}(t_k)$, where $t_k \in t$ is a 3D-coordinate, in conjunction with their viewing direction $\pmb{d}_k$, make up the dataset in which the MLP is trained on. It's been shown that MLPs have a hard time learning high-frequency signals given low-dimensional input \cite{tancik_fourier_2020}. In order to remedy this, the points are normalized to lie in the interval of $[-1, 1]$ and the signals' dimensionality is increased by applying positional encoding, \autoref{sec:positionalencoding}. The dimensionality of the points and their corresponding viewing directions are increased by applying $\gamma(\cdot)$, shown in \autoref{eq:positionalencoding}, to both.
 
 \input{equations/positional-encoding.tex}
 
-A predicted color can be retrieved by passing the encoded 3D coordinate and its corresponding encoded camera pose through the MLP $F_{\theta}$. The output of $F_\theta$ is a 4D vector containing a color $RGB$ and a density $\sigma$. In order to retain multiview consistency, NeRF first predicts the volume density $\sigma$ as a function of just the location $\textbf{x}$. Subsequently, the RGB color $\pmb{c}$ is predicted as a function of both the location and viewing direction.
+A predicted color can be obtained by passing the encoded 3D coordinate and its corresponding encoded camera pose through the MLP $F_{\theta}$. The output of $F_\theta$ is a 4D vector containing a color $RGB$ and a density $\sigma$. In order to retain multiview consistency, NeRF first predicts the volume density $\sigma$ as a function of just the location $\textbf{x}$. Subsequently, the RGB color $\pmb{c}$ is predicted as a function of both the location and viewing direction.
 
 
 Using the points' density $\sigma$ and color $\pmb{c}$ we can approximate the volume rendering, as discussed in \autoref{sec:volumerendering}, to synthesize a novel view of the scene. The expected color $C(\pmb{r})$ can be derived by \autoref{eq:volume-rendering}, which further can be approximated with numerical quadrature as shown in \autoref{eq:numerical-quadrature-loss}.
@@ -87,7 +117,7 @@ Using the points' density $\sigma$ and color $\pmb{c}$ we can approximate the vo
 \input{equations/volume-rendering.tex}
 \input{equations/numerical-quadrature-loss.tex}
 
-The transmittance $T(t)$ can be viewed as the probability that the ray doesn't "hit anything", i.e. if the ray continues up until point $t$ or not. $\sigma(\pmb{r}(t))$ and $c(\pmb{r}(t), \pmb{d})$ is the density and color of point $\pmb{r}(t)$, respectively.
+The transmittance $T(t)$ represents the probability that the ray a ray will not intersect any objects up to point $t$. $\sigma(\pmb{r}(t))$ and $c(\pmb{r}(t), \pmb{d})$ represents the density and color of point $\pmb{r}(t)$, respectively.
 
 Since volume rendering is differentiable, we optimize the loss between the synthesized and ground truth observed image. This is done by calculating the total squared error between the ground truth pixel colors and the synthesized pixel color over all the rays $\pmb{r} \in \mathcal{R}$. Both the coarse and fine networks, as described in \autoref{sec:hierarchicalsampling}, are optimized over.
 
@@ -97,21 +127,25 @@ An overview of the NeRF pipeline can be viewed in \autoref{fig:nerf-pipeline}
 
 \input{figures/nerf-pipeline.tex}
 
+% ✅ Somewhat rewritten
 \subsubsection{Positional Encoding} \label{sec:positionalencoding}
-Positional encoding is one of the many proposed encoding schemes, first introduced in the original NeRF paper. It is a method used to increase the dimensionality of an input vector, as it's shown that deep networks are biased toward learning lower-frequency functions. It is not to be confused with positional encoding in transformers. 
+Positional encoding is one of the many proposed encoding schemes, first introduced in the original NeRF paper. It is a method used to increase the dimensionality of an input vector, as it's shown that deep networks are biased toward learning lower-frequency functions. It is important to note that positional encoding in the context of NeRF is distinct from the positional encoding employed in transformers.
 
+% ✅ Somewhat rewritten
 \subsubsection{Hierarchical sampling} \label{sec:hierarchicalsampling}
-When training a NeRF, different sampling strategies can be utilized. The sampling strategy is an important choice as it is core to how the dataset for the MLP is constructed. In the original NeRF paper they used a sampling strategy called hierarchical sampling. The key notion is that they trained two MLPs, one \textit{coarse} and one \textit{fine}. The coarse MLP uses stratified sampling, as described in \autoref{sec:stratifiedsampling}, where points along the ray are sampled in uniform intervals within each bin. When being trained, the coarse MLP outputs a probability distribution function (PDF) of which samples contributed highly to the final predicted RGB value. This PDF is then passed to the fine MLP which sample points along the ray in accordance with the PDF. This strategy of having a coarse network predict the important areas to sample, i.e. the areas that contain a volume, helps the fine network predict a better result.
+When training a NeRF, different sampling strategies can be utilized. The sampling strategy is an important choice as it is core to how the dataset for the MLP is constructed. The original NeRF paper proposed the use of a sampling approach called hierarchical sampling. This method involves training two MLPs: a \textit{coarse} MLP and a \textit{fine} MLP. During training, the coarse MLP employs stratified sampling, as described in \autoref{sec:stratifiedsampling}, which involves uniform interval sampling within each bin along the ray. The coarse MLP outputs a probability distribution function (PDF) that highlights the samples that significantly contribute to the final predicted RGB value. This PDF is then passed to the fine MLP which sample points along the ray in accordance with the PDF. This strategy of having a coarse network predict the important areas to sample, i.e. the regions containing volume, facilitates the fine network in generating improved predictions.
 
 % Point from Mip-NeRF 360. Doesn't fit very well here, but it's a good point!
 %The only reason why the coarse network is supervised is to guide the sampling of the fine network. This is the motivation behind improvements in e.g. Mip-NeRF 360
 
+% ✅ Rewritten
 \subsubsection{Stratified sampling} \label{sec:stratifiedsampling}
-Stratified sampling is a sampling method. It has proven benefits in machine learning as it helps prevent overfitting. The sampling method consists of two steps:
+Stratified sampling is a sampling method. It has proven benefits in machine learning as it helps prevent overfitting. The sampling method can be broken into three steps:
 
 \begin{itemize}
-    \item \textbf{Partition the dataset into strata:} In the case of NeRF, a strata is the points contained within a bin $\pmb{x} \in [t_i, t_i+1]$ along the ray $\pmb{r}(t)$. The population/size of a strata can vary based on predefined functions. Importance sampling can be achieved by increasing the size of the strata in accordance with a PDF.
-    \item \textbf{For each stratum, apply simple random sampling.} 
+    \item \textbf{Partition the dataset into strata}: In the case of NeRF, the rays are partitioned into equally sized bins where the points contained within a bin $\pmb{x} \in [t_i, t_i+1]$ along the ray $\pmb{r}(t)$, comprises the respective stratum.
+    \item \textbf{Determine the number of samples to take from each stratum}: The sample size from a stratum can vary based on predefined functions. Importance sampling can be achieved by increasing the sample size in accordance with a PDF.
+    \item \textbf{For each stratum, apply simple random sampling}: Simple random sampling is applied to each stratum to select a predefined number of points randomly and with equal probability.
 \end{itemize}
 
 \input{figures/stratified-sampling.tex}
@@ -119,8 +153,15 @@ Stratified sampling is a sampling method. It has proven benefits in machine lear
 
 % --------------------- Structure from motion ---------------------
 \section{Structure from motion} \label{sec:sfm}
-Structure from motion is a technique for estimating 3D structures from sequences of 2D input images. In NeRF it is used a preprocessing tool for retrieving camera poses of the input images. In most NeRF methods, accurate camera poses are a strict requirement, although some papers have experimented with removing the need for pose supervision \cite{lin_barf_2021}\cite{wang_nerf--_2022}.
+% ✅ Rewritten
+Structure from motion is a technique for estimating 3D structures from sequences of 2D input images. Although some NeRF approaches have  endeavored to eliminate the necessity for pose supervision \cite{lin_barf_2021}\cite{wang_nerf--_2022}, accurate camera poses are typically a strict requirement in most NeRF methods. As a result, SfM techniques may be employed as a preprocessing mechanism for retrieving the camera poses of the input images.
 
+% TODO: Add section about how BaRF and NeRF-- both only work on object-centric scenes.
+
+% OLD
+%Structure from motion is a technique for estimating 3D structures from sequences of 2D input images. In NeRF it can be used as a preprocessing tool for retrieving camera poses of the input images. In most NeRF methods, accurate camera poses are a strict requirement, although some papers have experimented with removing the need for pose supervision \cite{lin_barf_2021}\cite{wang_nerf--_2022}.
+
+% ❌ Pretty happy with how this reads. Haven't changed anything
 \subsection{COLMAP} \label{sec:colmap}
 COLMAP is a general-purpose Structure-from-Motion (SfM) \cite{schoenberger2016sfm} and Multi-View Stereo (MVS) \cite{schoenberger2016mvs} pipeline. The general overview of the pipeline contains the following steps:
 \begin{itemize}
@@ -129,7 +170,7 @@ COLMAP is a general-purpose Structure-from-Motion (SfM) \cite{schoenberger2016sf
     \item Structure and motion reconstruction
 \end{itemize}
 
-During the first step, SIFT-features \cite{Lowe2004} are extracted. Sparse feature points in the image are found and their appearences are described using numerical descriptors.
+During the first step, SIFT-features \cite{Lowe2004} are extracted. Sparse feature points in the image are found and their appearances are described using numerical descriptors.
 
 % TODO: Elaborate on the different match-options; Exhaustive Matching, Sequential Matching, Vocabulary Tree Matching. Runtimes, found in the paper, can be added to appendix.
 
@@ -158,18 +199,28 @@ There is definitively literature on the topic of the time and memory complexity 
 
 
 % --------------------- Evaluating NeRFs ---------------------
+% ✅ Rewritten
 \section{Evaluating NeRFs} \label{sec:evaluating-nerfs}
-Evaluating the quality of NeRFs is inherently hard since it's a visual modality. After a NeRF is trained it will eventually be used to render an image. Image similarity metrics are consequently the most important metric to evaluate the quality of a NeRF. The assessment of image similarity has been a long-standing challenge in computer graphics, but the following metrics are commonly used throughout most papers comparing NeRFs.
+Evaluating the quality of NeRFs is a difficult task due to the visual nature of the modality. Once a NeRF is trained, it is typically employed to render an image, making image similarity metrics the most critical measure for evaluating NeRF quality. The evaluation of image similarity has been a persistent challenge in computer graphics, but the following metrics are commonly used throughout most papers comparing NeRFs.
 
+% OLD
+% Evaluating the quality of NeRFs is inherently hard since it's a visual modality. After a NeRF is trained it will eventually be used to render an image. Image similarity metrics are consequently the most important metric to evaluate the quality of a NeRF. The assessment of image similarity has been a long-standing challenge in computer graphics, but the following metrics are commonly used throughout most papers comparing NeRFs.
+
+% ✅ Not much done, already well-written subsection.
 \subsection{PSNR - Peak Signal-to-Noise Ratio}
 PSNR is a common measure for quantifying reconstruction quality for images and videos. It builds upon MSE which measures the absolute difference between each pixel in two images $I_1$ and $I_2$.
 
 \input{equations/psnr.tex}
 
-$MAX_I$ represents the dynamic range of an image, i.e. the highest pixel value that the picture may contain. This is 255 when pixels are represented with 8 bits per sample. In more general terms, $MAX_I$ is $2^B-1$ when samples are recorded with $B$ bits per sample. Due to the high dynamic range of many signals, PSNR is typically expressed as a logarithmic number using the decibel (dB) scale.
+$MAX_I$ represents the dynamic range of an image, i.e. the largest range of pixel values that the picture may contain. This is 255 when pixels are represented with 8 bits per sample. In more general terms, $MAX_I$ is $2^B-1$ when samples are recorded with $B$ bits per sample. Due to the high dynamic range of many signals, PSNR is typically expressed as a logarithmic number using the decibel (dB) scale.
 
+
+% ✅ Rewritten
 \subsection{SSIM - Structural Similarity}
-Although MSE and PSNR are good measures of the reconstruction error, they don't examine an image the same way humans do. We don't compare pixel-value to pixel-value in order to conclude if two images are similar, we look at it in a more holistic way. SSIM tries to capture this by instead comparing luminance $l$, contrast $c$ and structure $s$ between two windows $x$ and $y$ of common size $N \times N$.
+While Mean Squared Error (MSE) and Peak Signal-to-Noise Ratio (PSNR) are effective measures of reconstruction error, they do not evaluate an image in the same manner as humans. Rather than comparing pixel values in order to conclude if two images are similar, humans assess images holistically. Structural Similarity Index (SSIM) attempts to replicate this approach by comparing the luminance $l$, contrast $c$, and structure $s$ between two windows $x$ and $y$ of a common size $N \times N$.
+
+% OLD
+%Although MSE and PSNR are good measures of the reconstruction error, they don't examine an image the same way humans do. We don't compare pixel-value to pixel-value in order to conclude if two images are similar, we look at it in a more holistic way. SSIM tries to capture this by instead comparing luminance $l$, contrast $c$ and structure $s$ between two windows $x$ and $y$ of common size $N \times N$.
 
 \input{equations/ssim.tex}
 
@@ -186,12 +237,21 @@ Although MSE and PSNR are good measures of the reconstruction error, they don't 
 
 SSIM is bounded by $-1 \leq \text{SSIM} \leq 1$ where $1$ implies perfect correlation, $0$ implies no similarity, and $-1$ implies perfect anti-correlation.
 
+
+% ✅ Rewritten
 \subsection{LPIPS - Learned Perceptual Image Patch Similarity}
-LPIPS \cite{zhang_unreasonable_2018} is a perceptual similarity metric based on deep network activations. Where MSE, PSNR and SSIM uses relatively shallow functions in order to determine similarity across images, LPIPS leverage deep neural networks to obtain a metric that perceives similarity the same way humans do. Image patches with a low LPIPS score are perceptually similar.
+LPIPS \cite{zhang_unreasonable_2018} is a perceptual similarity metric based on deep network activations. Unlike MSE, PSNR and SSIM which uses relatively shallow functions in order to determine similarity across images, LPIPS leverages deep neural networks to obtain a metric that perceives similarity in a way that is similar to humans. The dataset used to train LPIPS includes two types of perceptual judgments: Two Alternative Forced Choice (2AFC) and Just Noticeable Differences (JND). In 2AFC, people were asked to select which of two distorted images was “closer” to the reference, while in JND, people were presented with two image patches, one reference and one distorted, and asked if they were the same. By training on this dataset, LPIPS is able to capture higher-level features of images that are more relevant to human perception, such as object shapes and textures, making it a more effective similarity metric than traditional metrics like MSE, PSNR, and SSIM. Image patches with a low LPIPS score are perceptually similar.
 
 \input{figures/lpips.tex}
 
 %The metric determines how similar two image patches' activations are, for a given network. It's been demonstrated that this metric closely matches human perception. Image patches with a low LPIPS score are perceptually similar.
+
+
+\section{CARLA}
+
+CARLA \cite{Dosovitskiy17} is an open-source simulator designed for autonomous driving research. Its highly customizable simulation environment allows for the creation and testing of a wide range of driving scenarios and conditions. CARLA includes a variety of sensors, such as cameras, lidars, and GPS, which can be used to collect visual and non-visual data. We can interact with CARLA’s features via a Python API, which allows for the control of vehicle position, orientation, and most other behaviors within the simulation. This flexibility enables the generation of diverse and realistic data, making CARLA, among many other things, a powerful tool for the development and testing of data capture pipelines. Data captured from CARLA can be seen \autoref{fig:carla-3-camera-setup}.
+
+\include{figures/carla-3-camera-setup}
 
 
 \section{Related Work}
@@ -200,7 +260,7 @@ After the original NeRF paper was published there has been a surge in related pa
 
 % --------------------- mip-NeRF ---------------------
 \subsection{Mip-NeRF: A Multiscale Representation for Anti-Aliasing Neural Radiance Fields} \label{sec:mipnerf}
-NeRF shows good performance when all training and testing photos are taken at about the same distance from the scene, and it doesn't have to reason about scale or aliasing. When you add more cameras, pulled away from the scene, NeRF starts to break down, because it's a single-scale model now trying to solve a multi-scale problem. Renderings from the NeRF will show aliasing artifacts in distant views and excessive blur in close-up views.
+NeRF shows good performance when all training and testing photos are taken at about the same distance from the scene, and it doesn't have to reason about scale or aliasing. When you add more cameras, pulled away from the scene, NeRF starts to break down, because it's a single-scale model now trying to solve a multi-scale problem. Renderings from the NeRF will show aliasing artifacts in distant views and excessive blur in close-up views.
 
 A solution to this problem would be to adapt a solution that is used in offline ray tracing, supersampling. With supersampling, we would march multiple rays through the same pixel's footprint. This technique doesn't solve the issue of aliasing effects, but the rendered image would look better. However, doing so would be very computationally expensive and it would increase the already very long training times of NeRF, which already depends on querying an underlying MLP hundreds of times for a single ray.
 
@@ -247,8 +307,12 @@ Reconstructing 3D content from 2D photos is inherently ambiguous since the conte
 An overview of the mip-NeRF 360 pipeline can be seen in \autoref{fig:mip-nerf-360-pipeline-overview}. Note that the pipeline has a number of differences from the previous mip-NeRF pipeline portrayed in \autoref{fig:mip-nerf-pipeline-overview}. There is no redundant RGB-value being rendered and there are two different fields; one density field and one mip-NeRF field.
 
 
+\section{Large Scale NeRF} \label{sec:large-scale-nerf}
 
-\subsection{Block NeRF: Scalable Large Scene Neural View Synthesis}
+\subsection{Block NerF}
+\subsection{Wayve - Nvidia GTC talk}
+
+\subsection{Block NeRF: Scalable Large Scene Neural View Synthesis} \label{sec:block-nerf}
 Block NeRF is a paper that demonstrates a method for large-scale reconstruction of scenes using NeRFs. It does this by splitting large areas into multiple blocks of a certain radius, where each block has a connected NeRF, dubbed a block-NeRF. The different block-NeRFs are trained on images within their radius of responsibility. At inference time, only the block-NeRFs with a radius that spans the requested location are kept. These have all been trained on image data from the requested location and can render an output. Some of the remaining block-NeRFs might still be without a direct line of sight to the requested location, which results in low "visibility" (discussed in \autoref{sec:visibility-prediction}). These block-NeRFs are also filtered out, resulting in a pool of block-NeRFs with good visibility. The color outputs of the remaining block-NeRFs are merged to render the final image output.
 
 Block NeRF leverages multiple techniques in order to enable the reconstruction of large scenes.
@@ -275,3 +339,22 @@ The main technique proposed by instant-NeRF is a new parametric encoding for the
 
 %The only difference is essentially how spatial data is represented, i.e. parametric encoding. Instant-NGP encodes spatial data at multiple resolutions using hash tables, thereof the name multiresolution hash tables. During backpropagation, the MLP's weights and the feature vectors in the hash tables are both updated.
 %In a fully connected MLP, every weight and bias must be updated on back-propagation. With parametric encodings, only a very small number of feature vectors must be updated. Also, by reducing the size of the MLP, such parametric models can be trained to convergence much faster without sacrificing approximation quality. You trade a larger memory footprint by allocating hash tables, but in return you have to update a far lower number of trainable parameters per back-propagation, leading to an increased training and inference speed.
+
+
+\section{Nerfstudio}
+With the magnitude of different published methods regarding NeRF, some with corresponding source code and some not, it's not trivial to compare them on self-captured data. In the experiments, I have leveraged an open-source project named Nerfstudio \cite{nerfstudio}. It is an API that streamlines the creation, training, and visualization of NeRFs. The components that make up NeRFs are modularized in a way that allows interpretable implementation of different NeRF methods. In addition, it ships with implemented versions of some of the most important published methods to date for real-world captures; NeRF, mip-NeRF, and instant-ngp.
+
+\section{Nerfacto} \label{sec:nerfacto}
+Nerfstudio also provides its own method dubbed "Nerfacto". The method isn't published work, but leverages techniques from several other published methods which have proved to work well for real data captures. The techniques used in Nerfacto result in a method that strikes a great balance between quality and speed. The techniques highlighted by Nerfacto have already been discussed in \autoref{chap:relatedwork}, but I'll recap and elaborate on a few here.
+
+\input{figures/nerfacto-pipeline-overview.tex}
+
+\textbf{Camera pose refinement}, as described in \autoref{sec:camera-pose-refinement} is a technique proposed to reduce the impact of imperfect camera poses. It's a very effective measure to reduce cloudy artifacts and increase the sharpness and overall quality of the resulting 3D representation.
+
+\textbf{Per image appearance conditioning}, as described in \autoref{sec:appearance-embeddings}, is a technique that allows the NeRF to process and represent 3D scenes with variable lighting, exposures, weather, and post-processing effects. In Nerfacto, the appearance embedding is a vector of size 32, which is concatenated with the viewing direction before it's passed through the MLP.
+
+\textbf{Hash encodings}, as described in \autoref{sec:instant-ngp}, is an effective encoding scheme used to severely decrease training- and inference time. In Nerfacto, 16 hash tables with $2^{19}$ rows, each storing a feature vector of size 2, are allocated. The subsequent MLP has a very low capacity, with only one hidden layer containing 64 neurons.
+
+\textbf{Proposal sampling}, as described in \autoref{sec:mipnerf360}, is a sampling technique used to increase the sampling density of areas that contribute most to the final render. Nerfacto extends the proposal sampler used in mip-NeRF 360 \cite{barron_mip-nerf_2022} by utilizing two density functions implemented as small fused-MLP with hash encodings \cite{muller_instant_2022}. This provides accurate and fast density estimations.
+
+\textbf{Scene contraction}, as described in \autoref{sec:mipnerf360}, is a technique proposed in mip-NeRF 360 \cite{barron_mip-nerf_2022} to extend mip-NeRF to support unbounded scenes.

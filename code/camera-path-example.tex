@@ -1,0 +1,32 @@
+\begin{figure}[ht]
+\centering
+\begin{lstlisting}[language=json,linewidth=0.9\linewidth]
+{
+  "camera_type": "perspective",
+  "render_height": 1080,
+  "render_width": 1920,
+  "fps": 24,
+  "seconds": 10,
+  "smoothness_value": 0.4624,
+  "is_cycle": true,
+  "camera_path": [
+    {
+      "camera_to_world": [
+          0.0387,  0.0484,  0.9980,  0.4483,
+          0.9992, -0.0018, -0.0386,  0.9853,
+         -2.0166,  0.9988, -0.0485, -0.0018,
+          0,       0,       0,       1
+      ],
+      "fov": 90,
+      "aspect": 1.6678200692041523
+    },
+    ...
+  ],
+  "keyframes": [...],
+}
+
+\end{lstlisting}
+\caption{Example of a \textit{camera-path.json}-file used to render a specific path for a trained NeRF in the Nerfstudio API.}
+\label{code:camera-path-example}
+\end{figure}
+
