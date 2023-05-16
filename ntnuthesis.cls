@@ -189,7 +189,8 @@
 \RequirePackage[acronym]{glossaries}        % create a glossary and acronym list
 \RequirePackage{colortbl}
 \RequirePackage{algpseudocode}
-\RequirePackage{forest}
+\RequirePackage{forest}                     % Create directory trees
+\RequirePackage{siunitx}                    % Round in table
 
 %% CUSTOMISATION
 
@@ -348,3 +349,16 @@
     commentstyle=\color{codegreen},
     morecomment=[l][\color{magenta}]{\#},
 }
+
+% Define a new column type with the desired settings
+\newcolumntype{C}[1]{S[table-format=#1,table-number-alignment=center,table-auto-round=true]}
+
+% Redefine the color green and red
+\definecolor{green}{RGB}{204, 255, 204}
+\definecolor{red}{RGB}{255, 204, 204}
+\definecolor{blue}{RGB}{204, 229, 255}
+
+% Colored underline
+\RequirePackage{color,soul}                 
+\setul{0.5ex}{0.3ex}
+\newcommand{\ulcolor}[2][Red]{\setulcolor{#1}\ul{#2}}
