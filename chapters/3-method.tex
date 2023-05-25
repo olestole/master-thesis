@@ -1,6 +1,30 @@
 \chapter{Method}
+%The method chapter of this paper describes the process from creating a data capture pipeline, extending it to a full end-to-end capture-to-render pipeline with Nerfstudio, using the pipeline to create a data capture baseline, using the baseline to run further experiments, extending the baseline to support large scale scenes, and finally extending it to support real data.
 
-\section{Synthetic data - Collect data from CARLA}
+This chapter is split into multiple parts, all essential for the end-to-end pipeline, depicted in \autoref{fig:end-to-end-pipeline}, to allow the capture of synthetic data with CARLA and subsequent training, evaluation, and render of a NeRF with Nerfstudio. The separate components are thoroughly explained.
+
+% TODO: Write that we're going to use Nerfstudio here?
+
+\input{figures/end-to-end-pipeline}
+
+\begin{comment}
+This chapter elucidates the methodological approach employed in this research to explore the potential of Neural Radiance Fields (NeRF) in improving the synthetic data pipeline from CARLA to Nerfstudio. Our approach is underpinned by a systematic series of stages, each contributing to the robustness of the pipeline, and enabling us to establish a baseline leveraging synthetic data from CARLA.
+
+We start this chapter by detailing the process of collecting synthetic data from CARLA, a sophisticated platform for generating artificial datasets. We explain our selection criteria and data collection techniques, aimed at maintaining consistency while ensuring the collected data is representative and fit for our objectives.
+
+Next, we outline our procedure for integrating the collected data into the Nerfstudio environment. Our goal here is to ensure seamless data transition, optimising the pipeline for robust performance. A detailed description of the specific pipeline we created with CARLA data in Nerfstudio will follow.
+
+A significant component of our method is establishing a CARLA baseline. We elucidate how this baseline was identified and what parameters were considered. Following the establishment of the baseline, we detail its application in various stages of our method.
+
+The subsequent section focuses on the extension of the CARLA-baseline to support large-scale scenes using the concept of Block-NeRF. This is a vital aspect of our method that enables more extensive and complex scene rendering, thus broadening the application scope of our pipeline.
+
+Lastly, we present an extension of the pipeline to accommodate input of real data, providing a pathway for future integration of real-world scenarios into the existing synthetic data pipeline. This element of our method is critical in considering the practicability of our pipeline beyond synthetic data environments.
+
+By sequentially guiding the reader through our method, this chapter seeks to offer comprehensive insight into our research approach, underlying decisions, and considerations. This will lay a strong foundation for understanding the experimental results and discussions in the subsequent chapters.
+\end{comment}
+
+\section{Data capture pipeline - Collect synthetic data from CARLA}
+This section will explain how we utilize the CARLA-simulator, introduced in \autoref{sec:carla}, to capture synthetic data. It'll cover basic CARLA-concepts and give a thorough explanation of how the different concepts are combined and utilized in order to create a data capture pipeline.
 
 \begin{comment}
 
@@ -21,7 +45,7 @@ I might add something here about how the data flows in the CARLA setup.
 
 
 \subsubsection{Creating a CARLA Actor}
-In order to capture data we need a programmable vehicle that we control, usually referred to as the \textit{ego} vehicle. An ego vehicle, \texttt{carla.Vehicle} is a special instance of the most basic CARLA instance, the \texttt{carla.Actor}. It can be spawned by defining a spawn point, a choice of vehicle, and whether the vehicle should run on autopilot or not. An arbitrary amount of autopilot vehicles can be spawned in order to simulate a complex traffic environment, but we want to capture synthetic data with the least amount of transient objects so we only spawn the ego vehicle.
+To capture data in the virtual CARLA-environment, a vehicle that is both controllable and programmable is required. This vehicle is commonly referred to as the “ego” vehicle (\texttt{carla.Vehicle}) and is a special instance of the most basic CARLA instance, the \texttt{carla.Actor}. It can be spawned by defining a spawn point, a choice of vehicle, and whether the vehicle should operate on autopilot or not. Although an arbitrary number of autopilot vehicles can be spawned to simulate a complex traffic environment, the objective is to capture synthetic data with minimal transient objects; therefore, only the ego vehicle is spawned.
 
 
 \subsubsection{Setting up the environment with the traffic manager}
@@ -29,46 +53,49 @@ In order to capture data we need a programmable vehicle that we control, usually
 In order to define the environment in which the spawned ego vehicle will operate, we leverage the \texttt{carla.TrafficManager} available on the \texttt{carla.Client} that's used to connect to the simulator. The traffic manager enables us to define some important aspects of the environment:
 
 \begin{itemize}
-    \item \textbf{Choose the ego vehicle's route:} The traffic manager allows us to set the route instructions for a certain actor. We can define arbitrary routes by creating an array of route instructions, e.g. \texttt{['Left', 'Left', 'Right', 'Straight', 'Right']}.
-    \item \textbf{Ignore the traffic lights:} Since the only moving vehicle in the environment is the ego vehicle, we don't have to abide by the rules of traffic. In order to speed up the data capture we choose to ignore the traffic lights.
-    \item \textbf{Set the vehicle speed:} The traffic manager allows us to set a vehicle's speed to a percentage of the default speed of 30 km/h. When set to $100$ we follow the default speed of 30 km/h, when set to $50$ the speed will be 15 km/h, etc.
+    \item \textbf{Choose the ego vehicle's route:} The traffic manager allows us to set the route instructions for a specific actor. We can define arbitrary routes by creating an array of route instructions, e.g. \texttt{['Left', 'Left', 'Right', 'Straight', 'Right']}.
+    \item \textbf{Choose to ignore the traffic lights:} Since the only moving vehicle in the environment is the ego vehicle, we don't have to abide by the rules of traffic. In order to speed up the data capture we choose to ignore the traffic lights.
+    \item \textbf{Set the vehicle speed:} The traffic manager provides the ability to configure a vehicle’s speed as a percentage of the default speed of 30 km/h. A setting of $100\%$ adheres to the default speed, while a setting of $50\%$ corresponds to a speed of 15 km/h, and so on.
 \end{itemize}
 
 
-\subsubsection{Run configuration}
-
-In order to test multiple configurations of environment and vehicle setup and the corresponding results, I created an \texttt{ExperimentSetting}-class. It enables the following configurations:
+\subsubsection{Experiment configuration}
+In order to evaluate numerous environment and vehicle setups, along with their corresponding outcomes, an \texttt{ExperimentConfig}-class was created. This class enables the definition of the following configurations:
 
 \begin{itemize}
-    \item \textbf{Defining a camera rig:} Mounts a list of RGB-cameras with configurable camera settings, location and rotation to the ego vehicle. We're optionally able to parse a rig file exported from the NAPLab car into a camera rig for the ego vehicle.
-    \item \textbf{Camera frame rate}: Sets the rate of image capture.
+    \item \textbf{Camera rig:} Mounts a list of RGB-cameras with configurable camera settings, location, and rotation to the ego vehicle. We're optionally able to parse a "rig"-file, a special type of JSON file exported from the NAPLab car, into a camera rig for the ego vehicle.
+    \item \textbf{Data capture frequency}: Sets the frequency of data capture, i.e. images and camera poses.
     \item \textbf{Stop-criteria:} Specifies the ego vehicle's stop condition either by a stop distance or a number of completed turns.
-    \item \textbf{Camera noise:} Enables the simulation of noisy GPS/GNSS sensor readings by adding Gaussian noise to the location/rotation output from the mounted cameras.
+    \item \textbf{Camera noise:} Enables the simulation of noisy GPS/GNSS sensor readings by adding Gaussian noise to the location output from the mounted cameras.
     \item \textbf{Spawn transform:} Enables specifying the spawn-location/-rotation of the ego vehicle.
-    \item \textbf{Vehicle speed.} Sets the vehicle speed for the ego vehicle.
-    \item \textbf{Path:} Sets the route instructions for the ego vehicle.
+    \item \textbf{Speed:} Sets the target speed for the ego vehicle.
+    \item \textbf{Route:} Sets the route instructions for the ego vehicle.
 \end{itemize}
 
 
-\subsubsection{TransformFile}
+\subsubsection{CARLA data parser}
 
-Create an instance of \texttt{TransformFile} used to store the images and corresponding camera poses from the camera rig mounted to the car. We’ll explore the details behind the format and data conventions in \autoref{sec:carla-to-nerfstudio}.
+To capture and store data during the vehicle’s drive, a custom \texttt{CarlaDataParser}-class is created. This class provides methods for capturing an image with its corresponding camera pose, transforming the camera poses into specified formats, and exporting the captured data. The format and data conventions will be thoroughly described in \autoref{sec:carla-to-nerfstudio}.
 
 \subsubsection{CARLA Run-loop}
 The CARLA Run-loop includes the following steps:
 
 \begin{itemize}
-    \item While the car hasn’t met a stop-criteria, e.g. that it has driven the set amount of distance/turns, keep driving and collecting data.
+    \item Read and apply the configurations from \texttt{ExperimentConfig}.
+    \item Spawn an ego vehicle.
+    \item While the ego vehicle hasn’t met a stop-criteria, e.g. that it has driven the set amount of distance/turns, keep driving and capture data.
     \begin{itemize}
-        \item \textbf{Get the image from all the cameras mounted to the car:} Every carla sensor has a \texttt{listen} method which is called every time a sensor retrieves data. \textit{Carlo} (\textbf{add citation}) has abstracted the pipeline for retrieving image data from a respective camera, which would otherwise require handling the listen-callback, reading of the \texttt{carla.Image} data and transform from raw data (bytes) to \texttt{np.ndarrays}. With the Carlo-abstraction, I only need to create a list of cameras, get the \texttt{np.ndarray} containing the image-data, stack the camera output and display the respective image with a tool like \texttt{cv2}.
+        \item Get the image from all the cameras mounted to the car: Each sensor in CARLA has a \texttt{listen} method, triggered whenever data is retrieved by the sensor. Carlo (\textbf{add citation}) simplifies the process of obtaining image data from the corresponding camera, a process which traditionally would involve managing the listen-callback, decoding the \texttt{carla.Image} data, and converting raw data bytes into \texttt{np.ndarrays}. Using the Carlo abstraction, the steps are reduced to creating a list of cameras, retrieving the \texttt{np.ndarray} containing the image data, stacking the camera outputs, and presenting the resulting image using a library like \texttt{OpenCV} \cite{opencv_library}.
+        \item Pass the captured image and corresponding camera pose to the \texttt{CarlaDataParser}'s \texttt{append\_frame} method.
     \end{itemize}
-    \item Store the image-/camera pose data if it’s the correct tick
+    \item Export the parsed CARLA-data with \texttt{CarlaDataParser}'s \texttt{export\_transforms} method.
+    \item Terminate the simulation and perform necessary clean-up activities.
 \end{itemize}
 
 
+\begin{comment}
 The following algorithm outlines the steps for capturing synthetic data using the CARLA simulator. The code is written in Python and utilizes the CARLA library.
 
-\begin{comment}
     
 \begin{algorithmic}[1]
 \Function{run\_carla\_session}{experiment\_settings}
@@ -100,7 +127,7 @@ The following algorithm outlines the steps for capturing synthetic data using th
 
 
 
-\section{From CARLA to Nerfstudio} \label{sec:carla-to-nerfstudio}
+\section{CARLA Data Parser - From CARLA to Nerfstudio} \label{sec:carla-to-nerfstudio}
 \begin{comment}
 Premise: Have collected data from CARLA.
 Question: How do I get it from CARLA to Nerfstudio in a usable format?
@@ -111,11 +138,12 @@ Question: How do I get it from CARLA to Nerfstudio in a usable format?
 \end{itemize}
 \end{comment}
 
-We now have a pipeline that enables the creation of a controllable environment for a vehicle with an arbitrary setup of sensors. How do we export the collected sensor data in a format that's readable by Nerfstudio?
+We now have a pipeline that enables the creation of a controllable environment for a vehicle with an arbitrary setup of sensors, and subsequent capture of data. How do we export the captured sensor data in a format that's readable by Nerfstudio?
 
-In order to train a NeRF we need images and corresponding camera poses. As discussed in \autoref{sec:nerf}, the camera poses are $4x4$ homogeneous transformation matrices, containing both the translation and rotation in reference to a coordinate system. Nerfstudio expects a file structure as shown in \autoref{fig:nerfstudio-file-structure}. In order to handle the data parsing from CARLA to Nerfstudio we create a helper-class \texttt{TransformsFile} which have methods for saving images as PNG-files, calculating the camera's intrinsic parameters, transforming the extrinsic parameters, and appending parsed frames to the \texttt{transforms.json}-file.
+In order to train a NeRF we need images and corresponding camera poses. As discussed in \autoref{sec:nerf}, the camera poses are $4x4$ homogeneous transformation matrices, containing both the translation and rotation in reference to a coordinate system. Nerfstudio, as discussed in \autoref{sec:nerfstudio}, expects the data in a file structure as shown in \autoref{fig:nerfstudio-file-structure}. In order to handle the data parsing from CARLA to Nerfstudio we create a helper-class \texttt{CarlaDataParser} which has methods for saving images as PNG files, calculating the camera's intrinsic parameters, transforming the extrinsic parameters, and appending parsed frames to a \texttt{transforms.json}-file. The \texttt{transforms.json}-file contains the camera's intrinsics and a list of frames where each frame holds an image path and the respective image's camera pose. An example \texttt{transforms.json}-file can be seen in \autoref{code:transform-examples}.
 
 \input{figures/nerfstudio-file-structure}
+\input{code/transform-example}
 
 CARLA gives access to basic camera attributes that we can use to approximate the intrinsic parameters. Given the image's width $w$ and height $h$, in accordance to the camera's field of view $fov$, we can calculate the focal length $f$ and subsequently the $x$- and $y$-component of the focal length $f_x$ and $f_y$ as follows:
 
@@ -132,11 +160,9 @@ c_x &= \frac{w}{2} &
 c_y &= \frac{h}{2}
 \end{align*}
 
-The calculated intrinsic values will then be added to a \texttt{transforms.json}-file that contains the camera's intrinsics and a list of frames where each frame has a reference to an image and that image's camera pose. An example \texttt{transforms.json}-file can be seen in \autoref{code:transform-examples}.
+Once calculated, the intrinsic values are added to the \texttt{transforms.json}-file.
 
-\input{code/transform-example}
-
-CARLA is built with Unreal Engine and subsequently uses its coordinate convention, with some noticeable differences which we'll get back into later. The Unreal Engine coordinate convention is a left-handed system with the up vector being +Z. Nerfstudio uses the OpenGL/Blender coordinate convention for cameras, which is a right-handed system, and its world space is oriented such that the up vector is +Z. The disparity in coordinate conventions between CARLA and Nerfstudio would make the NeRF-renderings non-interpretable, if we trained a NeRF directly on the transformation matrices exported from CARLA. In order to transform the transformation matrices that contain both rotation and translation we apply \texttt{TransformFile}'s \texttt{carla\_to\_nerf}-transformation as described in \textbf{INSERT FIGURE/EQUATION HERE}, before appending the frame to the \texttt{transform.json}-file. The \texttt{carla\_to\_nerf} function takes a \texttt{carla.Transform} object as input and returns a 4x4 matrix in OpenGL/Blender-format. The function first extracts the location and rotation components of the input transform. The location component is then converted from the Unreal Engine coordinate system to the OpenGL/Blender coordinate system used by Nerfstudio. This conversion involves swapping the X and Y coordinates of the location and negating the Z coordinate. The rotation component is also converted to the OpenGL/Blender coordinate system by swapping the pitch and roll angles and adding 90 degrees to each angle. Finally, the transformed location and rotation components are combined into a new \texttt{carla.Transform} object, which is used to generate the 4x4 matrix that is returned by the function. An example of the transformed CARLA-matrix can be seen in \autoref{code:frame-example}.
+CARLA is built with Unreal Engine and subsequently uses its coordinate convention, with some noticeable differences which we'll get back into later. The Unreal Engine coordinate convention, illustrated in \autoref{fig:carla-coordinates-system}, is a left-handed system with the up vector being +Z. Nerfstudio uses the OpenGL/Blender coordinate convention for cameras, which is a right-handed system, and its world space is oriented such that the up vector is +Z. The disparity in coordinate conventions between CARLA and Nerfstudio would make the NeRF-renderings non-interpretable, if we trained a NeRF directly on the transformation matrices exported from CARLA. In order to convert the transformation matrices that contain both rotation and translation we apply \texttt{CarlaDataParser}'s \texttt{carla\_to\_nerf}-transformation as described in \textbf{INSERT FIGURE/EQUATION HERE}, before appending the frame to the \texttt{transform.json}-file. The \texttt{carla\_to\_nerf} function takes a \texttt{carla.Transform} object as input and returns a 4x4 matrix in OpenGL/Blender-format. The function first extracts the location and rotation components of the input transform. The location component is then converted from the Unreal Engine coordinate system to the OpenGL/Blender coordinate system used by Nerfstudio. This conversion involves swapping the X and Y coordinates of the location and negating the Z coordinate. The rotation component is also converted to the OpenGL/Blender coordinate system by swapping the pitch and roll angles and adding 90 degrees to each angle. Finally, the transformed location and rotation components are combined into a new \texttt{carla.Transform} object, which is used to generate the 4x4 matrix that is returned by the function. An example of the transformed CARLA-matrix can be seen in \autoref{code:frame-example}.
 
 \input{figures/carla-coordinates-system}
 \input{code/frame-example}
@@ -314,28 +340,34 @@ Question: How can I train a NeRF that represent the same scene?
 \end{itemize}
 \end{comment}
 
-We now have the synthetic data captured from CARLA in a format that we can use to train NeRFs in Nerfstudio on. How do I use this data and the Nerfstudio API to create a pipeline that automates processing, training, evaluating and rendering the different experiments?
 
-I've created a pipeline that leverage the Nerfstudio API to process, train, evaluate and render the NeRFs. The pipeline accepts parameters including:
+
+%We now have the synthetic data captured from CARLA in a format that we can use to train NeRFs in Nerfstudio on. How do I use this data and the Nerfstudio API to create a pipeline that automates processing, training, evaluating and rendering the different experiments?
+
+%I've created a pipeline that leverage the Nerfstudio API to process, train, evaluate, and render the NeRFs. The pipeline accepts parameters including:
+
+Having obtained the synthetic data captured from CARLA in a format suitable for training NeRFs in Nerfstudio, the next step is to develop and utilize a pipeline that automates the processing, training, evaluation, and rendering of various experiments using this data and the Nerfstudio API. This section will elaborate on the pipeline and its components.
+
+The developed pipeline accepts a \texttt{Argument}-class used to configure the processing, training, evaluation, and rendering of the NerF. The most important parameters include:
 
 \begin{itemize}
     \item \textbf{Input/output directory:} Defines where the data is located and where the output from the pipeline should be stored?
-    \item \textbf{Model:} Defines which model to use for training the NeRF
-    \item \textbf{Settings for camera optimizer:} Defines if the NeRF should also treat the camera poses as learnable parameters and optimize the camera poses.
+    \item \textbf{Model:} Defines which NeRF-model to use.
+    \item \textbf{Settings for camera optimizer:} Defines if the NeRF should treat the camera poses as learnable parameters and optimize the camera poses.
     \item \textbf{Settings for side-by-side rendering:} Defines, among other things, which input-camera should be used as ground truth when rendering side-by-side.
 \end{itemize}
 
 \subsubsection{Process}
 
-In most scenarios when working with real data, e.g. images of an object captured with a handheld camera, we don't have accurate camera poses. In those scenarios we have to pre-process the data in order to approximate camera poses for the captured images. It can be accomplished by leveraging SfM-algorithms as explained in \autoref{sec:sfm}. In the scenario where we're dealing with synthetic data captured from CARLA, the poses are as accurate as they can be as they've been calculated in a deterministic environment. Due to this, and the fact that we've already parsed the data into a Nerfstudio data format as shown in \autoref{fig:nerfstudio-file-structure} and \autoref{code:transform-examples}, we don't have to do any preprocessing.
+In most scenarios when working with real data, e.g. images of an object captured with a handheld camera, we don't have accurate camera poses. In those scenarios we have to pre-process the data in order to approximate camera poses for the captured images. It can be accomplished by leveraging SfM-algorithms as discussed in \autoref{sec:sfm}. In the scenario where we're dealing with synthetic data captured from CARLA, the poses are as accurate as they can be as they've been calculated in a deterministic environment. Due to this, and the fact that we've already parsed the data into a Nerfstudio data format as shown in \autoref{fig:nerfstudio-file-structure} and \autoref{code:transform-examples}, we don't have to do any preprocessing.
 
 \subsubsection{Train}
 
-The experiments in this thesis focus on the faster NeRF models implemented in Nerfstudio, namely Nerfacto (\autoref{sec:nerfacto}) and Instant NGP (\autoref{sec:instant-ngp}). Although the models are different, most of the shared model configurations are the same as can be seen in the model parameters included in \autoref{sec:nerfstudio-train-parameters}. During training, the parameters in the model are trained to represent the 3D scene. For the Nerfacto-model, this entails backpropagating the error and updating both the NeRF MLP and the proposal MLP.
+The experiments in this thesis focus on the faster NeRF models implemented in Nerfstudio, namely Nerfacto (\autoref{sec:nerfacto}) and Instant NGP (\autoref{sec:instant-ngp}). Although the models are different, most of the shared model configurations are the same as can be seen in the model parameters included in \autoref{sec:nerfstudio-train-parameters}.
 
-The Nerfacto- and Instant NGP-model leverage 3 different losses to guide the training; \textit{RGB loss}, \textit{interlevel loss} and \textit{distortion loss}. \textit{RGB loss} is the standard NeRF-loss explained in \autoref{eq:nerf-loss}. Interlevel- and distortion-loss are both from the Mip-NeRF 360 implementation explained in \autoref{sec:mipnerf360}. The interlevel loss encourages the model to generate consistent predictions across different levels of the multi-scale hierarchy, while the distortion loss encourages the model to generate smooth and continuous predictions.
+During training, the parameters in the model are trained to represent the 3D scene. For the Nerfacto-model, this entails backpropagating the error and updating both the NeRF MLP and the proposal MLP. The Nerfacto- and Instant NGP-model leverage 3 different losses to guide the training; \textit{RGB loss}, \textit{interlevel loss} and \textit{distortion loss}. \textit{RGB loss} is the standard NeRF-loss explained in \autoref{eq:nerf-loss}. Interlevel- and distortion-loss are both from the Mip-NeRF 360 implementation explained in \autoref{sec:mipnerf360}. The interlevel loss encourages the model to generate consistent predictions across different levels of the multi-scale hierarchy, while the distortion loss encourages the model to generate smooth and continuous predictions.
 
-The training leverages the ADAM optimizer for all networks within the model. The optimizer for the proposal networks and Nerfacto fields both use a learning rate of $1 \times 10^{-2}$, with no weight decay and $\epsilon=10^{-8}$, while the camera optimizer use a learning rate of $6 \times 10^{-4}$, weight decay of $1 \times 10^{-2}$, and $\epsilon=10^{-8}$. All scenes were trained for 15,000 iterations, which is sufficient for achieving convergence. Training time for each scene is approximately 15-20 minutes when using an NVIDIA A100 GPU.
+The training leverages the ADAM optimizer for all networks within the model. The optimizer for the proposal networks and Nerfacto fields both use a learning rate of $1 \times 10^{-2}$, with no weight decay and $\epsilon=10^{-8}$, while the camera optimizer uses a learning rate of $6 \times 10^{-4}$, weight decay of $1 \times 10^{-2}$, and $\epsilon=10^{-8}$. All scenes were trained for 15,000 iterations, which is sufficient for achieving convergence. Training time for each scene is approximately 15-20 minutes when using an NVIDIA A100 GPU.
 
 % TODO: Rewrite and reorganize. Write about how a batch of pixels are created for each training iteration
 During the training of a NeRF, a batch of pixels is created for each training iteration. By default, this batch consists of 4096 pixels. To obtain these pixels, the training algorithm randomly samples them from all of the training images that are stored in RAM. However, this approach can be memory-intensive, especially when dealing with large datasets. To address this issue, the NeRF pipeline provides an option to set the parameter \texttt{–-pipeline.datamanager.train-num-images-to-sample-from}, which allows the user to sample pixels from a smaller subset of images. When using a smaller subset of images, the training algorithm will keep sampling from this subset unless the parameter \texttt{--num-times-to-repeat-images} is also set. This parameter specifies the number of training iterations after which the training algorithm should grab a new set of images to sample from. For instance, if \texttt{--num-times-to-repeat-images} is set to 1, the training algorithm will grab a new set of images to sample from every iteration. However, this approach can be computationally expensive and slow down the training process.
@@ -346,9 +378,10 @@ To evaluate the quality of the NeRF models, we employ the metrics discussed in \
 
 \input{figures/wandb-eval-data}
 
-\subsubsection{Render} % FIX: the reasoning for why side-by-side was created
+\subsubsection{Render}
+%However, comparing experiments across different models and datasets with custom camera paths that will be slightly different for run/scene can be time-consuming and challenging. To address this issue, a script was developed to extract the ground truth camera path and use it in conjunction with the input images and trained NeRF model to create a side-by-side rendering. This approach has proven to be a useful means of qualitatively evaluating the performance of the NeRF models.
 
-The Nerfstudio API provides a script for rendering trained NeRF models given a sequence of camera positions, each with a corresponding field of view and aspect ratio, as shown in the camera path example in \autoref{code:camera-path-example}. The Nerfstudio viewer, depicted in \autoref{fig:nerfstudio-viewer-overview}, enables the creation and editing of camera paths, which can be exported and used for rendering. However, comparing experiments across different models and datasets with custom camera paths that will be slightly different for run/scene can be time-consuming and challenging. To address this issue, a script was developed to extract the ground truth camera path and use it in conjunction with the input images and trained NeRF model to create a side-by-side rendering. This approach has proven to be a useful means of qualitatively evaluating the performance of the NeRF models.
+The Nerfstudio API provides a script for rendering trained NeRF models given a camera path; a sequence of camera poses, each with a corresponding field of view and aspect ratio, as shown in the camera path example in \autoref{code:camera-path-example}. The Nerfstudio viewer, depicted in \autoref{fig:nerfstudio-viewer-overview}, enables the creation and editing of camera paths, which can be exported and used for rendering. In addition to the possibility to create a custom camera path, a script to render the NeRF based on the input data's camera path was created. This option enables an intuitive way to evaluate how well the NeRF has learned the input scene, and it has proven to be a useful means of qualitatively evaluating the performance of the NeRF models.
 
 % TODO: Write about the side-by-side script
 
@@ -379,8 +412,6 @@ The Nerfstudio API provides a script for rendering trained NeRF models given a s
 
 
 
-
-
 \section{Find a CARLA-baseline}
 \begin{comment}
 Premise: Have a pipeline to test multiple CARLA-setups
@@ -393,19 +424,19 @@ Question: How do I find a CARLA-baseline?
 \end{itemize}
 \end{comment}
 
-Now I have a pipeline to test multiple CARLA-setups to find a setup that yields great data for training NeRFs. In order to improve on the capture setup I want to create a baseline that I can use to conduct further experiments.
+A pipeline to evaluate numerous CARLA configurations to identify a configuration that generates high-quality data for NeRF training has been established. In order to facilitate further experiments, a baseline need to be created.
 
 The experiments chosen to define a suitable baseline are mostly based on heuristics and knowledge of what's important for good NeRF results. When capturing video or images for a NeRF it’s important that the scene is well-lit, that you capture non-blurry images, and that there are no transient objects present. If the camera poses of the images you capture are to be approximated with the use of SfM-methods like COLMAP, it's also very important that the images have an overlap in order to secure feature-matching across the images. The five experiments I chose to define my baseline, which will be elaborated upon in \autoref{sec:experiments-and-results}, were:
 
 \begin{itemize}
-    \item \textbf{Camera setup:} Define how many cameras to mount and in which translation and rotation in relation to the ego vehicle.
+    \item \textbf{Camera setup:} How many cameras should be mounted to the ego vehicle, and in what translation and rotation?
     \item \textbf{Capacity:} How long should the segments used to capture data be?
     \item \textbf{Number of frames:} How many frames to capture?
     \item \textbf{Image size:} What resolution should the mounted cameras capture at?
     \item \textbf{Vehicle speed:} At what speed should the ego vehicle drive while capturing data?
 \end{itemize}
 
-The best results from each of the experiments, mostly based on the quantitative metrics discussed in \autoref{sec:evaluating-nerfs}, were used to iteratively build a baseline used for further experiments.
+The best results from each of the experiments, based on qualitative results and quantitative metrics discussed in \autoref{sec:evaluating-nerfs}, were used to iteratively build a baseline used for further experiments.
 
 
 
@@ -432,12 +463,13 @@ Question: Which further experiments should I conduct?
 \end{itemize}
 \end{comment}
 
-With a defined baseline for capturing data for NeRF models, we can now evaluate the impact of different capture settings on the quality of the resulting models. The baseline provides a starting point for conducting further experiments, which can be systematically varied to explore the factors that impact the quality of resulting trained NeRF. Additionally, we can simulate real-world capture scenarios using the synthetic data generated by the baseline. The specific experiments ran with the baseline, elaborated upon in \autoref{sec:experiments-and-results}, were:
+With a defined baseline, we can now evaluate the impact of different NeRF- and capture settings on the quality of the resulting models. The baseline provides a starting point for conducting further experiments, which can be systematically varied to explore the factors that impact the quality of resulting trained NeRF. Additionally, we can simulate real-world capture scenarios using the synthetic data generated by the baseline. The specific experiments ran with the baseline, elaborated upon in \autoref{sec:experiments-and-results}, were:
 
 \begin{itemize}
     \item \textbf{Noisy sensor readings:} Noise in the camera pose due to inaccurate readings from the GPS/GNSS.
-    \item \textbf{Approximated poses vs. perfect poses:} How effective is COLMAP in approximating the camera poses, as oppsed to the perfect camera poses extracted from CARLA?
+    \item \textbf{Approximated poses vs. perfect poses:} How effective is COLMAP in approximating the camera poses, as opposed to the perfect camera poses extracted from CARLA?
     \item \textbf{Different models:} How do the different NeRF models perform against each other?
+    \item \textbf{Improve capacity - Block NeRF PoC}: How can we train NeRFs on increasingly larger scenes?
 \end{itemize}
 
 
@@ -506,9 +538,9 @@ Question: How do I implement Block-NeRF in Nerfstudio, given perfect poses?
 \end{itemize}
 \end{comment}
 
-The NeRF models have proven to work well with the data captured from the defined CARLA-baseline. When we change the route of the CARLA-baseline and create a larger dataset, spanning kilometers of road data, the NeRF models evidently have a hard time generating high-quality image synthesis. That result is expected as the models' underlying MLPs only have a certain capacity. We could increase the capacity by increasing the number of hidden layers and neurons per layer, but this would lead to linearly increasing training -and rendering times. Rendering is already an expensive operation which further supports the claim for another solution.
+The NeRF model in the defined baseline has proven to perform well. When we change the route of the CARLA-baseline and create a larger dataset, spanning kilometers of road data, the NeRF models evidently have a hard time generating high-quality image synthesis. That result is expected as the models' underlying MLPs only have a certain capacity. We could increase the capacity by increasing the number of hidden layers and neurons per layer, but this would lead to linearly increasing training -and rendering times. Rendering is already an expensive operation which further supports the claim for another solution.
 
-As discussed in \autoref{sec:large-scale-nerf} it is an open research field within the NeRF community to expand the capability of NeRFs to enable the representation of large scenes. Compared to the other fields covered in NeRF research, there aren't a lot of papers exploring large-scale NeRFs, which might be due to the amount of data needed and the corresponding data capture endeavor. Luckily, we have constructed a pipeline that automates synthetic data capture and the subsequent processing, training, evaluation and rendering of the NeRF. Due to this we expand the pipeline to enable the evaluation of a large-scale NeRF approach, based on a naive implementation of Block-NeRf \cite{tancik_block-nerf_2022}.
+As discussed in \autoref{sec:block-nerf} it is an open research field within the NeRF community to expand the capability of NeRFs to enable the representation of large scenes. Compared to the other fields covered in NeRF research, there aren't a lot of papers exploring large-scale NeRFs, which might be due to the amount of data needed and the corresponding data capture endeavor. Luckily, we have constructed a pipeline that automates synthetic data capture and the subsequent processing, training, evaluation and rendering of the NeRF. Due to this we expand the pipeline to enable the evaluation of a large-scale NeRF approach, based on a naive implementation of Block-NeRf \cite{tancik_block-nerf_2022}.
 
 % Explain the naive Block NeRF implementation
 One of the main challenges in implementing Block-NeRF is obtaining the camera poses for the captured images. Traditional SfM methods, such as COLMAP, become computationally expensive and slow when dealing with large datasets, as is demonstrated by the feature matching complexity overview presented in Table \ref{tab:colmap-feature-complexity}. However, being in possession of the image's corresponding camera poses simplifies the process. Assuming we have both, the steps for creating a Block-NeRF model can be summarized as follows:
@@ -524,7 +556,7 @@ One of the main challenges in implementing Block-NeRF is obtaining the camera po
     
     \item \textbf{Create a camera path spanning the segments contained in the complete dataset:}
     
-    The camera path can be created in the Nerfstudio, you could leverage a previously exported camera path, or use a helper function to leverage the camera path of the input images which will later also be used to generate the side-by-side render. An important aspect in this naive implementation is that the camera-to-world matrices in the camera path is in the same scale and coordinate system as the Block-NeRF's \texttt{transforms.json}-files.
+    There are multiple options for creating the camera path: The camera path can be created in the Nerfstudio viewer, you could leverage a previously exported camera path, or you could use a helper function to leverage the camera path of the input images which will later also be used to generate the side-by-side render. No matter which option you choose, an important aspect in this naive implementation is that the camera-to-world matrices in the camera path are in the same scale and coordinate system as the Block-NeRF's \texttt{transforms.json}-files.
     
     \item \textbf{Create a lookup table for which Block to render which camera pose:}
 
@@ -532,7 +564,7 @@ One of the main challenges in implementing Block-NeRF is obtaining the camera po
 
     \item \textbf{Modify the camera path to account for the offset, transformations, and scales of each NeRF:}
     
-    Before a NeRF is trained, the input camera poses are scaled to fit a $[-1, 1]$ bounding box, and transformed so that the average up vector is aligned with the Z-axis. The respective transformation which is carried out to make the training easier is stored in a \texttt{dataparser\_transform.json}-file containing the applied transform matrix and scale. Each of the Block-NeRF's \texttt{dataparser\_transform.json}-file is different, and in order to render the desired camera path seamlessly across the different NeRFs according to the lookup table, we have to augment it to account for the transformations. We achieve this by creating a new, transformed camera path where the segments which are to be rendered by $\text{Block-NeRF}_i$ have their camera-to-world transformed by applying $\text{Block-NeRF}_i$'s scale $s_i$ and transformation matrix $t_i$. 
+    Before a NeRF is trained, the input camera poses are scaled to fit a $[-1, 1]$ bounding box, and transformed so that the average up vector is aligned with the Z-axis. The respective transformation which is carried out to make the training easier is stored in a \texttt{dataparser\_transform.json}-file containing the applied transform matrix and scale. Each of the Block-NeRF's \texttt{dataparser\_transform.json}-file is different, and in order to render the desired camera path seamlessly across the different NeRFs according to the lookup table, we have to augment it to account for the transformations. We achieve this by creating a new, transformed camera path where the segments which are to be rendered by $\text{Block-NeRF}_i$ have their camera-to-world transformed by applying $\text{Block-NeRF}_i$'s scale $s$ and transformation matrix $t$. 
     
     \item \textbf{Render the created camera path:}
 
@@ -594,37 +626,6 @@ One of the main challenges in implementing Block-NeRF is obtaining the camera po
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \section{Extending the pipeline to enable input of real data}
 
 \begin{comment}
@@ -637,5 +638,79 @@ Question: How can this pipeline be extended to enable input of real data?
 \end{itemize}
 \end{comment}
 
+\input{figures/nerfstudio_real_data_estimated_poses}
+
+\begin{comment}
+Introduction
+- Making NeRFs with real data is the usual way to go about generating NeRFs.
+- The challenge is in capturing this data from cameras mounted on vehicles, in uncontrolled environment.
+
+How do I expand the pipeline?
+- How is the data captured? Introduce the NAPLab-car, the sensors, etc.
+- How do I read this data? Mention the Aksel and Mathias' repository.
+    - Use FFMPEG to read the .h264-video and serve the frames with a generator-function.
+    - Use regex to parse a file with GPS data formatted as NMEA (National Marine Electronics Association) sentences, a standard messages used by GPS (Global Positioning System) receivers to communicate with other devices, such as computers or chartplotters. Each GPS-datapoint is seved with a generator-function the same way as with the video-frames.
+    - The camera is synchronized to the closest frame in time to the GPS timestamp using custom code. "- Custom code is used to synchronize the camera to the frame closest in time with the GPS timestamp."
+    - After synchronization, I can loop through the synchronized sensor data with a regular loop.
+- Premise: Have synchronized image- and GPS-data.
+- Create a NAPLabDataParser that implements the same methods as the CarlaDataParser. The main difference is in the implementation of the transform-function. 
+- The transformation matrix is created by :
+    - Store the initial GPS lat, long and alt, and use it as the reference point.
+    - The reference point is utilized in order to convert latitude, longitude, altitude of subsequent GPS-readings to North, East, Down from the observer, i.e. the reference point.
+    - NED is then converted to ENU and then to blender coordinate conventions.
+    - The rotation is estimated with trigonometry by comparing subsequent GPS-readings.
+    - The translation and rotation is combined into a transformation matrix.
+- The intrinsics are computed in the same way as discussed in \autoref{sec:carla-to-nerfstudio}.
+- The transformation matrix and intrinsics are combined into a transform.json
+- The exported transform.json and images are in the same format as the output from the CarlaDataParser, so the following pipeline remains unchanged.
+\end{comment}
+
 The pipeline from data capture in CARLA to image synthesis with a trained NeRF has demonstrated efficacy. How can I expand on the pipeline to enable the input of real data, not captured in a virtual environment like the CARLA simulator?
 
+The traditional approach for generating Neural Radiance Fields (NeRFs) involves the use of real data. The real data is usually captured from handheld cameras. With handheld cameras it is uncomplicated to capture well-lit, non-blurry, object-centric images that doesn't contain transient objects. Until now we've used a virtual environment to capture data as it provides a fully controllable environment in which we can test different setups and ensure optimal conditions. The following challenge in this project is capturing high-quality data from sensors, mounted to a moving vehicle, that are suitable to train NeRF models.
+
+To capture data, we utilized the car from the NTNU Autonomous Perception Lab (NAPLab) \cite{naplab}. The NAPLab car is fitted with multiple sensors, including cameras, GPS/GNSS, and Lidar. The cameras capture data with a resolution of $1920 \times 1080$. The GPS/GNSS-system consists of two Swift Navigation Duro Ruggedized Receivers \cite{swift_navigation_duro_manual}, which offer superior positioning accuracy compared to regular GPS/GNSS systems. According to the manufacturer’s documentation, each Duro module has a horizontal position accuracy of 0.75 meters (CEP 50 in SBAS mode) without RTK, and can achieve centimeter-level accuracy with RTK enabled. This high level of accuracy enables the capture of rough camera poses alongside the images.
+
+After having captured data with the NAPLab car, the data has to be parsed and processed before it can be transformed into the expected Nerfstudio-format. Aksel and Mathias (\textbf{Cite repo}) provide a repository that streamlines the reading and parsing of NAPLab's data into a manageable format. In order to read the video data, FFMPEG is utilized to transform .h264-files into sequences of \texttt{np.ndarray}s that are subsequently served by a generator function. The GPS data is formatted as NMEA (National Marine Electronics Association) sentences, a message standard used by GPS (Global Positioning System) receivers to communicate with other devices. This GPS data is read and parsed using regex and subsequently served by a generator function. 
+
+A key aspect of the data parsing is the synchronization of the camera with the GPS timestamp. This is achieved by leveraging functionality from the same repository that aligns the camera with the frame closest in time to the GPS timestamp. Following synchronization, the sensor data can be accessed and further processed using a regular loop.
+
+The synchronized data have to be converted into Nerfstudio's data format in order to be used in the predefined pipeline. In order to achieve this, a \texttt{NAPLabDataParser} that implements the same methods as the \texttt{CarlaDataParser}, is created. The primary difference is the implementation of the transformation function that converts the translation and rotation data from one coordinate convention to another. The transformation matrix construction process involves several steps:
+
+\begin{itemize}
+    \item The initial GPS latitude, longitude, and altitude readings are stored as the reference point.
+    \item The \texttt{geodetic2ned} function from the \texttt{pymap3d} library \cite{Hirsch_PyGemini} is used to transform GPS data into North, East, Down (NED) coordinates.
+    \item The NED coordinates are then converted to East, North, Up (ENU) coordinates and then to Blender coordinate conventions.
+    \item The cameras' rotation is estimated by comparing adjacent GPS data points using trigonometry.
+    \item The resulting translation and rotation data are combined into a single transformation matrix.
+\end{itemize}
+
+The computation of intrinsic values follows the same methodology as discussed in \autoref{sec:carla-to-nerfstudio}. These intrinsics, in combination with the transformation matrix, are assembled into a \texttt{transform.json} file.
+
+The output from the \texttt{NAPLabDataParser}, i.e., the \texttt{transform.json} file and images, is in the same format as that from the \texttt{CarlaDataParser}. Therefore, the subsequent stages of the pipeline remain unaffected, ensuring the smooth transition from synthetic to real data inputs.
+
+
+
+
+
+\begin{comment}
+The traditional approach for generating Neural Radiance Fields (NeRFs) involves the use of real data. However, collecting this real data presents a unique challenge when dealing with cameras mounted on vehicles operating in uncontrolled environments. Overcoming this obstacle requires an innovative expansion of the existing data processing pipeline.
+
+Data capture is achieved with the assistance of a specially outfitted vehicle, known as the NAPLab-car, equipped with an array of sensors for comprehensive environmental data collection. Subsequently, the captured data is read and processed using the repository developed by Aksel and Mathias.
+
+This repository utilizes FFMPEG software to read the .h264-video, serving the video frames through a generator function. In parallel, a regular expression (regex) is used to parse GPS data structured as NMEA (National Marine Electronics Association) sentences - standard messages exchanged between GPS receivers and auxiliary devices like computers or chartplotters. Each parsed GPS datapoint is then served via a generator function akin to the video frames.
+
+A key aspect of the pipeline expansion is the synchronization of the camera with the GPS timestamp. This is achieved with custom code that aligns the camera with the frame closest in time to the GPS timestamp. Following synchronization, the sensor data can be accessed and navigated using a regular loop.
+
+Building on this premise of synchronized image and GPS data, a NAPLabDataParser is created to mimic the functionality of the CarlaDataParser. The primary distinction lies in the implementation of the transform function. The transformation matrix construction process involves several steps:
+
+- The initial GPS latitude, longitude, and altitude readings are stored and utilized as a reference point.
+- This reference point serves as a basis to convert subsequent GPS readings into North, East, Down (NED) coordinates relative to the observer.
+- NED coordinates are subsequently converted to East, North, Up (ENU) and further to Blender coordinate conventions.
+- Subsequent GPS readings are compared to estimate rotation using trigonometry.
+- Finally, the translation and rotation data are integrated into a single transformation matrix.
+
+The computation of intrinsic values follows the same methodology as discussed in \autoref{sec:carla-to-nerfstudio}. These intrinsics, in combination with the transformation matrix, are assembled into a transform.json file.
+
+The output from the NAPLabDataParser, i.e., the transform.json file and images, is analogous in format to that from the CarlaDataParser. Therefore, the subsequent stages of the pipeline remain unaffected, ensuring the smooth transition from synthetic to real data inputs.
+\end{comment}

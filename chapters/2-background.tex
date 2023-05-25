@@ -2,7 +2,9 @@
 
 The background chapter of this paper focuses on the use of Neural Radiance Fields (NeRFs) for representing and rendering 3D scenes. The chapter discusses several important NeRF methods, including NeRF \cite{mildenhall_nerf_2020}, mip-NeRF \cite{barron_mip-nerf_2021}, mip-NeRF 360 \cite{barron_mip-nerf_2022}, Block NeRF \cite{tancik_block-nerf_2022}, and instant-ngp \cite{muller_instant_2022}. Additionally, the chapter covers several key techniques used in the NeRF pipeline, including positional encoding, hierarchical sampling, stratified sampling, appearance embeddings, learned pose refinement, and visibility prediction.
 
-The chapter also discusses the use of Structure from Motion (SfM) and COLMAP \cite{schoenberger2016sfm} as important tools for the pre-processing step in the NeRF pipeline, and presents several metrics for evaluating NeRFs, including PSNR, SSIM, and LPIPS. By providing an overview of these methods, techniques, tools, and metrics, the background chapter aims to establish a common ground for future chapters.
+The chapter also discusses the use of Structure from Motion (SfM) and COLMAP \cite{schoenberger2016sfm} as important tools for the pre-processing step in the NeRF pipeline, and presents several metrics for evaluating NeRFs, including PSNR, SSIM, and LPIPS. By providing an overview of these methods, techniques, tools, and metrics, the background chapter aims to establish a common ground for future chapters. 
+
+Please note that, in order to cover the relevant background, some sections of the following chapter have been adapted from my unpublished project work on neural radiance fields (NeRF) for novel view synthesis and 3D reconstruction, which was completed as part of the course “TDT4501 Computer Science, Specialization Project”.
 
 % --------------------- Volume rendering ---------------------
 \section{Volume rendering} \label{sec:volumerendering}
@@ -247,7 +249,7 @@ LPIPS \cite{zhang_unreasonable_2018} is a perceptual similarity metric based on 
 %The metric determines how similar two image patches' activations are, for a given network. It's been demonstrated that this metric closely matches human perception. Image patches with a low LPIPS score are perceptually similar.
 
 
-\section{CARLA}
+\section{CARLA} \label{sec:carla}
 
 CARLA \cite{Dosovitskiy17} is an open-source simulator designed for autonomous driving research. Its highly customizable simulation environment allows for the creation and testing of a wide range of driving scenarios and conditions. CARLA includes a variety of sensors, such as cameras, lidars, and GPS, which can be used to collect visual and non-visual data. We can interact with CARLA’s features via a Python API, which allows for the control of vehicle position, orientation, and most other behaviors within the simulation. This flexibility enables the generation of diverse and realistic data, making CARLA, among many other things, a powerful tool for the development and testing of data capture pipelines. Data captured from CARLA can be seen \autoref{fig:carla-3-camera-setup}.
 
@@ -307,10 +309,11 @@ Reconstructing 3D content from 2D photos is inherently ambiguous since the conte
 An overview of the mip-NeRF 360 pipeline can be seen in \autoref{fig:mip-nerf-360-pipeline-overview}. Note that the pipeline has a number of differences from the previous mip-NeRF pipeline portrayed in \autoref{fig:mip-nerf-pipeline-overview}. There is no redundant RGB-value being rendered and there are two different fields; one density field and one mip-NeRF field.
 
 
+\begin{comment}
 \section{Large Scale NeRF} \label{sec:large-scale-nerf}
-
 \subsection{Block NerF}
 \subsection{Wayve - Nvidia GTC talk}
+\end{comment}
 
 \subsection{Block NeRF: Scalable Large Scene Neural View Synthesis} \label{sec:block-nerf}
 Block NeRF is a paper that demonstrates a method for large-scale reconstruction of scenes using NeRFs. It does this by splitting large areas into multiple blocks of a certain radius, where each block has a connected NeRF, dubbed a block-NeRF. The different block-NeRFs are trained on images within their radius of responsibility. At inference time, only the block-NeRFs with a radius that spans the requested location are kept. These have all been trained on image data from the requested location and can render an output. Some of the remaining block-NeRFs might still be without a direct line of sight to the requested location, which results in low "visibility" (discussed in \autoref{sec:visibility-prediction}). These block-NeRFs are also filtered out, resulting in a pool of block-NeRFs with good visibility. The color outputs of the remaining block-NeRFs are merged to render the final image output.
@@ -341,8 +344,8 @@ The main technique proposed by instant-NeRF is a new parametric encoding for the
 %In a fully connected MLP, every weight and bias must be updated on back-propagation. With parametric encodings, only a very small number of feature vectors must be updated. Also, by reducing the size of the MLP, such parametric models can be trained to convergence much faster without sacrificing approximation quality. You trade a larger memory footprint by allocating hash tables, but in return you have to update a far lower number of trainable parameters per back-propagation, leading to an increased training and inference speed.
 
 
-\section{Nerfstudio}
-With the magnitude of different published methods regarding NeRF, some with corresponding source code and some not, it's not trivial to compare them on self-captured data. In the experiments, I have leveraged an open-source project named Nerfstudio \cite{nerfstudio}. It is an API that streamlines the creation, training, and visualization of NeRFs. The components that make up NeRFs are modularized in a way that allows interpretable implementation of different NeRF methods. In addition, it ships with implemented versions of some of the most important published methods to date for real-world captures; NeRF, mip-NeRF, and instant-ngp.
+\section{Nerfstudio} \label{sec:nerfstudio}
+With the magnitude of different published methods regarding NeRF, some with corresponding source code and some not, it's not trivial to compare them on self-captured data. Nerfstudio \cite{nerfstudio} is an open-source framework/API that streamlines the creation, training, and visualization of NeRFs. The components that make up NeRFs are modularized in a way that allows interpretable implementation of different NeRF methods. In addition, it ships with implemented versions of some of the most important published methods to date for real-world captures; NeRF, mip-NeRF, and instant-ngp.
 
 \section{Nerfacto} \label{sec:nerfacto}
 Nerfstudio also provides its own method dubbed "Nerfacto". The method isn't published work, but leverages techniques from several other published methods which have proved to work well for real data captures. The techniques used in Nerfacto result in a method that strikes a great balance between quality and speed. The techniques highlighted by Nerfacto have already been discussed in \autoref{chap:relatedwork}, but I'll recap and elaborate on a few here.

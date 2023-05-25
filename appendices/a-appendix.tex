@@ -109,6 +109,56 @@ If the appendix is in the form of a ready-made PDF file, it should be supported 
 \includepdf[pages=-]{appendices/NTNUProsjektavtale.pdf}
 \end{comment}
 
-\input{figures/lego-result.tex}
-\input{figures/ohma-electra-result.tex}
-\input{figures/trex-result.tex}
+\section{Results}
+
+\subsection{Block NeRF}
+% The full Block NeRF evaluation table. Only the condensed version containing the average across the different segments are included in the result-section
+
+\begin{table}[ht]
+\centering
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{l l | C{2.2} C{1.3} C{1.3}}
+\hline
+& \textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
+\hline
+0 & Segment 1 & 24.960262 & 0.815270 & 0.161623 \\
+1 & Segment 2 & 25.660400 & 0.824085 & 0.164296 \\
+2 & Segment 3 & 23.914209 & 0.755183 & 0.194245 \\
+3 & Segment 4 & 23.363695 & 0.764547 & 0.216242 \\
+\hline
+\multicolumn{2}{l}{Average difference from one NeRF} &\cellcolor{green} 0.2768 &\cellcolor{green} 0.02277125 &  \cellcolor{red} -0.015 % Unsure if I'll include this
+\end{tabular}
+\caption{Results for each segment when the basline-segment spanning the entire block has been split into 4 Block-NeRFs.}
+\label{tab:block-nerf-four-segments-full}
+\end{table}
+
+
+\begin{table}[ht]
+\centering
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{l l | C{2.2} C{1.3} C{1.3}}
+\hline
+& \textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
+\hline
+0 & Segment 1 & 25.047100 & 0.826931 & 0.138852 \\
+1 & Segment 2 & \cellcolor{green} 25.703838 & 0.831167 & 0.156331 \\
+2 & Segment 3 & 24.924395 & 0.830144 & 0.149870 \\
+3 & Segment 4 & \cellcolor{red} 22.726223 & \cellcolor{red} 0.713277 & \cellcolor{red} 0.207025 \\
+4 & Segment 5 & 25.468483 & 0.837942 & \cellcolor{green} 0.131815 \\
+5 & Segment 6 & 25.670006 & \cellcolor{green} 0.841962 & 0.147232 \\
+6 & Segment 7 & 25.661350 & 0.820813 & 0.163685 \\
+7 & Segment 8 & 25.070913 & 0.777114 & 0.154277 \\
+8 & Segment 9 & 24.803871 & 0.814633 & 0.154028 \\
+9 & Segment 10 & 23.693977 & 0.753770 & 0.185557 \\
+10& Segment 11 & 23.936722 & 0.757462 & 0.179283 \\
+11& Segment 12 & 24.584238 & 0.807874 & 0.144022 \\
+\hline
+\multicolumn{2}{l}{Average metrics of 12 block NeRF} & \cellcolor{green} 24.774259 & \cellcolor{green} 0.801090 & \cellcolor{green} 0.159331 \\
+\multicolumn{2}{l}{Average metrics of 1 block NeRF} & \cellcolor{red} 22.515461 & \cellcolor{red} 0.654036 & \cellcolor{red} 0.424356 \\
+\hline
+\end{tabular}
+\caption{Results for exp\_block\_nerf\_long\_path\_2-block\_10}
+\label{tab:block-nerf-twelve-segments-full}
+\end{table}

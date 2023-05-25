@@ -362,3 +362,5 @@
 \RequirePackage{color,soul}                 
 \setul{0.5ex}{0.3ex}
 \newcommand{\ulcolor}[2][Red]{\setulcolor{#1}\ul{#2}}
+
+\RequirePackage{float} % Enables [H] for strict placement
