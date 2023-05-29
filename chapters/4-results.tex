@@ -5,7 +5,7 @@ The results obtained from the experiments are evaluated both quantitatively, usi
 
 % TODO: Change the link
 \vspace{2mm} %5mm vertical space
-\noindent \textbf{\href{}{Link to companion page with video renders}}
+\noindent \textbf{\href{https://absorbing-peace-5f6.notion.site/NeRF-Renders-Master-thesis-34ff125e2200406588f002b36eeaacef}{Link to companion page with video renders}}
 
 \section{Defining a baseline}
 
@@ -392,25 +392,25 @@ During the capture of images and corresponding camera poses from a vehicle in a 
 \hline
 & & \multicolumn{3}{c}{\textbf{Baseline segments}} & \multicolumn{3}{c}{\textbf{Shorter segments}} \\
 \hline
-0 & $\mathcal{N}(0, 0.0)$   & \cellcolor{green} 23.412970 & \cellcolor{green} 0.713507 & \cellcolor{red} 0.320640 & \cellcolor{green} 24.831890 & \cellcolor{green} 0.824606 & \cellcolor{red} 0.102266 \\
+0 & $\mathcal{N}(0, 0.0)$   & \cellcolor{green} 23.412970 & \cellcolor{green} 0.713507 & \cellcolor{green} 0.320640 & \cellcolor{green} 24.831890 & \cellcolor{green} 0.824606 & \cellcolor{green} 0.102266 \\
 1 & $\mathcal{N}(0, 0.1^2)$ & 22.513981 & 0.674136 & 0.321364 & 23.028709 & 0.752731 & 0.114806 \\
 2 & $\mathcal{N}(0, 0.2^2)$ & 21.343519 & 0.616709 & 0.338266 & 20.674553 & 0.613583 & 0.148965 \\
 3 & $\mathcal{N}(0, 0.3^2)$ & 20.520330 & 0.577203 & 0.345663 & 20.502602 & 0.595552 & 0.154787 \\
 4 & $\mathcal{N}(0, 0.5^2)$ & 19.075649 & 0.501499 & 0.371572 & 19.059755 & 0.482721 & 0.197262 \\
 5 & $\mathcal{N}(0, 1.0^2)$ & 17.670620 & 0.433909 & 0.432940 & 18.085838 & 0.406564 & 0.338364 \\
-6 & $\mathcal{N}(0, 3.0^2)$ & \cellcolor{red} 16.662760 & \cellcolor{red} 0.408036 & \cellcolor{green} 0.637326 & \cellcolor{red} 15.709220 & \cellcolor{red} 0.344876 & \cellcolor{green} 0.612587 \\
+6 & $\mathcal{N}(0, 3.0^2)$ & \cellcolor{red} 16.662760 & \cellcolor{red} 0.408036 & \cellcolor{red} 0.637326 & \cellcolor{red} 15.709220 & \cellcolor{red} 0.344876 & \cellcolor{red} 0.612587 \\
 \hline
 & & \multicolumn{6}{c}{\textbf{Baseline \textbf{without} camera optimizer}} \\
 \hline
 & & \multicolumn{3}{c}{\textbf{Baseline segments}} & \multicolumn{3}{c}{\textbf{Shorter segments}} \\
 \hline
-0 & $\mathcal{N}(0, 0.0)$   & \cellcolor{green} 24.702831 & \cellcolor{green} 0.792646 & \cellcolor{red} 0.179289 & \cellcolor{green} 25.677803 & \cellcolor{green} 0.861634 & \cellcolor{red} 0.076989 \\
+0 & $\mathcal{N}(0, 0.0)$   & \cellcolor{green} 24.702831 & \cellcolor{green} 0.792646 & \cellcolor{green} 0.179289 & \cellcolor{green} 25.677803 & \cellcolor{green} 0.861634 & \cellcolor{green} 0.076989 \\
 1 & $\mathcal{N}(0, 0.1^2)$ & 22.463675 & 0.677371 & 0.280633 & 23.318026 & 0.755237 & 0.146877 \\
 2 & $\mathcal{N}(0, 0.2^2)$ & 21.212559 & 0.601917 & 0.366598 & 21.383156 & 0.628668 & 0.209283 \\
 3 & $\mathcal{N}(0, 0.3^2)$ & 20.468809 & 0.560959 & 0.399360 & 21.101936 & 0.612378 & 0.232985 \\
 4 & $\mathcal{N}(0, 0.5^2)$ & 19.366894 & 0.499264 & 0.474444 & 20.071671 & 0.513037 & 0.299472 \\
 5 & $\mathcal{N}(0, 1.0^2)$ & 18.207266 & 0.444120 & 0.560452 & 18.290358 & 0.417969 & 0.404933 \\
-6 & $\mathcal{N}(0, 3.0^2)$ & \cellcolor{red} 16.322678 & \cellcolor{red} 0.385614 & \cellcolor{green} 0.647966 & \cellcolor{red} 15.077240 & \cellcolor{red} 0.362973 & \cellcolor{green} 0.698665 \\
+6 & $\mathcal{N}(0, 3.0^2)$ & \cellcolor{red} 16.322678 & \cellcolor{red} 0.385614 & \cellcolor{red} 0.647966 & \cellcolor{red} 15.077240 & \cellcolor{red} 0.362973 & \cellcolor{red} 0.698665 \\
 \hline
 \end{tabular}
 \caption{Results for Gaussian Noise experiment on both the baseline and shorter segments. The shorter segments are 10\% the size of the baseline segment, approximately 50m in length.}
@@ -662,30 +662,75 @@ As shown in \autoref{fig:overlap}, an increase in $\delta$ results in a signific
 
 
 \section{Real data}
-Extending the pipeline to allow input of real data. The important part is to change the \texttt{CarlaDataParser} with another data parser.
+The implementation of the real data-capture pipeline and the subsequent \texttt{NAPLabDataParser} allows the end-to-end pipeline to be run with data captured from the NAPLab car. We want to investigate the quality of the capture, if the captured data is suitable for training NeRFs, how the camera poses estimated from the GPS compare to the camera poses approximated with COLMAP, how splitting up the data and leveraging Block-NeRF affects performance, and how camera optimization affects the results.
+
+In order to test the aforementioned aspects, six different pipeline runs are conducted. The results are presented in \autoref{tab:trip067-results}.
 
 
 \begin{table}[ht]
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
-\begin{tabular}{l | C{2.2} C{1.3} C{1.3}}
+\begin{tabular}{l | C{2.2} C{1.3} C{1.3} c}
 \hline
-\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
+\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{Time processing} \\
 \hline
-COLMAP with optimizer    &\cellcolor{green} 23.486408 & 0.864474 & 0.421610 \\
-COLMAP without optimizer & 22.640327 &\cellcolor{green} 0.865871 &\cellcolor{green} 0.401821 \\
-GPS with optimizer       & 21.741020 & 0.849057 & 0.422538 \\
-GPS without optimizer    &\cellcolor{red} 21.625042 &\cellcolor{red} 0.847604 &\cellcolor{red} 0.422631 \\
+COLMAP w/ optimizer           & 23.486408   & 0.864474 & 0.421610 & 01:05:59 \\
+COLMAP w/o optimizer          & 22.640327   & 0.865871 & 0.401821 & 01:05:59 \\
+COLMAP w/ optimizer, 12 BNs   &\cellcolor{green} 25.65282775 &\cellcolor{green} 0.882313 &\cellcolor{green} 0.332909 & 01:05:59 \\
+GPS w/ optimizer              & 21.741020   & 0.849057 & 0.422538 & 00:00:00 \\
+GPS w/o optimizer             &\cellcolor{red} 21.625042   &\cellcolor{red} 0.847604 &\cellcolor{red} 0.422631 & 00:00:00 \\
+GPS w/ optimizer, 12 BNs      & 22.65892333 & 0.848332 & 0.393478 & 00:00:00 \\
 \hline
 \end{tabular}
-\caption{Data from Trip067 with transformation matrix approximated with COLMAP or GPS-readings.}
-\label{}
+\caption{Data from Trip067 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block NeRF and the resulting metric score is averaged across the 12 NeRFs evaluations.}
+\label{tab:trip067-results}
 \end{table}
+
+
+The results highlight interesting trade-offs between the different metrics and strategies used. Notably, the Block NeRF runs with camera poses approximated with COLMAP yields the best metrics across all the experiments. Disregarding both Block NeRF runs, the camera poses approximated with COLMAP and then optimized yielded the best PSNR, indicating that this approach was the most successful in preserving high-frequency detail. Conversely, it was the COLMAP approximation without optimization that yielded the highest SSIM and lowest LPIPS, suggesting that this method preserved the structural and perceptual similarity of the images more effectively.
+
+In contrast, the experiments using GPS readings for camera pose approximations with or without optimization were less successful across all metrics. The GPS-based runs yielded lower PSNR, SSIM, and higher LPIPS, with the non-optimized GPS approach scoring the lowest in all three metrics.
+
+
+% Of the runs that don't leverage the naive Block NeRF approach, the run with camera poses approximated with COLMAP and further optimized camera poses achieves the significantly best PSNR. The COLMAP run without optimizer achieves best SSIM and LPIPS, although the metrics are very similar to the run with optimizer. The qualitative results from the two runs are very different. The run with optimized camera poses appear much more blurry than the one without optimized camera poses.
+
+
+\begin{comment}
+- As expected, the camera optimizer provides better results than the contrary on real data with imperfect camera poses. Atleast it ha a significantly higher PSNR, how do they compare qualitatively?
+- As with the synthetic data, the optimized runs appear more blurry, but still achieves better scores on the metrics.
+
+
+In the set of experiments that did not implement the naive Block NeRF approach, the results display noteworthy distinctions between different methodologies. The experiment wherein camera poses were approximated using COLMAP and subsequently optimized rendered the highest Peak Signal-to-Noise Ratio (PSNR). This particular experiment demonstrates superior performance in preserving original image detail and quality.
+
+However, interestingly, the experiment utilizing COLMAP without any subsequent optimization yielded the best results in terms of the Structural Similarity Index Measure (SSIM) and the Learned Perceptual Image Patch Similarity (LPIPS). Despite these metrics being extremely close to the COLMAP run with optimization, their distinction in results is worth noting.
+
+Delving deeper into qualitative outcomes, a stark contrast is observed between the two COLMAP runs. The experiment leveraging optimized camera poses generated results with a distinctly higher degree of blurriness compared to its counterpart that did not utilize optimized poses.
+
+This observation highlights the intriguing impact of pose optimization on image clarity and indicates that while certain metrics might be optimized, subjective visual quality and the overall objective might vary significantly. These results collectively underline the complex interplay between technical metrics and perceptual outcomes in the realm of NeRF generation.
+\end{comment}
+
+
+\section{Novel views along altered trajectory}
+
+An important application of NeRFs is their ability to synthesize high-quality images from novel viewpoints. Although there are many applications for this, one of those is training and evaluating self-driving vehicles. In this section, we will investigate how a NeRF trained on self-captured synthetic and real data can be used to create camera paths and render novel views not previously observed in the dataset.
+
+% In order to investigate how our self-captured data performs for this purpose 
+% As previously discussed, NeRF is employed in autonomous vehicle pipelines for this exact purpose.
+%This capability could prove particularly useful in applications 
+% you need to expand a dataset, e.g. in a machine learning setting, much like you would employ data augmentation.
+% One important application of NeRFs is their ability to synthesize images from previously unseen viewpoints, not present in the original dataset. 
+% This capability could prove particularly useful in applications where you need to expand a dataset, e.g. in a machine learning setting, much like you would employ data augmentation.
+
+\input{figures/unseen-trajectories-v2}
+
+\autoref{fig:nerfstudio-trajectory} shows an example of two different camera paths created in Nerfstudio for a trained NeRF. Both of the camera paths are altered to simulate swerving trajectories, the first across a traffic light area and the second across a lane.
+
+Given this thesis' focus on data captured by a driving vehicle, an apparent application is the generation of previously unseen vehicle trajectories. By capturing images from multiple viewpoints along a particular vehicle trajectory and subsequently training a NeRF on this data, the NeRF would enable the synthesis of new images depicting a previously unseen vehicle trajectory. This can be useful for a variety of applications, such as training autonomous driving systems. In \autoref{fig:nerfstudio-trajectory} you can see an example of how data from such an unseen trajectory can be generated by creating a camera path.
 
 
 
 
 
 % For discussion
-As expected, the camera optimizer provides better results than the contrary on real data with imperfect camera poses. Atleast it ha a significantly higher PSNR, how do they compare qualitatively?
+% The scene has only been seen from a very limited number of views. In order to generate high-quality novel views, the same scene should be observed from multiple viewpoints.

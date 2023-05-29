@@ -1,9 +1,67 @@
 \chapter{Conclusion \& Future Work}
 
 \section{Conclusion}
-Conclude the thesis. Could create a holistic research goal that I could use to wrap up the thesis, or I could conclude what has been done, what worked and what should be looked into.
+\begin{comment}
+\begin{description}[leftmargin=!,labelwidth=\widthof{RQ:}]
+\item[\textbf{RG:}] Design and develop an end-to-end pipeline for generating NeRFs, leveraging vehicle-captured video sequences and corresponding camera poses with varying degrees of accuracy.
+\end{description}
+\end{comment}
+
+\begin{comment}
+- What has been done in the thesis?
+- Main topics
+- What were the results?
+
+The data has been vehicle-captured, starting in a controllable, virtual environment CARLA, and later expanded to real vehicle-data.
+
+This thesis focused on designing and developing an end-to-end pipeline for capturing data from a scene and using the captured data to generate a NeRF representing the same scene. After being developed, the end-to-end pipeline was first used with synthetic data captured in a controllable, virtual environment - CARLA - in order to create a baseline. The experiments conducted to create the baseline highlights the importance of considering the camera setup, segment length or scene size, dataset size, image size, and vehicle speed. The baseline was subsequently used to conduct further experiments. The findings from the subsequent experiments conclude that despite noise, optimized camera poses yield superior renderings, especially in shorter segments, while non-optimized poses excel only with perfect camera poses. Additionally, COLMAP pre-processing significantly outperforms joint optimization, especially with substantial noise, making it a worthy consideration despite the initial time commitment. Another development was the implementation of a naive large scale NeRF approach. The results from experiments conducted on it highlights its efficacy on multiple scenes, producing sharper details and an overall enhancement in the visual quality.
+
+After implementing a dataparser for the real data to be piped into the same pipeline, multiple experiments were conducted, comparing the results with the results form the synthetic data. Despite having a working pipeline, the results from the vehicle-captured real data wasn't great, and multiple limitations were put forward as to why.
+\end{comment}
+
+%This thesis has focused on the design and development of an end-to-end pipeline capable of capturing data from a scene, and subsequently generating a Neural Radiance Field (NeRF) representing the same scene. 
 
 
+The primary research goal of this thesis was to design and develop an end-to-end pipeline for generating NeRFs, leveraging vehicle-captured video sequences and corresponding camera poses with varying degrees of accuracy.
+
+Initially, a data capture pipeline was created for CARLA, which provided synthetic data from a controlled environment. Connecting this data capture pipeline with the Nerfstudio pipeline facilitated the creation of a performance baseline for further experiments. During the creation of the baseline, multiple configurations and settings were evaluated, underscoring their significance on the resulting image synthesis. Some of the configurations that proved important were camera setup, segment length, dataset size, image resolution, and vehicle speed.
+
+Having obtained a baseline, further experiments were conducted, revealing important findings: NeRFs trained with jointly optimized camera poses consistently achieved higher scores than non-optimized camera poses on the metrics PSNR, SSIM and LPIPS, and proved particularly effective on shorter segments. However, pre-processing an approximation of the camera poses with COLMAP outperformed camera pose optimization, especially in high-noise situations, arguing for its consideration despite an upfront processing-time investment.
+
+Progressing into the exploration of large-scale NeRF approaches, a naive prototype was implemented. Despite being a prototype with rudimentary features, the high-quality results were consistent across multiple scenes. The approach provided the ability to represent large scenes while still retaining sharp details and high visual quality.
+
+In order to expand the current pipeline to enable the input of real data, a data capture pipeline with a custom data parser was created for the NAPLab vehicle. Despite achieving lower-quality image synthesis, primarily due to the uncontrollable environment, many of the findings from the controllable, virtual environment held true. Optimizing the rough camera poses captured from the NAPLab vehicle performed better than not optimizing them. However, COLMAP outperformed joint camera optimization overall. Additionally, the naive large-scale NeRF implementation performed better than a single NeRF.
+
+Both the synthetic and real data were used to conduct experiments on how well the vehicle-captured data could provide a NeRF capable of rendering unseen trajectories. [INSERT RESULTS HERE]
+\begin{comment}
+
+Initially, this pipeline was applied to synthetic data gathered from a controlled virtual environment, CARLA, which facilitated the creation of a performance baseline. The establishment of this baseline underscored the significance of various parameters for the quality of the data capture and subsequent NeRF. The parameters included camera setup, segment length, dataset size, image resolution, and vehicle speed.
+
+Subsequent experimentation built upon this baseline, revealing important findings. Optimized camera poses consistently produced superior renderings despite the presence of noise, with shorter segments proving particularly effective. In contrast, non-optimized poses only excelled with perfect camera poses. Furthermore, our experiments demonstrated that COLMAP pre-processing overwhelmingly outperformed joint camera pose optimization, even in high-noise situations, arguing for its consideration despite an upfront time investment.
+
+Progressing into the exploration of large-scale NeRF approaches, we implemented a naive variant. The promising results of this implementation were evident across multiple scenes, with image synthesis displaying sharper details and a notable improvement in overall visual quality.
+
+Applying the acquired knowledge from the previous experiments, a dataparser for the NAPLab vehicle was created, allowing the end-to-end pipeline to be used on real data. Despite lower-quality image synthesis due to the uncontrollable environment, many of the findings from the controllable, virtual environment held true. Although optimizing camera poses performed better than not optimizing them, COLMAP outperformed joint camera optimization overall. Additionally, the naive Block NeRF implementation performed better than a single NeRF.
+\end{comment}
+
+\begin{comment}
+Following the successful implementation of a dataparser for real-world data, we applied our pipeline to data captured from an actual vehicle. Despite operational functionality, the results from the real-world data proved less than optimal. The limitations identified during these experiments are considered crucial factors in explaining these outcomes. Consequently, future work will address these constraints to further refine the performance of the NeRF-based pipeline for real-world applications.
+
+- Pipeline from CARLA to Nerfstudio
+    - Enables experimenting with data capture techniques that can later be applied to real world scenarios.
+    - Enables running multiple experiments with different experiment settings, e.g. camera setup, vehicle speed, route, image resolution, etc., in a streamlined way.
+    - The data output from the experiment-pipeline in CARLA is in a format supported by most NeRFs. Enables training NeRFs on the synthetic data captured in CARLA, and, based on the evaluation of the NeRF, tweak settings to improve the resulting image synthesis.
+- A baseline for NeRFs trained on synthetic data captured in CARLA. 
+    - Can be used to further improve both the data capture and the NeRF-models on synthetic data.
+    - Can be used to experiment with data capture- and NeRF-settings.
+    - The metrics used to evaluate the baseline (PSNR, SSIM and LPIPS) are widely used throughout NeRF-research and makes comparable.
+- Block NeRF in Nerfstudio API
+    - Creates a naive Block NeRF implementation in the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
+    - The PoC allows testing which parameters are important when capturing large scale data for NeRFs. E.g. the segment size, overlap between the blocks, image merging techniques.
+- Side-by-side view
+    - Leverage FFMPEG to create a script for generating side-by-side views of the rendered NeRF and the ground truth.
+    - Makes qualitative assessment of the resulting NeRF easier.
+\end{comment}
 
 
 
@@ -22,24 +80,44 @@ Conclude the thesis. Could create a holistic research goal that I could use to w
 
 
 \section{Future Work}
-This section provides ideas related to NeRFs, synthetic data capture, and the extension to real-life data capture that were not covered in this report, but would be interesting to explore in future work.
+% This section provides ideas related to NeRFs, synthetic data capture, and the extension to real-life data capture that were not covered in this report, but would be interesting to explore in future work.
+This section provides ideas related to this thesis that weren't covered, but would be interesting to explore in future work. Given that the large-scale approach provided the best results across all experiments when compared to single-NeRF approaches, it's a promising approach to pursue. Following are some techniques and approaches that would provide interesting tracks for future work.
 
-\subsection{Improve pipeline for real-data capture}
-Better estimate the rotation matrix from the collected data
+Wayve's pipeline for large-scale NeRF includes the use of COLMAP for individual segments, reducing the complexity and time used to approximate camera poses. Given this thesis' findings of COLMAP's performance in contrast to Nerfstudio's camera optimization, it seems worthwhile to explore this approach and integrate it into the large-scale NeRF pipeline.
 
-\subsection{Large scale NeRF}
+When capturing real data that span large areas, it's inevitable to capture a lot of transient objects in the image data, such as moving cars and pedestrians. This data contributes to blurry renderings and artifacts because the object's position changes from frame to frame. A solution to this problem is the employment of object segmentation models and masking. By employing a segmentation model and subsequent masking of transient objects, the data becomes more consistent across frames and should produce higher-quality renderings.
+
+Although the naive Block lookup-table works well when rendering the same path the vehicle had when capturing the data, it doesn't necessarily adapt to the free roaming of the 3D scene. In order to remedy this, a visibility prediction network could be employed. This network's responsibility would be to predict if a certain point would be "visible" from a specific Block NeRF, i.e. predict if a Block NeRF's render would provide additional information to the final render. Combining this technique with image-merging techniques, such as merging multiple rendered images with inverse distance weighting, could provide a higher-quality and more coherent final render. This is because multiple Block NeRFs could contribute to rendering a point they've only partially "seen", resulting in a more complete representation of the scene. Both of these techniques are explored in Block NeRF \cite{tancik_block-nerf_2022}, as discussed in \autoref{sec:block-nerf}.
+
+The Nerfacto-model and most other state-of-the-art NeRF models leverage a space-warping algorithm designed for front-facing or object-centric trajectories. The capture of data from a vehicle isn't inherently object-centric, and changing the space-warping algorithm could potentially have a great impact on the performance. F2-NeRF \cite{...} has proposed a new space-warping method designed to handle arbitrary trajectories, called \textit{perspective warping}. Implementing F2-NeRF as the backbone model for large-scale NeRF would be an interesting track to pursue.
+
+
+
+
+
 \begin{comment}
+\subsection{Improve pipeline for real-data capture}
+- Better estimate the rotation matrix from the collected data
+- Increase precision of camera pose
+- The NAPLab car's accelerometer could be used to calculate roll and pitch.
+- LiDAR data could be used for further pose estimation
+\end{comment}
+
+\begin{comment}
+\subsection{Improve on the Large scale NeRF implementation}
+
+\begin{itemize}
+    \item ✅ Create a pipeline that enables the use of COLMAP for each segment in a more streamlined way. A successful implementation should have significant implications on the quality of the resulting render.
+    \item ✅ Mask transient objects using segmentation models.
+    \item ✅ Visibility prediction.
+    \item ✅ Change backbone model to a model like F2 which has a different space warping algorithm, and should enable better results than using Nerfacto as the backbone model.
+    \item ✅ Inverse distance weighing.
+    \item Make the implementation parallelizable, enhancing scalability.
+\end{itemize}
+
 - Create a pipeline that enables the use of COLMAP for each segment in a more streamlined way. A succesful implementation should have significant implications on the quality of the resulting render.
 - Mask transient objects using segmentation models
 - Inverse distance weighing
 - Visibility prediction
 - Change backbone model to a model like F2 which have a different space warping algorithm, and should enable better results than using Nerfacto as the backbone model.
 \end{comment}
-
-\begin{itemize}
-    \item Create a pipeline that enables the use of COLMAP for each segment in a more streamlined way. A successful implementation should have significant implications on the quality of the resulting render.
-    \item Mask transient objects using segmentation models.
-    \item Inverse distance weighing.
-    \item Visibility prediction.
-    \item Change backbone model to a model like F2 which has a different space warping algorithm, and should enable better results than using Nerfacto as the backbone model.
-\end{itemize}

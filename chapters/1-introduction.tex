@@ -32,19 +32,43 @@ RQ1, RQ2, ...
 %By leveraging NeRFs we can create a pipeline that efficiently reconstructs 3D scenes. The reconstructed scenes have many applications, and could be beneficial in applications that require simulated virtual worlds. In order to create a functional pipeline I want to use synthetic data from a controllable environment and later extend the pipeline to enable real data capture.
 
 \section{Motivation}
-\textbf{Need to rewrite this motivation, but I think it's a good starting point.}
+The field of Neural Radiance Fields (NeRF) has experienced a surge in research and development over the past years, with models becoming exponentially better and more performant. These models have demonstrated impressive, photo-realistic reconstruction and novel view synthesis of 3D scenes, given a set of posed 2D camera images. This surge in research has opened up new frontiers in many applications including the expansion of mapping and navigation capabilities (cite Google Immersive View), computer graphics and visual effects (cite Volinga), asset creation (cite Luma), and autonomous driving (cite Wayve). 
 
-The field of Neural Radiance Fields (NeRF) has experienced a surge in research and development over the past years, with models becoming exponentially better and more performant. These models have demonstrated impressive capabilities in efficiently reconstructing 3D scenes from 2D images, opening up new frontiers in many applications including autonomous driving. As an example, Wayve, a pioneer in the self-driving vehicle industry, has already integrated NeRF technology into their system (\textbf{Cite Nvidia GTC Talk}). As with most large-scale NeRF implementations with commercial applications, their tools and code remain proprietary, rendering them inaccessible for wider research purposes. This advancement underscores the potential significance of the technology and motivates further exploration of its capabilities and potential applications.
+\begin{comment}
+Looking deeper into autonomous driving, one of the many applications where NeRF could prove beneficial
+"Let's look further into one of the applications where NeRF could be beneficial, e.g. autonomous driving."
+Looking deeper into autonomous driving, an application that could benefit from these advances
+Zooming in on an application that could benefit from these advances, autonomous driving fits well.
+\end{comment}
+
+
+Looking further into the realm of autonomous driving, one area of application that could benefit from these advances stands out. Autonomous driving systems are commonly evaluated by re-simulating previously encountered scenarios; however, any deviation from the recorded encounter may change the vehicle’s trajectory, requiring high-fidelity novel view renderings along the altered path. Wayve, a pioneer in the self-driving vehicle industry, has already integrated NeRF technology into their system (\textbf{Cite Nvidia GTC Talk}) for the purpose of rendering novel views along altered paths. However, as with most commercial applications, their tools and code remain proprietary rendering them inaccessible for wider research purposes.
+
+In order to explore the use of NeRFs in applications such as autonomous driving that could benefit from the generation of high-quality renders of novel views, this thesis seeks to design and develop an end-to-end pipeline capable of capturing data from a scene, and subsequently generating a Neural Radiance Field (NeRF) representing the same scene. 
+
+The first part of the project will focus on creating a data capture pipeline for a vehicle in a controllable environment. Having created a pipeline for data capture, it will be connected to a pipeline for training, rendering, and evaluating NeRFs. The end-to-end pipeline will be used to configure the data capture and NeRF-settings in order to obtain a performance baseline. Further experiments investigating approaches to deal with noise or increasing scene-size will be conducted, before the pipeline is extended to enable input of real data.
+
+% In order to explore the application of NeRFs in autonomous driving this thesis seeks to design and develop an end-to-end pipeline capable of capturing data from a scene, and subsequently generating a Neural Radiance Field (NeRF) representing the same scene. The resulting NeRF can in turn be used to create photo-realistic renders of unseen scenarios and trajectories, expanding the dataset for training autonomous agents and potentially enhancing their capabilities.
+
+%The first part of the project will focus on creating a data capture pipeline for a vehicle in a controllable environment. Having created a pipeline for data capture, it will be connected to a pipeline for training, rendering, and evaluating NeRFs. The end-to-end pipeline will be used to configure the data capture and NeRF-settings in order to obtain a performance baseline. Further experiments investigating approaches to deal with noise or increasing scene-size will be conducted, before the pipeline is extended to enable input of real data.
+
+
+
+
+
+
+% CARLA, an open-source simulator designed for autonomous driving research will be utilized for this purpose.
+% Nerfstudio, an open-source framework/API that streamlines the creation, training, and visualization of NeRFs will be utilized for this purpose.
+
+\begin{comment}
+The field of Neural Radiance Fields (NeRF) has experienced a surge in research and development over the past years, with models becoming exponentially better and more performant. These models have demonstrated impressive capabilities in efficiently reconstructing 3D scenes from 2D images, opening up new frontiers in many applications including autonomous driving. As an example, Wayve, a pioneer in the self-driving vehicle industry, has already integrated NeRF technology into their system (\textbf{Cite Nvidia GTC Talk}). As with most large-scale NeRF implementations with commercial applications, their tools and code remain proprietary, rendering them inaccessible for wider research purposes. However, this advancement underscores the potential significance of the technology and motivates further exploration of its capabilities and potential applications.
 
 One particular area of interest is the ability to create a pipeline that captures data and reconstructs larger scenes, facilitating the application of NeRF models in large-scale environments. A functional pipeline could further enhance the performance of systems like Wayve's and lead to broader implications in other sectors requiring 3D scene reconstruction.
 
 There are multiple key steps to achieving the goal of designing and developing an end-to-end pipeline that enables the capture and reconstruction of large 3D scenes. A pragmatic approach would first create a data capture pipeline in a controllable virtual environment, which in turn is connected to a NeRF pipeline. Having constructed the pipeline it could be used to create a baseline to compare future iterations of scene capture and NeRF-settings, allowing steady improvement. With a functional pipeline, and an acquired baseline, the pipeline could be extended to enable the input of real data.
 
 Given the importance and potential of this research in the evolving landscape of 3D scene reconstruction, this thesis seeks to explore these steps and further contribute to the knowledge and application of NeRF technology.
-
-
-
-
+\end{comment}
 
 
 
@@ -55,58 +79,24 @@ Given the importance and potential of this research in the evolving landscape of
 
 
 \section{Goal and research questions}
+
+The primary research goal of this thesis is to design and develop an end-to-end pipeline for generating NeRFs, leveraging vehicle-captured video sequences and corresponding camera poses with varying degrees of accuracy. In order to achieve this goal, four research questions were posed:
+
 \begin{comment}
-1. What other experiments could have been included in defining the baseline for capturing data for NeRFs?
-2. How could the process of choosing which experiments to include in the baseline have been done differently?
-3. What factors affect the quality of the data captured by the mounted cameras in the context of training NeRFs?
-4. How does the speed of the vehicle affect the quality of the data captured by the mounted cameras in the context of training NeRFs?
-5. How effective is the camera pose optimization step in the Nerfacto-pipeline in reducing noise in the rendered images?
-6. How does the use of Gaussian noise in the experiments affect the evaluation of the impact of camera optimization in the Nerfacto-pipeline?
-7. How does the Block NeRF implementation compare to the traditional NeRF implementation in terms of efficacy and computational requirements?
-8. What improvements can be made to the Block NeRF implementation to further mitigate the differences in quality between blocks?
-9. How was the implementation of the CARLA to NerfStudio pipeline executed?
-
-
-1. "How can imperfections in the dataset affect the performance of a CARLA to Nerfstudio pipeline leveraging Neural Radiance Fields and how can these be mitigated?"
-2. "What is the impact of various factors (like vehicle speed, number of frames, image size, etc.) on the effectiveness of the CARLA to Nerfstudio pipeline leveraging Neural Radiance Fields?"
-3. "What are the improvements gained by extending the CARLA-baseline to support large-scale scenes with Block-NeRF in the context of a Neural Radiance Fields pipeline?"
-
-
-1. How can the pipeline from CARLA to Nerfstudio be further optimized to enhance the realism and accuracy of data capture in simulated environments?
-2. How does the variability in experiment settings (e.g., camera setup, vehicle speed, route, image resolution) influence the quality of data output and the subsequent NeRF modeling in the CARLA-Nerfstudio pipeline?
-3. How can we effectively measure and quantify the improvement in image synthesis resulting from tweaks to settings based on NeRF evaluation?
-4. What role does the established baseline play in advancing NeRF-models on synthetic data captured in CARLA, and how can it be utilized more efficiently?
-5. How can the data capture settings be optimized to improve the quality and consistency of synthetic data for NeRF training, leveraging the baseline established?
-6. Which metrics, in addition to PSNR, SSIM, and LPIPS, can be employed to provide a more comprehensive evaluation of the NeRF baseline?
-7. How does the integration of Block NeRF in the Nerfstudio API improve the quality of large scene NeRFs, and what are the key parameters influencing this improvement?
-8. What strategies can be used to identify and modify the essential parameters (such as segment size, block overlap, image merging techniques) when capturing large scale data for NeRFs using Block NeRF in the Nerfstudio API?
-9. How does the side-by-side view feature leveraging FFMPEG enhance the qualitative assessment of the resulting NeRF, and how can this be further improved?
-10. What potential future extensions can be envisioned for the CARLA-Nerfstudio pipeline to accommodate real data, moving beyond synthetic data environments, and what would be the challenges associated with such extensions?
-\end{comment}
-
 The research goal for this thesis is:
 \begin{description}[leftmargin=!,labelwidth=\widthof{RQ:}]
-\item[\textbf{RG:}] Create an end-to-end pipeline to generate a NeRF of a given scene based on video sequences with more or less known camera poses.
+\item[\textbf{RG:}] Design and develop an end-to-end pipeline for generating NeRFs, leveraging vehicle-captured video sequences and corresponding camera poses with varying degrees of accuracy.
 \end{description}
 
 In order to achieve this goal, four research questions were posed:
+\end{comment}
 
 \begin{description}[leftmargin=!,labelwidth=\widthof{RQ 1:}]
 % CREATING A BASELINE
 \item[\textbf{RQ 1:}] What are the critical factors that need to be considered when capturing data for training NeRF models, and how do they impact the performance of the resulting models?
 
 % CAMERA POSE OPTIMIZATION AND NOISY GPS/GNSS READINGS
-\item[\textbf{RQ 2:}] How does the accuracy of initial camera poses and segment size influence the effectiveness of camera pose optimization, and is it possible to achieve equivalent results by optimizing rough camera poses directly, as opposed to pre-processing an approximation of accurate camera poses with tools such as COLMAP?
-
-% COLMAP VS. CARLA POSES
-%\item[\textbf{RQ 3:}] What is the impact of using approximated camera poses obtained from COLMAP on the quality of 3D reconstruction compared to perfect poses extracted from CARLA?
-
-% CAMERA POSES
-% Attempt #1 to combine the two questions above, since they both tackle the issue of camera poses:
-% \item[\textbf{RQ 2/3:}] How does the accuracy of camera pose and segment size influence the effectiveness of camera pose optimization, and what is the comparative impact on the quality of 3D reconstruction when using approximated camera poses obtained from COLMAP versus perfect poses extracted from CARLA?
-
-% Attempt #2:
-% How does the accuracy of initial camera poses and segment size influence the effectiveness of camera pose optimization, and is it possible to achieve equivalent results by optimizing rough camera poses directly, as opposed to pre-processing an approximation of accurate camera poses with tools such as COLMAP?
+\item[\textbf{RQ 2:}] How does the initial camera pose accuracy and segment length impact the final reconstruction? Can rough initial camera poses be optimized to achieve comparable results to those obtained from tools such as COLMAP?
 
 
 % DIFFERENT MODELS
@@ -114,9 +104,6 @@ In order to achieve this goal, four research questions were posed:
 
 % IMPLEMENTATION OF BLOCK NERF
 \item[\textbf{RQ 4:}] What are the technical challenges and considerations for implementing a functional approach for large-scale NeRF within the Nerfstudio API, and how does it compare to approaches not optimized for large-scale in terms of scalability, efficiency, and rendering quality?
-
-% IMPLEMENTATION OF THE END-TO-END PIPELINE
-%\item[\textbf{RQ 5:}] What are the technical challenges and best practices for designing and implementing an efficient and scalable pipeline to capture synthetic data from CARLA and process it into the correct NeRF-format, while ensuring the quality of the resulting NeRF models?
 
 % EXTENDING TO REAL DATA
 
@@ -130,42 +117,13 @@ In order to achieve this goal, four research questions were posed:
 The chosen research method for this report is experimental research. The experiments in this report will compare different methods, techniques, and configurations used to capture and process data, and subsequently used to train NeRFs. Observation will be used for the quantitative and qualitative evaluation of the results. The quantitative evaluation will span common image reconstruction quality metrics like PSNR and SSIM, whereas the qualitative assessment primarily will consist of analysing video rendering outputs looking for abnormalities or other interesting findings.
 
 
-\begin{comment}
-The research method for this study primarily involves experimental design. We will conduct a series of experiments to compare the effectiveness of different data capturing and processing techniques, as well as various configurations for training NeRF models. Our experimental procedure consists of two major components: a quantitative evaluation and a qualitative analysis.
-
-In the quantitative evaluation, we will use recognized image reconstruction quality metrics such as the Peak Signal-to-Noise Ratio (PSNR) and the Structural Similarity Index Measure (SSIM) to assess the performance of the models.
-
-For the qualitative assessment, we will conduct an in-depth analysis of the video rendering outputs generated by the models. We aim to identify any abnormalities or particularly noteworthy findings through this detailed visual inspection. The results of both quantitative and qualitative evaluations will be used to draw conclusions about the efficiency, scalability, and rendering quality of different models and configurations.
-\end{comment}
-
-
-
-
-
 
 
 
 
 
 \section{Contribution}
-
 \textbf{Just notes for now}
-\begin{comment}
-- Pipeline from CARLA to Nerfstudio
-    - Enables experimenting with data capture techniques that can later be applied to real world scenarios.
-    - Enables running multiple experiments with different experiment settings, e.g. camera setup, vehicle speed, route, image resolution, etc., in a streamlined way.
-    - The data output from the experiment-pipeline in CARLA is in a format supported by most NeRFs. Enables training NeRFs on the synthetic data captured in CARLA, and, based on the evaluation of the NeRF, tweak settings to improve the resulting image synthesis.
-- A baseline for NeRFs trained on synthetic data captured in CARLA. 
-    - Can be used to further improve both the data capture and the NeRF-models on synthetic data.
-    - Can be used to experiment with data capture- and NeRF-settings.
-    - The metrics used to evaluate the baseline (PSNR, SSIM and LPIPS) are widely used throughout NeRF-research and makes comparable.
-- Block NeRF in Nerfstudio API
-    - Creates a naive Block NeRF implementation in the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
-    - The PoC allows testing which parameters are important when capturing large scale data for NeRFs. E.g. the segment size, overlap between the blocks, image merging techniques.
-- Side-by-side view
-    - Leverage FFMPEG to create a script for generating side-by-side views of the rendered NeRF and the ground truth.
-    - Makes qualitative assessment of the resulting NeRF easier.
-\end{comment}
 
 \begin{itemize}
     \item Pipeline from CARLA to Nerfstudio
@@ -195,11 +153,6 @@ For the qualitative assessment, we will conduct an in-depth analysis of the vide
 
 
 
-
-
-
-
-
 \section{Report Outline}
 
 \begin{description}[leftmargin=!,labelwidth=\widthof{Chapter 1:}]
@@ -210,7 +163,7 @@ Presents the motivation, goal, research method, contributions, and research ques
 Provides an overview of preliminary methods, techniques, tools, frameworks, and metrics in order to establish a common ground for successive chapters.
 
 \item[\textbf{Chapter 3 - Method:}]
-Provides details about the multi-stage process necessary for the end-to-end pipeline designed and developed throughout this report. Sections span in-depth discussion and overview of the virtual environment, the data capture pipeline, the NeRF pipeline, the extension to large-scale scenes, and lastly the extension from synthetic to real data.
+Provides details about the multi-stage process necessary for the designed and developed end-to-end pipeline. Sections span in-depth discussion and overview of the virtual environment, the data capture pipeline, the NeRF pipeline, the extension to large-scale scenes, and lastly the extension from synthetic to real data.
 
 \item[\textbf{Chapter 4 - Experiments and Results:}]
 Presents the conducted experiments and subsequent results.
@@ -223,3 +176,75 @@ Summarizes the main findings of the study and further suggests a direction for f
 \end{description}
 
 
+
+
+% Comments
+
+% Research questions
+\begin{comment}
+1. What other experiments could have been included in defining the baseline for capturing data for NeRFs?
+2. How could the process of choosing which experiments to include in the baseline have been done differently?
+3. What factors affect the quality of the data captured by the mounted cameras in the context of training NeRFs?
+4. How does the speed of the vehicle affect the quality of the data captured by the mounted cameras in the context of training NeRFs?
+5. How effective is the camera pose optimization step in the Nerfacto-pipeline in reducing noise in the rendered images?
+6. How does the use of Gaussian noise in the experiments affect the evaluation of the impact of camera optimization in the Nerfacto-pipeline?
+7. How does the Block NeRF implementation compare to the traditional NeRF implementation in terms of efficacy and computational requirements?
+8. What improvements can be made to the Block NeRF implementation to further mitigate the differences in quality between blocks?
+9. How was the implementation of the CARLA to NerfStudio pipeline executed?
+
+
+1. "How can imperfections in the dataset affect the performance of a CARLA to Nerfstudio pipeline leveraging Neural Radiance Fields and how can these be mitigated?"
+2. "What is the impact of various factors (like vehicle speed, number of frames, image size, etc.) on the effectiveness of the CARLA to Nerfstudio pipeline leveraging Neural Radiance Fields?"
+3. "What are the improvements gained by extending the CARLA-baseline to support large-scale scenes with Block-NeRF in the context of a Neural Radiance Fields pipeline?"
+
+
+1. How can the pipeline from CARLA to Nerfstudio be further optimized to enhance the realism and accuracy of data capture in simulated environments?
+2. How does the variability in experiment settings (e.g., camera setup, vehicle speed, route, image resolution) influence the quality of data output and the subsequent NeRF modeling in the CARLA-Nerfstudio pipeline?
+3. How can we effectively measure and quantify the improvement in image synthesis resulting from tweaks to settings based on NeRF evaluation?
+4. What role does the established baseline play in advancing NeRF-models on synthetic data captured in CARLA, and how can it be utilized more efficiently?
+5. How can the data capture settings be optimized to improve the quality and consistency of synthetic data for NeRF training, leveraging the baseline established?
+6. Which metrics, in addition to PSNR, SSIM, and LPIPS, can be employed to provide a more comprehensive evaluation of the NeRF baseline?
+7. How does the integration of Block NeRF in the Nerfstudio API improve the quality of large scene NeRFs, and what are the key parameters influencing this improvement?
+8. What strategies can be used to identify and modify the essential parameters (such as segment size, block overlap, image merging techniques) when capturing large scale data for NeRFs using Block NeRF in the Nerfstudio API?
+9. How does the side-by-side view feature leveraging FFMPEG enhance the qualitative assessment of the resulting NeRF, and how can this be further improved?
+10. What potential future extensions can be envisioned for the CARLA-Nerfstudio pipeline to accommodate real data, moving beyond synthetic data environments, and what would be the challenges associated with such extensions?
+\end{comment}
+
+\begin{comment}
+Gammelt forslag:
+How does the accuracy of initial camera poses and segment size influence the effectiveness of camera pose optimization, and is it possible to achieve equivalent results by optimizing rough camera poses directly, as opposed to pre-processing an approximation of accurate camera poses with tools such as COLMAP?
+
+Gabriel:
+What is the influence of the initial camera pose and segment length on the final reconstruction? Does it help to have a rough estimate of the camera pose instead of using tools such as COLMAP on image sequences without camera position information?
+
+ChatGPT:
+How does the precision of initial camera poses and the length of image sequences impact the outcome of camera pose optimization? Is it viable to optimize rough camera pose estimations directly and still achieve results comparable to those obtained when applying tools like COLMAP for preprocessing and estimating accurate camera poses?
+\end{comment}
+
+% Research method
+\begin{comment}
+The research method for this study primarily involves experimental design. We will conduct a series of experiments to compare the effectiveness of different data capturing and processing techniques, as well as various configurations for training NeRF models. Our experimental procedure consists of two major components: a quantitative evaluation and a qualitative analysis.
+
+In the quantitative evaluation, we will use recognized image reconstruction quality metrics such as the Peak Signal-to-Noise Ratio (PSNR) and the Structural Similarity Index Measure (SSIM) to assess the performance of the models.
+
+For the qualitative assessment, we will conduct an in-depth analysis of the video rendering outputs generated by the models. We aim to identify any abnormalities or particularly noteworthy findings through this detailed visual inspection. The results of both quantitative and qualitative evaluations will be used to draw conclusions about the efficiency, scalability, and rendering quality of different models and configurations.
+\end{comment}
+
+
+% Contributions
+\begin{comment}
+- Pipeline from CARLA to Nerfstudio
+    - Enables experimenting with data capture techniques that can later be applied to real world scenarios.
+    - Enables running multiple experiments with different experiment settings, e.g. camera setup, vehicle speed, route, image resolution, etc., in a streamlined way.
+    - The data output from the experiment-pipeline in CARLA is in a format supported by most NeRFs. Enables training NeRFs on the synthetic data captured in CARLA, and, based on the evaluation of the NeRF, tweak settings to improve the resulting image synthesis.
+- A baseline for NeRFs trained on synthetic data captured in CARLA. 
+    - Can be used to further improve both the data capture and the NeRF-models on synthetic data.
+    - Can be used to experiment with data capture- and NeRF-settings.
+    - The metrics used to evaluate the baseline (PSNR, SSIM and LPIPS) are widely used throughout NeRF-research and makes comparable.
+- Block NeRF in Nerfstudio API
+    - Creates a naive Block NeRF implementation in the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
+    - The PoC allows testing which parameters are important when capturing large scale data for NeRFs. E.g. the segment size, overlap between the blocks, image merging techniques.
+- Side-by-side view
+    - Leverage FFMPEG to create a script for generating side-by-side views of the rendered NeRF and the ground truth.
+    - Makes qualitative assessment of the resulting NeRF easier.
+\end{comment}

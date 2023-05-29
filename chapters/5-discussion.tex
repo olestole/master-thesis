@@ -222,9 +222,9 @@ From the quantitative results, it appears COLMAP optimizes the camera poses simi
 \begin{description}[leftmargin=!,labelwidth=\widthof{RQ 1:}]
 \item[\textbf{RQ 3:}] How do different NeRF methods (NeRF, mip-NeRF, instant-ngp, Nerfacto) perform on unbounded scenes in terms of reconstruction quality and computational efficiency?
 \end{description}
-
-
 TODO
+
+
 
 
 
@@ -233,7 +233,11 @@ TODO
 \item[\textbf{RQ 4:}] What are the technical challenges and considerations for implementing a functional approach for large-scale NeRF within the Nerfstudio API, and how does it compare to approaches not optimized for large-scale in terms of scalability, efficiency, and rendering quality?
 \end{description}
 
-Although the initial Block NeRF implementation is naive, both the quantitative and qualitative results provided demonstrate its efficacy. The renders of the shorter segments are much sharper and provide an overall better result. Although the results are very good, it's worth noting that the implementation requires substantially more computing. 
+Implementing a functional approach for large-scale NeRF within the Nerfstudio API has been technically challenging, as elaborated upon in \autoref{sec:method-block-nerf}. However, the initial naive Block NeRF approach has displayed encouraging performance in both quantitative and qualitative aspects. The experimental results confirm that compared to training single NeRFs on large scenes, the Block NeRF approach yields superior outcomes. The image synthesis produced by the Block NeRF approach exhibits sharper details and an overall enhancement in the visual quality.
+
+While the naive implementation of Block NeRF doesn't inherently exhibit optimal scalability, it holds significant potential for improvement. In its current state, each Block NeRF is trained sequentially, creating a bottleneck that limits scalability. However, the architecture provides an opportunity for horizontal scaling, which could be achieved by parallelizing the unique training processes across multiple GPUs. This adjustment would drastically improve efficiency and reduce training time, thereby enhancing scalability.
+
+Nevertheless, it's important to acknowledge that this process is computationally intensive, and care should be taken to find a balance between the quality of the results and the efficiency of the process. Future work could focus on optimizing this balance to make large-scale NeRF more viable and efficient, while maintaining the high-quality image synthesis that the Block NeRF approach has demonstrated thus far.
 
 
 
@@ -242,51 +246,44 @@ Although the initial Block NeRF implementation is naive, both the quantitative a
 \subsection{Improving Block NeRF}
 %The overlap between the blocks become substantially less visible with higher overlap values, $\delta$. When we increase $\delta$, we increase the dataset of each block leading to the capacity issue previously explored. In a production setting, it'll be important to tune all these parameters to effectively maximize quality across all blocks.
 
-Although we solve the issue related to overlap, we see from \autoref{fig:block-nerf-frame-comparison} that the last frame in a block provides noticeably lower quality renders than the first frame in the next block. This is to be expected if the second block's data has been captured near the respective motive seen from both blocks. This difference could probably be further mitigated by experimenting with image-merging techniques, e.g. by rendering the view from both blocks and merging them with inverse distance weighing.
+While our approach of incorporating overlap between the Block NeRF's data resolves the problem of visible artifacts during the transition between Blocks, it is evident from \autoref{fig:block-nerf-frame-comparison} that the final frame of a block produces renders of lower quality compared to the initial frame of the subsequent block. This is to be expected if the second block's data has been captured near the respective motive seen from both blocks. This difference could probably be further mitigated by experimenting with image-merging techniques, e.g. by rendering the view from both blocks and merging them with inverse distance weighing.
 
 %Further improvements that could be done:
 %- The details of the scenery in the second frame is clearly better than the first, which is expected as block number 2 has been trained on close-up images of the scene. This difference could be mitigated by looking into image-merging techniques such as inverse distance weighing.
 
 
 
+\section{Real data}
+The naive Block NeRF approach emerges as the clear frontrunner in our experiments on real data, producing both the best quantitative and qualitative results. This finding aligns with expectations considering the substantial scale of the scene being learned, which likely surpasses the capacity of a single NeRF. Among all conducted experiments, the Block NeRF run with camera poses approximated by COLMAP notably outperforms in terms of PSNR, reinforcing COLMAP's superiority over GPS-based pose estimation.
 
+In the subset of experiments excluding the naive Block NeRF approach, the results display noteworthy distinctions between different methodologies. The experiment wherein camera poses were approximated using COLMAP and subsequently optimized rendered the highest Peak Signal-to-Noise Ratio (PSNR). However, interestingly, the experiment utilizing COLMAP without any subsequent optimization yielded the best results in terms of the Structural Similarity Index Measure (SSIM) and the Learned Perceptual Image Patch Similarity (LPIPS). Despite these metrics being extremely close to the COLMAP run with optimization, their distinction in results is worth noting.
 
-\section{Implementation of CARLA to Nerfstudio pipeline}
-Discuss the implementation.
+Delving deeper into qualitative outcomes, the experiment leveraging optimized camera poses generated results with a distinctly higher degree of blurriness compared to its counterpart that did not utilize optimized poses. This observation highlights the impact of pose optimization on image clarity and indicates that while certain metrics might be optimized, subjective visual quality and the overall objective might vary significantly. These results underline the complex interplay between technical metrics and perceptual outcomes in the realm of NeRF generation.
 
-
-
-
-
-
-
-
-
-
-
-\section{Generation of imperfect datasets}
-\textbf{Unsure where to put this section}
-
-One important application of NeRFs is their ability to synthesize images from previously unseen viewpoints, not present in the original dataset. This capability could prove particularly useful in applications where you need to expand a dataset, e.g. in a machine learning setting, much like you would employ data augmentation.
-
-Given this thesis' focus on data captured by a driving vehicle, an apparent application is the generation of previously unseen vehicle trajectories. By capturing images from multiple viewpoints along a particular vehicle trajectory and subsequently training a NeRF on this data, the NeRF would enable the synthesis of new images depicting a previously unseen vehicle trajectory. This can be useful for a variety of applications, such as training autonomous driving systems. In \autoref{fig:nerfstudio-trajectory} you can see an example of how data from such an unseen trajectory can be generated by creating a camera path.
-
-\input{figures/nerfstudio-trajectory}
+\begin{comment}
+% Discuss the implementation of rotation matrix
+- The estimation could be further improved by investigating techniques for leveraging more of the contained data.
+- The NAPLab car's accelerometer could be used to calculate roll and pitch.
+- LiDAR data could be used for further pose estimation
+\end{comment}
 
 
 
 
 
+\section{Novel views along altered trajectory}
+\textbf{Her skal jeg utvide med eksempler fra ekte data når jeg får det på tirsdag.}
+One of the benefits of using NeRFs in autonomous vehicle training is the ability to generate data along altered trajectories. While this can be achieved with a simulator, as discussed in \autoref{sec:wayve}, the application of NeRF becomes particularly useful when a high-quality NeRF has been trained on real data. In this case, the NeRF can be used to expand the training dataset for the autonomous vehicle by creating an arbitrary number of altered camera paths and synthesizing photo-realistic novel views of altered trajectories. This can help improve the robustness and generalizability of the autonomous agent by exposing it to a wider range of scenarios and viewpoints.
 
-
-
-
-
+From the renderings depicted in \autoref{fig:unseen-trajectories-v2}, we see the potential in this area. Although these renderings are from the synthetic data, high-quality data-capture and a suitable NeRF-pipeline is the only requirements for achieving equivalent renderings from real data.
 
 
 
 
 \section{Shortcomings}
-\textbf{Just notes for now}
-\subsection{Test the transferability from synthetic to real data}
-There wasn't enough time to thoroughly test if the findings from the synthetic data would transfer to real data and contribute to better-performing NeRFs.
+
+Several areas of potential improvement can be recognized within this study. Firstly, while our research has illuminated key aspects of data capture, the time constraints of the project did not allow us to validate these findings through real-world testing. Synthetic data sets were leveraged extensively and provided evidence that the combined configurations for the baseline were promising. However, the validity of these results has yet to be confirmed on real data.
+
+Secondly, there exist limitations in the capture of real data, specifically in the estimation of transformation matrices. The camera poses' translational components are derived from raw GNSS-readings, and the rotational components are estimated through trigonometric comparisons of adjacent GNSS-readings. Such a method is inherently susceptible to errors and inaccuracies. To improve the accuracy and reliability of data capture, a better approach could be to utilize both of the vehicle's GNSS sensors and integrate the vehicle's accelerometer data to achieve precise roll and pitch estimations.
+
+These identified limitations present potential avenues for further research and improvement, offering opportunities to refine and enhance the existing methodology and outcomes of the study.

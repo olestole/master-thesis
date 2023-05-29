@@ -1,7 +1,7 @@
 \chapter{Method}
 %The method chapter of this paper describes the process from creating a data capture pipeline, extending it to a full end-to-end capture-to-render pipeline with Nerfstudio, using the pipeline to create a data capture baseline, using the baseline to run further experiments, extending the baseline to support large scale scenes, and finally extending it to support real data.
 
-This chapter is split into multiple parts, all essential for the end-to-end pipeline, depicted in \autoref{fig:end-to-end-pipeline}, to allow the capture of synthetic data with CARLA and subsequent training, evaluation, and render of a NeRF with Nerfstudio. The separate components are thoroughly explained.
+This chapter is split into multiple parts, all essential for the end-to-end pipeline, depicted in \autoref{fig:end-to-end-pipeline}, to allow the capture of data and subsequent training, evaluation, and render of a NeRF with Nerfstudio. The separate components are thoroughly explained.
 
 % TODO: Write that we're going to use Nerfstudio here?
 
@@ -63,7 +63,7 @@ In order to define the environment in which the spawned ego vehicle will operate
 In order to evaluate numerous environment and vehicle setups, along with their corresponding outcomes, an \texttt{ExperimentConfig}-class was created. This class enables the definition of the following configurations:
 
 \begin{itemize}
-    \item \textbf{Camera rig:} Mounts a list of RGB-cameras with configurable camera settings, location, and rotation to the ego vehicle. We're optionally able to parse a "rig"-file, a special type of JSON file exported from the NAPLab car, into a camera rig for the ego vehicle.
+    \item \textbf{Camera rig:} Mounts a list of RGB-cameras with configurable camera settings, location, and rotation to the ego vehicle. We're optionally able to parse a "rig"-file, a special type of JSON file exported from the NAPLab car discussed in \autoref{sec:extending-real-data}, into a camera rig for the ego vehicle. 
     \item \textbf{Data capture frequency}: Sets the frequency of data capture, i.e. images and camera poses.
     \item \textbf{Stop-criteria:} Specifies the ego vehicle's stop condition either by a stop distance or a number of completed turns.
     \item \textbf{Camera noise:} Enables the simulation of noisy GPS/GNSS sensor readings by adding Gaussian noise to the location output from the mounted cameras.
@@ -162,8 +162,28 @@ c_y &= \frac{h}{2}
 
 Once calculated, the intrinsic values are added to the \texttt{transforms.json}-file.
 
-CARLA is built with Unreal Engine and subsequently uses its coordinate convention, with some noticeable differences which we'll get back into later. The Unreal Engine coordinate convention, illustrated in \autoref{fig:carla-coordinates-system}, is a left-handed system with the up vector being +Z. Nerfstudio uses the OpenGL/Blender coordinate convention for cameras, which is a right-handed system, and its world space is oriented such that the up vector is +Z. The disparity in coordinate conventions between CARLA and Nerfstudio would make the NeRF-renderings non-interpretable, if we trained a NeRF directly on the transformation matrices exported from CARLA. In order to convert the transformation matrices that contain both rotation and translation we apply \texttt{CarlaDataParser}'s \texttt{carla\_to\_nerf}-transformation as described in \textbf{INSERT FIGURE/EQUATION HERE}, before appending the frame to the \texttt{transform.json}-file. The \texttt{carla\_to\_nerf} function takes a \texttt{carla.Transform} object as input and returns a 4x4 matrix in OpenGL/Blender-format. The function first extracts the location and rotation components of the input transform. The location component is then converted from the Unreal Engine coordinate system to the OpenGL/Blender coordinate system used by Nerfstudio. This conversion involves swapping the X and Y coordinates of the location and negating the Z coordinate. The rotation component is also converted to the OpenGL/Blender coordinate system by swapping the pitch and roll angles and adding 90 degrees to each angle. Finally, the transformed location and rotation components are combined into a new \texttt{carla.Transform} object, which is used to generate the 4x4 matrix that is returned by the function. An example of the transformed CARLA-matrix can be seen in \autoref{code:frame-example}.
+CARLA is built with Unreal Engine and subsequently uses its coordinate convention. The Unreal Engine coordinate convention, illustrated in \autoref{fig:carla-coordinates-system}, is a left-handed system where +X is forward, +Y is right, and +Z is up. Nerfstudio uses the OpenGL/Blender coordinate convention for cameras, which is a right-handed system, and its world space is oriented such that +X is right, +Y is forward, and +Z is up. The disparity in coordinate conventions between CARLA and Nerfstudio would make the NeRF-renderings non-interpretable, if we trained a NeRF directly on the transformation matrices exported from CARLA. In order to convert the transformation matrices that contain both rotation and translation we apply \texttt{CarlaDataParser}'s \texttt{carla\_to\_nerf}-transformation. The transformation from CARLA's left-handed coordinate system to NerfStudio's right-handed coordinate system can be represented as a matrix multiplication.
 
+Let $M_{carla}$ be the transformation matrix in CARLA convention, and $M_{nerf}$ be the transformation matrix in Nerfstudio convention. The transformation can be expressed as:
+
+$$M_{nerf} = R_{z}(90) \cdot R_{x}(-90) \cdot T \cdot M_{carla} $$
+
+where $T$ is a translation matrix to swap the y and z coordinates, and $R_{x}$, $R_{z}$ are rotation matrices around the x and z axes, respectively. The order of multiplication is from right to left.
+
+% ------
+\begin{comment}
+    
+as described in \textbf{INSERT FIGURE/EQUATION HERE}, before appending the frame to the \texttt{transform.json}-file. The \texttt{carla\_to\_nerf} function takes a \texttt{carla.Transform} object as input and returns a 4x4 matrix in OpenGL/Blender-format. The function first extracts the location and rotation components of the input transform. The location component is then converted from the Unreal Engine coordinate system to the OpenGL/Blender coordinate system used by Nerfstudio. This conversion involves swapping the X and Y coordinates of the location and negating the Z coordinate. The rotation component is also converted to the OpenGL/Blender coordinate system by swapping the pitch and roll angles and adding 90 degrees to each angle. Finally, the transformed location and rotation components are combined into a new \texttt{carla.Transform} object, which is used to generate the 4x4 matrix that is returned by the function. An example of the transformed CARLA-matrix can be seen in \autoref{code:frame-example}.
+
+% ------------- TRY TO EXPLAIN WITH MATRIX
+The transformation from Carla to Nerfstudio coordinate convention can be represented as a matrix multiplication. Let $M_{carla}$ be the transformation matrix in Carla convention, and $M_{nerf}$ be the transformation matrix in Nerfstudio convention. The transformation can be expressed as:
+
+$$M_{nerf} = T \cdot R_{x}(-90) \cdot R_{y}(-90) \cdot R_{z}(-90) \cdot M_{carla} \cdot R_{z}(90) \cdot R_{y}(90) \cdot R_{x}(90)$$
+
+where $T$ is a translation matrix to swap the y and z coordinates, and $R_{x}$, $R_{y}$, and $R_{z}$ are rotation matrices around the x, y, and z axes, respectively. The order of multiplication is from right to left.
+
+\end{comment}
+% ----------------------------------------
 \input{figures/carla-coordinates-system}
 \input{code/frame-example}
 
@@ -626,7 +646,7 @@ One of the main challenges in implementing Block-NeRF is obtaining the camera po
 
 
 
-\section{Extending the pipeline to enable input of real data}
+\section{Extending the pipeline to enable input of real data} \label{sec:extending-real-data}
 
 \begin{comment}
 Premise: Have a working pipeline to collect, train and render novel views from CARLA

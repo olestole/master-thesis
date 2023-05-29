@@ -364,3 +364,6 @@
 \newcommand{\ulcolor}[2][Red]{\setulcolor{#1}\ul{#2}}
 
 \RequirePackage{float} % Enables [H] for strict placement
+
+
+\RequirePackage[parfill]{parskip}         % New-line instead of indentation between paragraphs
