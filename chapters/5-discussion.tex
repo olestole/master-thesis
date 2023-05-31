@@ -1,5 +1,5 @@
 \chapter{Discussion}
-This chapter discusses and analyzes the results of our experiments, highlighting their significance in the context of the research questions. We also reflect on any limitations of the thesis and attempt to address the research questions based on the findings.
+This chapter discusses and analyzes the results of the experiments, highlighting their significance in the context of the research questions. We also reflect on any limitations of the thesis and attempt to address the research questions based on the findings.
 
 \section{Defining a baseline}
 
@@ -11,7 +11,7 @@ Points to discuss:
 - Although one experiment seem to do better with the current chosen setup, it might've done worse in another setup.
 \end{comment}
 
-In order to define a baseline for capturing data for training NeRFs, I chose five experiments to test: camera setup, capacity, number of frames, image size, and vehicle speed. These experiments were chosen based on heuristics and knowledge of what contributes to good NeRF results, such as well-lit scenes and non-blurry images. While the chosen experiments consider important factors for capturing data for NeRFs, there may have been other experiments that could have been included in defining the baseline. It's also important to weigh the fact that the best-performing settings in one experiment may not generalize to other setups. Overall, the process of defining a baseline is an iterative one that requires careful consideration of various factors and a willingness to continuously improve and refine the baseline.
+In order to define a baseline for capturing data for training NeRFs, five experiments were selected and conducted: camera setup, capacity, number of frames, image size, and vehicle speed. These experiments were chosen based on heuristics and knowledge of what contributes to good NeRF results, such as well-lit scenes and non-blurry images. While the chosen experiments consider important factors for capturing data for NeRFs, there may have been other experiments that could have been included in defining the baseline. It's also important to weigh the fact that the best-performing settings in one experiment may not generalize to other setups. Overall, the process of defining a baseline is an iterative one that requires careful consideration of various factors and a willingness to continuously improve and refine the baseline.
 
 \subsection{Camera setup}
 
@@ -45,7 +45,7 @@ the model to train on the partial scene with two times the amount of data, and s
 
 
 
-\subsection{Capacity}
+\subsection{Capacity} 
 % Summarize the important discussion added in the experiment
 As stated in the experiment's section, the longest segment was selected for the baseline despite achieving the lowest scores across the metrics. This was done to ensure that the scene encompasses a diverse range of environments, including straight roads, curves, intersections, and varying lighting conditions.
 
@@ -76,7 +76,7 @@ In the qualitative analysis of the capacity results, it's evident that the quali
 %- The default dataset size in Nerfstudio is 300 images
 %- Show a mathematical proof of why more images would make sense
 
-To comprehend the outcomes of this experiment, it would be beneficial to look into how the number of frames and the image size impact the training process. We train for 15'000 iterations where each iteration uses 4096 pixels. This results in $\sim61$ million pixels being viewed throughout a single training. With 225 images and an image resolution of $600 \times 450$, we have $\sim61$ million pixels. That means that by the end of the training, approximately all of the input pixels were trained on. A dataset containing more than 225 images and corresponding camera poses would leave abundant pixels, and any fewer would lead to pixels being trained on multiple times. This calculation would entail that the results should be relatively similar for all experiments with 1231, 615, 411, 307, and 247 images respectively. But, there is a significant drop in PSNR from experiments 1 to 4. The drop in PSNR leads me to believe another important factor is the variety in the dataset.
+To comprehend the outcomes of this experiment, it would be beneficial to look into how the number of frames and the image size impact the training process. We train for 15'000 iterations where each iteration uses 4096 pixels. This results in $\sim61$ million pixels being viewed throughout a single training. With 225 images and an image resolution of $600 \times 450$, we have $\sim61$ million pixels. That means that by the end of the training, approximately all of the input pixels were trained on. A dataset containing more than 225 images and corresponding camera poses would leave abundant pixels, and any fewer would lead to pixels being trained on multiple times. This calculation would entail that the results should be relatively similar for all experiments with 1231, 615, 411, 307, and 247 images respectively. But, there is a significant drop in PSNR from experiments 1 to 4. The drop in PSNR indicates that another important factor is the variety in the dataset.
 
 
 % TODO: I should discuss other options as to why the number of frames affect the metrics in the way it does.

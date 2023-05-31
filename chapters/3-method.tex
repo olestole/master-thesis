@@ -138,7 +138,9 @@ Question: How do I get it from CARLA to Nerfstudio in a usable format?
 \end{itemize}
 \end{comment}
 
-We now have a pipeline that enables the creation of a controllable environment for a vehicle with an arbitrary setup of sensors, and subsequent capture of data. How do we export the captured sensor data in a format that's readable by Nerfstudio?
+Having obtained a pipeline that enables the creation of a controllable environment for a vehicle with an arbitrary setup of sensors, and subsequent data-capture, the captured data have to be exported in a format readable by Nefstudio. This section will elaborate on the creation of \texttt{CarlaDataParser} and the conversion from CARLA to Nerfstudio
+
+% We now have a pipeline that enables the creation of a controllable environment for a vehicle with an arbitrary setup of sensors, and subsequent capture of data. How do we export the captured sensor data in a format that's readable by Nerfstudio?
 
 In order to train a NeRF we need images and corresponding camera poses. As discussed in \autoref{sec:nerf}, the camera poses are $4x4$ homogeneous transformation matrices, containing both the translation and rotation in reference to a coordinate system. Nerfstudio, as discussed in \autoref{sec:nerfstudio}, expects the data in a file structure as shown in \autoref{fig:nerfstudio-file-structure}. In order to handle the data parsing from CARLA to Nerfstudio we create a helper-class \texttt{CarlaDataParser} which has methods for saving images as PNG files, calculating the camera's intrinsic parameters, transforming the extrinsic parameters, and appending parsed frames to a \texttt{transforms.json}-file. The \texttt{transforms.json}-file contains the camera's intrinsics and a list of frames where each frame holds an image path and the respective image's camera pose. An example \texttt{transforms.json}-file can be seen in \autoref{code:transform-examples}.
 
@@ -175,165 +177,8 @@ where $T$ is a translation matrix to swap the y and z coordinates, and $R_{x}$, 
     
 as described in \textbf{INSERT FIGURE/EQUATION HERE}, before appending the frame to the \texttt{transform.json}-file. The \texttt{carla\_to\_nerf} function takes a \texttt{carla.Transform} object as input and returns a 4x4 matrix in OpenGL/Blender-format. The function first extracts the location and rotation components of the input transform. The location component is then converted from the Unreal Engine coordinate system to the OpenGL/Blender coordinate system used by Nerfstudio. This conversion involves swapping the X and Y coordinates of the location and negating the Z coordinate. The rotation component is also converted to the OpenGL/Blender coordinate system by swapping the pitch and roll angles and adding 90 degrees to each angle. Finally, the transformed location and rotation components are combined into a new \texttt{carla.Transform} object, which is used to generate the 4x4 matrix that is returned by the function. An example of the transformed CARLA-matrix can be seen in \autoref{code:frame-example}.
 
-% ------------- TRY TO EXPLAIN WITH MATRIX
-The transformation from Carla to Nerfstudio coordinate convention can be represented as a matrix multiplication. Let $M_{carla}$ be the transformation matrix in Carla convention, and $M_{nerf}$ be the transformation matrix in Nerfstudio convention. The transformation can be expressed as:
-
-$$M_{nerf} = T \cdot R_{x}(-90) \cdot R_{y}(-90) \cdot R_{z}(-90) \cdot M_{carla} \cdot R_{z}(90) \cdot R_{y}(90) \cdot R_{x}(90)$$
-
-where $T$ is a translation matrix to swap the y and z coordinates, and $R_{x}$, $R_{y}$, and $R_{z}$ are rotation matrices around the x, y, and z axes, respectively. The order of multiplication is from right to left.
-
 \end{comment}
 % ----------------------------------------
-\input{figures/carla-coordinates-system}
-\input{code/frame-example}
-
-\begin{comment}
-% TODO: In order to use these matrices I need to make sure they're correct
-
-$$
-\begin{bmatrix}
-x_{blender} \\ y_{blender} \\ z_{blender} \\ 1
-\end{bmatrix}
-=
-\begin{bmatrix}
-0 & -1 & 0 & 0 \\
-1 & 0 & 0 & 0 \\
-0 & 0 & -1 & 0 \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-\begin{bmatrix}
-x_{unreal} \\ y_{unreal} \\ z_{unreal} \\ 1
-\end{bmatrix}
-$$
-
-
-
-
-where $(x_{blender}, y_{blender}, z_{blender})$ are the coordinates of the camera location in the Blender coordinate system, $(x_{unreal}, y_{unreal}, z_{unreal})$ are the coordinates of the camera location in the Unreal Engine coordinate system, $(\phi_{blender}, \theta_{blender}, \psi_{blender})$ are the Euler angles of the camera rotation in the Blender coordinate system, and $(\phi_{unreal}, \theta_{unreal}, \psi_{unreal})$ are the Euler angles of the camera rotation in the Unreal Engine coordinate system.
-
-
-
-
-Sure! Here's the transformation from a `carla.Transform` to a 4x4 matrix in LaTeX matrix form:
-
-Let $\mathbf{p}_{\text{CARLA}} = (x_{\text{CARLA}}, y_{\text{CARLA}}, z_{\text{CARLA}})$ be the location vector in CARLA coordinates, and let $\mathbf{R}_{\text{CARLA}}$ be the rotation quaternion in CARLA coordinates. We can convert $\mathbf{p}_{\text{CARLA}}$ and $\mathbf{R}_{\text{CARLA}}$ to a 4x4 transformation matrix $\mathbf{T}_{\text{NerfStudio}}$ as follows:
-
-1. Translate $\mathbf{p}_{\text{CARLA}}$ by $(0, 0, z_{\text{CARLA}})$ to align the Z-axes of the two coordinate systems. This can be represented by the following translation matrix:
-
-$$
-\mathbf{T}_1 =
-\begin{bmatrix}
-1 & 0 & 0 & 0 \\
-0 & 1 & 0 & 0 \\
-0 & 0 & 1 & z_{\text{CARLA}} \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-$$
-
-2. Rotate $\mathbf{R}_{\text{CARLA}}$ by $90^\circ$ around the X-axis to convert from a Z-up left-handed system to a Y-up right-handed system, and swap the pitch and roll components to account for the different order of declaration in the Unreal Engine and Blender coordinate systems. This can be represented by the following rotation matrix:
-
-$$
-\mathbf{T}_2 =
-\begin{bmatrix}
-1 & 0 & 0 & 0 \\
-0 & 0 & 1 & 0 \\
-0 & -1 & 0 & 0 \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-\begin{bmatrix}
-1 & 0 & 0 & 0 \\
-0 & 0 & 1 & 0 \\
-0 & -1 & 0 & 0 \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-=
-\begin{bmatrix}
-1 & 0 & 0 & 0 \\
-0 & 0 & -1 & 0 \\
-0 & 1 & 0 & 0 \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-$$
-
-3. Swap the Y and Z coordinates of $\mathbf{p}_{\text{CARLA}}$ to account for the different orientation of the Y and Z axes in the two coordinate systems. This can be represented by the following matrix:
-
-$$
-\mathbf{T}_3 =
-\begin{bmatrix}
-1 & 0 & 0 & 0 \\
-0 & 0 & 1 & 0 \\
-0 & 1 & 0 & 0 \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-$$
-
-4. Rotate $\mathbf{R}_{\text{CARLA}}$ by $-90^\circ$ around the Z-axis to convert from a Y-up right-handed system to a Z-up right-handed system. This can be represented by the following rotation matrix:
-
-$$
-\mathbf{T}_4 =
-\begin{bmatrix}
-0 & 1 & 0 & 0 \\
-- 1 & 0 & 0 & 0 \\
-0 & 0 & 1 & 0 \\
-0 & 0 & 0 & 1
-\end{bmatrix}
-$$
-
-5. The resulting matrix $\mathbf{T}_{\text{NerfStudio}}$ is obtained by multiplying these matrices together in the following order:
-
-$$
-\mathbf{T}_{\text {NerfStudio}} = \mathbf{T}_4 \mathbf{T}_3 \mathbf{T}_2 \mathbf{T}_1
-$$
-
-This gives us the 4x4 transformation matrix that can be used in NerfStudio.
-
-
-
-
-
-Let $\mathbf{R}_{\text{CARLA}}$ be the rotation matrix in CARLA coordinates, and let $\mathbf{R}_{\text{NerfStudio}}$ be the corresponding rotation matrix in NerfStudio coordinates. We can transform $\mathbf{R}_{\text{CARLA}}$ into $\mathbf{R}_{\text{NerfStudio}}$ using a series of elementary rotations.
-
-First, we rotate $\mathbf{R}_{\text{CARLA}}$ by $90^\circ$ around the X-axis to convert from a Z-up left-handed system to a Y-up right-handed system. This rotation can be represented by the following matrix:
-
-$$
-\mathbf{R}_1 =
-\begin{bmatrix}
-1 & 0 & 0 \\
-0 & 0 & 1 \\
-0 & -1 & 0
-\end{bmatrix}
-$$
-
-Next, we swap the Y and Z coordinates of $\mathbf{R}_{\text{CARLA}}$ to account for the different orientation of the Y and Z axes in the two coordinate systems. This can be accomplished by multiplying $\mathbf{R}_{\text{CARLA}}$ on the left by the following matrix:
-
-$$
-\mathbf{R}_2 =
-\begin{bmatrix}
-1 & 0 & 0 \\
-0 & 0 & 1 \\
-0 & 1 & 0
-\end{bmatrix}
-$$
-
-Finally, we rotate $\mathbf{R}_{\text{CARLA}}$ by $-90^\circ$ around the Z-axis to convert from a Y-up right-handed system to a Z-up right-handed system. This rotation can be represented by the following matrix:
-
-$$
-\mathbf{R}_3 =
-\begin{bmatrix}
-0 & 1 & 0 \\
-- 1 & 0 & 0 \\
-0 & 0 & 1
-\end{bmatrix}
-$$
-
-To obtain $\mathbf{R}_{\text{NerfStudio}}$, we can multiply these matrices together in the following order:
-
-$$
-\mathbf{R}_{\text{NerfStudio}} = \mathbf{R}_3 \mathbf{R}_2 \mathbf{R}_1 \mathbf{R}_{\text{CARLA}}
-$$
-
-This gives us the rotation matrix that we can use to construct a NerfStudio transform.
-\end{comment}
 
 
 
@@ -366,7 +211,9 @@ Question: How can I train a NeRF that represent the same scene?
 
 %I've created a pipeline that leverage the Nerfstudio API to process, train, evaluate, and render the NeRFs. The pipeline accepts parameters including:
 
-Having obtained the synthetic data captured from CARLA in a format suitable for training NeRFs in Nerfstudio, the next step is to develop and utilize a pipeline that automates the processing, training, evaluation, and rendering of various experiments using this data and the Nerfstudio API. This section will elaborate on the pipeline and its components.
+Having obtained the synthetic data captured from CARLA in a format suitable for training NeRFs in Nerfstudio, the next step is to develop and utilize a pipeline that automates the processing, training, evaluation, and rendering of various experiments using this data and the Nerfstudio API. This section will elaborate on the pipeline and its components depicted in \autoref{fig:nerfstudio-pipeline}.
+
+\input{figures/nerfstudio-pipeline}
 
 The developed pipeline accepts a \texttt{Argument}-class used to configure the processing, training, evaluation, and rendering of the NerF. The most important parameters include:
 
@@ -387,7 +234,7 @@ The experiments in this thesis focus on the faster NeRF models implemented in Ne
 
 During training, the parameters in the model are trained to represent the 3D scene. For the Nerfacto-model, this entails backpropagating the error and updating both the NeRF MLP and the proposal MLP. The Nerfacto- and Instant NGP-model leverage 3 different losses to guide the training; \textit{RGB loss}, \textit{interlevel loss} and \textit{distortion loss}. \textit{RGB loss} is the standard NeRF-loss explained in \autoref{eq:nerf-loss}. Interlevel- and distortion-loss are both from the Mip-NeRF 360 implementation explained in \autoref{sec:mipnerf360}. The interlevel loss encourages the model to generate consistent predictions across different levels of the multi-scale hierarchy, while the distortion loss encourages the model to generate smooth and continuous predictions.
 
-The training leverages the ADAM optimizer for all networks within the model. The optimizer for the proposal networks and Nerfacto fields both use a learning rate of $1 \times 10^{-2}$, with no weight decay and $\epsilon=10^{-8}$, while the camera optimizer uses a learning rate of $6 \times 10^{-4}$, weight decay of $1 \times 10^{-2}$, and $\epsilon=10^{-8}$. All scenes were trained for 15,000 iterations, which is sufficient for achieving convergence. Training time for each scene is approximately 15-20 minutes when using an NVIDIA A100 GPU.
+The training leverages the ADAM optimizer \cite{adam} for all networks within the model. The optimizer for the proposal networks and Nerfacto fields both use a learning rate of $1 \times 10^{-2}$, with no weight decay and $\epsilon=10^{-8}$, while the camera optimizer uses a learning rate of $6 \times 10^{-4}$, weight decay of $1 \times 10^{-2}$, and $\epsilon=10^{-8}$. All scenes were trained for 15,000 iterations, which is sufficient for achieving convergence. Training time for each scene is approximately 15-20 minutes when using an NVIDIA A100 GPU.
 
 % TODO: Rewrite and reorganize. Write about how a batch of pixels are created for each training iteration
 During the training of a NeRF, a batch of pixels is created for each training iteration. By default, this batch consists of 4096 pixels. To obtain these pixels, the training algorithm randomly samples them from all of the training images that are stored in RAM. However, this approach can be memory-intensive, especially when dealing with large datasets. To address this issue, the NeRF pipeline provides an option to set the parameter \texttt{–-pipeline.datamanager.train-num-images-to-sample-from}, which allows the user to sample pixels from a smaller subset of images. When using a smaller subset of images, the training algorithm will keep sampling from this subset unless the parameter \texttt{--num-times-to-repeat-images} is also set. This parameter specifies the number of training iterations after which the training algorithm should grab a new set of images to sample from. For instance, if \texttt{--num-times-to-repeat-images} is set to 1, the training algorithm will grab a new set of images to sample from every iteration. However, this approach can be computationally expensive and slow down the training process.
@@ -446,7 +293,7 @@ Question: How do I find a CARLA-baseline?
 
 A pipeline to evaluate numerous CARLA configurations to identify a configuration that generates high-quality data for NeRF training has been established. In order to facilitate further experiments, a baseline need to be created.
 
-The experiments chosen to define a suitable baseline are mostly based on heuristics and knowledge of what's important for good NeRF results. When capturing video or images for a NeRF it’s important that the scene is well-lit, that you capture non-blurry images, and that there are no transient objects present. If the camera poses of the images you capture are to be approximated with the use of SfM-methods like COLMAP, it's also very important that the images have an overlap in order to secure feature-matching across the images. The five experiments I chose to define my baseline, which will be elaborated upon in \autoref{sec:experiments-and-results}, were:
+The experiments chosen to define a suitable baseline are mostly based on heuristics and knowledge of what's important for good NeRF results. When capturing video or images for a NeRF it’s important that the scene is well-lit, that you capture non-blurry images, and that there are no transient objects present. If the camera poses of the images you capture are to be approximated with the use of SfM-methods like COLMAP, it's also very important that the images have an overlap in order to secure feature-matching across the images. The five experiments chosen to define the baseline, which will be elaborated upon in \autoref{sec:experiments-and-results}, were:
 
 \begin{itemize}
     \item \textbf{Camera setup:} How many cameras should be mounted to the ego vehicle, and in what translation and rotation?
@@ -685,9 +532,9 @@ How do I expand the pipeline?
 - The exported transform.json and images are in the same format as the output from the CarlaDataParser, so the following pipeline remains unchanged.
 \end{comment}
 
-The pipeline from data capture in CARLA to image synthesis with a trained NeRF has demonstrated efficacy. How can I expand on the pipeline to enable the input of real data, not captured in a virtual environment like the CARLA simulator?
+The pipeline from data capture in CARLA to image synthesis with a trained NeRF has demonstrated efficacy. How can it be expanded to enable the input of real data, not captured in a virtual environment like the CARLA simulator?
 
-The traditional approach for generating Neural Radiance Fields (NeRFs) involves the use of real data. The real data is usually captured from handheld cameras. With handheld cameras it is uncomplicated to capture well-lit, non-blurry, object-centric images that doesn't contain transient objects. Until now we've used a virtual environment to capture data as it provides a fully controllable environment in which we can test different setups and ensure optimal conditions. The following challenge in this project is capturing high-quality data from sensors, mounted to a moving vehicle, that are suitable to train NeRF models.
+The traditional approach for generating NeRFs involves the use of real data. The real data is usually captured from handheld cameras. With handheld cameras it is uncomplicated to capture well-lit, non-blurry, object-centric images that doesn't contain transient objects. Until now we've used a virtual environment to capture data as it provides a fully controllable environment in which we can test different setups and ensure optimal conditions. The following challenge in this project is capturing high-quality data from sensors, mounted to a moving vehicle, that are suitable to train NeRF models.
 
 To capture data, we utilized the car from the NTNU Autonomous Perception Lab (NAPLab) \cite{naplab}. The NAPLab car is fitted with multiple sensors, including cameras, GPS/GNSS, and Lidar. The cameras capture data with a resolution of $1920 \times 1080$. The GPS/GNSS-system consists of two Swift Navigation Duro Ruggedized Receivers \cite{swift_navigation_duro_manual}, which offer superior positioning accuracy compared to regular GPS/GNSS systems. According to the manufacturer’s documentation, each Duro module has a horizontal position accuracy of 0.75 meters (CEP 50 in SBAS mode) without RTK, and can achieve centimeter-level accuracy with RTK enabled. This high level of accuracy enables the capture of rough camera poses alongside the images.
 
@@ -705,9 +552,11 @@ The synchronized data have to be converted into Nerfstudio's data format in orde
     \item The resulting translation and rotation data are combined into a single transformation matrix.
 \end{itemize}
 
-The computation of intrinsic values follows the same methodology as discussed in \autoref{sec:carla-to-nerfstudio}. These intrinsics, in combination with the transformation matrix, are assembled into a \texttt{transform.json} file.
+The computation of intrinsic values follows the same methodology as discussed in \autoref{sec:carla-to-nerfstudio}. These intrinsics, in combination with the transformation matrix, are assembled into a \texttt{transform.json} file. The output from the \texttt{NAPLabDataParser}, i.e., the \texttt{transform.json} file and images, is in the same format as that from the \texttt{CarlaDataParser}. Therefore, the subsequent stages of the pipeline remain unaffected, ensuring the smooth transition from synthetic to real data inputs.
 
-The output from the \texttt{NAPLabDataParser}, i.e., the \texttt{transform.json} file and images, is in the same format as that from the \texttt{CarlaDataParser}. Therefore, the subsequent stages of the pipeline remain unaffected, ensuring the smooth transition from synthetic to real data inputs.
+The dataset captured from the NAPLab car is presented in \autoref{fig:naplab-dataset}.
+
+\input{figures/naplab-dataset}
 
 
 
