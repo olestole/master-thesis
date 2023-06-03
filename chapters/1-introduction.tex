@@ -32,7 +32,7 @@ RQ1, RQ2, ...
 %By leveraging NeRFs we can create a pipeline that efficiently reconstructs 3D scenes. The reconstructed scenes have many applications, and could be beneficial in applications that require simulated virtual worlds. In order to create a functional pipeline I want to use synthetic data from a controllable environment and later extend the pipeline to enable real data capture.
 
 \section{Motivation}
-The field of Neural Radiance Fields (NeRF) has experienced a surge in research and development over the past years, with models becoming exponentially better and more performant. These models have demonstrated impressive, photo-realistic reconstruction and novel view synthesis of 3D scenes, given a set of posed 2D camera images. This surge in research has opened up new frontiers in many applications including the expansion of mapping and navigation capabilities (cite Google Immersive View), computer graphics and visual effects (cite Volinga), asset creation (cite Luma), and autonomous driving (cite Wayve). 
+The field of Neural Radiance Fields (NeRF) has experienced a surge in research and development over the past years, with models becoming exponentially better and more performant \cite{debbagh_neural_2023}. These models have demonstrated impressive, photo-realistic reconstruction and novel view synthesis of 3D scenes, given a set of posed 2D camera images. This surge in research has opened up new frontiers in many applications including the expansion of mapping and navigation capabilities (Google Immersive View\footnote{\url{https://blog.google/products/maps/three-maps-updates-io-2022/}}), computer graphics and visual effects (Volinga\footnote{\url{https://volinga.ai/}}), asset creation (Luma AI\footnote{\url{https://lumalabs.ai/}}), and autonomous driving (Wayve\footnote{\url{https://wayve.ai/neural-rendering/}}). 
 
 \begin{comment}
 Looking deeper into autonomous driving, one of the many applications where NeRF could prove beneficial
@@ -42,7 +42,7 @@ Zooming in on an application that could benefit from these advances, autonomous 
 \end{comment}
 
 
-Looking further into the realm of autonomous driving, one area of application that could benefit from these advances stands out. Autonomous driving systems are commonly evaluated by re-simulating previously encountered scenarios; however, any deviation from the recorded encounter may change the vehicle’s trajectory, requiring high-fidelity novel view renderings along the altered path. Wayve, a pioneer in the self-driving vehicle industry, has already integrated NeRF technology into their system (\textbf{Cite Nvidia GTC Talk}) for the purpose of rendering novel views along altered paths. However, as with most commercial applications, their tools and code remain proprietary rendering them inaccessible for wider research purposes.
+Looking further into the realm of autonomous driving, one area of application that could benefit from these advances stands out. The evaluation of autonomous driving systems often involves the re-simulation of scenarios that have been encountered in the past. Yet, the vehicle's path could be altered by even the slightest divergence from the original incident, thus necessitating high-quality rendering of novel views along the altered trajectory \cite{tancikBlockNeRFScalableLarge2022}. Wayve, a pioneer in the self-driving vehicle industry, has already integrated NeRF technology into their system for the purpose of rendering novel views along altered paths. However, as with most commercial applications, their tools and code remain proprietary rendering them inaccessible for wider research purposes.
 
 In order to explore the use of NeRFs in applications such as autonomous driving that could benefit from the generation of high-quality renders of novel views, this thesis seeks to design and develop an end-to-end pipeline capable of capturing data from a scene, and subsequently generating a Neural Radiance Field (NeRF) representing the same scene. 
 
@@ -98,7 +98,6 @@ In order to achieve this goal, four research questions were posed:
 % CAMERA POSE OPTIMIZATION AND NOISY GPS/GNSS READINGS
 \item[\textbf{RQ 2:}] How does the initial camera pose accuracy and segment length impact the final reconstruction? Can rough initial camera poses be optimized to achieve comparable results to those obtained from tools such as COLMAP?
 
-
 % DIFFERENT MODELS
 \item[\textbf{RQ 3:}] How do different NeRF methods (NeRF, mip-NeRF, instant-ngp, Nerfacto) perform on unbounded scenes in terms of reconstruction quality and computational efficiency?
 
@@ -125,6 +124,15 @@ The chosen research method for this report is experimental research. The experim
 \section{Contribution}
 \textbf{Just notes for now}
 
+One of the primary contributions of this master's thesis is the establishment of a pipeline from CARLA \cite{Dosovitskiy17} to Nerfstudio \cite{nerfstudio}. This pipeline serves as a tool for conducting a variety of experiments, which could further be applied to real-world scenarios. By permitting the manipulation of various experiment settings, such as the camera setup, vehicle speed, route, and image resolution, this pipeline streamlines the process. Furthermore, the pipeline's data output is compatible with most NeRFs, thereby enabling the training of NeRFs on synthetic data captured in CARLA. This consequently facilitates the refinement of settings to enhance the resulting image synthesis based on the evaluation of the NeRF. In addition to the pipeline for synthetic data, the pipeline is also extended to allow the input of real data captured by the NAPLab car \cite{naplab}.
+
+In addition to the pipeline, this thesis introduces a baseline for NeRFs trained on synthetic data captured in CARLA. This baseline can be used to augment both the data capture and the NeRF models on synthetic data. It offers a platform for experimenting with data capture and NeRF settings, and its evaluation metrics (PSNR, SSIM, and LPIPS) align with those widely used in NeRF research, ensuring comparability.
+
+Another contribution lies in the development of a proof-of-concept (PoC) for large-scale NeRF approach with the Nerfstudio API. By creating a naive Block-NeRF implementation, it demonstrates how such an approach can dramatically enhance the quality of large-scale NeRFs. This PoC provides a testing ground for determining crucial parameters when capturing large-scale data for NeRFs, such as the segment size, the overlap between the blocks, and image merging techniques.
+
+Lastly, the thesis includes the creation of a utility for generating side-by-side view using FFMPEG. This enables the creation of a comparative view of the rendered NeRF and the ground truth. This addition not only facilitates the qualitative assessment of the resulting NeRF but also enhances the overall analysis process.
+
+\begin{comment}
 \begin{itemize}
     \item Pipeline from CARLA to Nerfstudio
     \begin{itemize}
@@ -140,8 +148,8 @@ The chosen research method for this report is experimental research. The experim
     \end{itemize}
     \item Block NeRF in Nerfstudio API
     \begin{itemize}
-        \item Creates a naive Block NeRF implementation in the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
-        \item The PoC allows testing which parameters are important when capturing large scale data for NeRFs. E.g. the segment size, overlap between the blocks, image merging techniques.
+        \item Creates a naive Block NeRF implementation with the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
+        \item The PoC allows testing which parameters are important when capturing large-scale data for NeRFs. E.g. the segment size, overlap between the blocks, and image merging techniques.
     \end{itemize}
     \item Side-by-side view
     \begin{itemize}
@@ -150,6 +158,7 @@ The chosen research method for this report is experimental research. The experim
     \end{itemize}
 \end{itemize}
 
+\end{comment}
 
 
 
@@ -157,7 +166,7 @@ The chosen research method for this report is experimental research. The experim
 
 \begin{description}[leftmargin=!,labelwidth=\widthof{Chapter 1:}]
 \item[\textbf{Chapter 1 - Introduction:}]
-Presents the motivation, goal, research method, contributions, and research questions for the study.
+Presents the study's motivation, goal, research method, contributions, and research questions.
 
 \item[\textbf{Chapter 2 - Background:}]
 Provides an overview of preliminary methods, techniques, tools, frameworks, and metrics in order to establish a common ground for successive chapters.
