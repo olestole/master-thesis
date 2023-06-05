@@ -1,2 +1,43 @@
 \chapter*{Sammendrag}
-Sammendrag
+
+Neural Radiance Fields (NeRF) har opplevd en omfattende vekst i forskning og utvikling de siste årene, med betydelige fremskritt innen modellprestasjon og en økende rekkevidde bruksområder. En av de lovende anvendelsene er innen autonome kjøretøy, hvor NeRFs blant annet kan benyttes til å generere simulerte miljøer for evaluering av autonome kjøretøy og til å skape fotorealistiske datasett av sjeldne scenarier.
+
+Denne masteroppgaven har som hovedmål å designe og utvikle en ende-til-ende-pipeline for generering av NeRFs, ved å bruke videosekvenser fra kjøretøy og tilhørende kameraposisjoner av varierende nøyaktighetsgrad. 
+
+Først etableres en datainnsamlings-pipeline for CARLA, som gir tilgang til syntetiske data fra et kontrollert miljø. Ved å integrere denne pipelinen med en NeRF-pipeline har man en ende-til-ende-pipeline for generering av NeRFs som iterativt kan konfigureres for å danne et utgangspunkt for videre eksperimenter. Etter å ha etablert et utgangspunkt utforskes tilnærminger for stor-skala NeRF og det implementeres en fungererende prototype. Pipelinen utvides deretter til å kunne håndtere ekte data fra et spesialisert kjøretøy utstyrt med nøyaktig GNSS og høyoppløselige kameraer.
+
+Resultatene er stort sett konsistente mellom syntetiske og ekte data; konfigurasjonen av datainnsamlingen har en betydelig innvirkning på kvaliteten av både dataene og den resulterende NeRF-modellen; en tilnærming som involverer flere mindre NeRF-modeller i stedet for én stor NeRF-modell, viser seg å være mer effektiv for å lære en scene i stor skala; parallell optimalisering av kameraposisjonen reduserer effekten av uperfekte kameraposisjoner, men forhåndsprosessering av kameraposisjonene med Structure-from-Motion (SfM) verktøy gir overlegne resultater.
+
+Når det gjelder å generere nye visninger for usette, spesielle scenarier, finner vi at gjengivelsene ikke helt matcher kvaliteten på de originale bildene. Likevel er de i stor grad vellykkede i å produsere klare og strukturelt nøyaktige gjengivelser, noe som bekrefter NeRF-er sitt potensiale og effektiviteten av tilnærmingen.
+
+
+
+\begin{comment}
+Feltet for Neural Radiance Fields (NeRF) har opplevd en oppsving i forskning og utvikling de siste årene, med betydelige forbedringer i modellprestasjon og en økende rekkevidde av anvendelsesområder. Midt i denne veksten har bruken av NeRFs i autonome kjøretøy fremstått som et lovende forskningsområde, da NeRFs kan generere et miljø for å evaluere autonome kjøretøy i tillegg til å generere fotorealistiske bilder av sjeldne scenarier.
+
+Det primære forskningsmålet med denne masteroppgaven er å utforme og utvikle en ende-til-ende-pipeline for å generere NeRFs, ved å benytte videosekvenser fra kjøretøy med tilhørende kameraposisjoner av varierende nøyaktighetsgrad.
+
+Til å begynne med opprettes en datainnhenting-pipeline for CARLA, som tilgjengeliggjør syntetiske data fra et kontrollert miljø. Ved å koble denne pipelinen med en NeRF-pipeline, blir det mulig å skape en ... for videre eksperimenter. Etter å ha oppnådd en baseline og en ende-til-ende-pipeline, utforsker masteroppgaven stor-skala NeRF-tilnærminger og implementerer en høytytende prototype. Til slutt utvides pipelinen for å muliggjøre bruk av ekte data fra et spesialisert kjøretøy med nøyaktig GNSS og høyoppløselige kameraer.
+
+De fleste funn er konsekvente på tvers av syntetiske og ekte data; konfigurasjonen av datainnhentingen har en betydelig påvirkning på både dataen og kvaliteten på den resulterende NeRF-en; en stor-skala tilnærming der en scene læres av flere mindre NeRF-er, i motsetning til én enkelt NeRF, presterer bedre; Parallell optimalisering av kameraposisjonen reduserer virkningen av uperfekte kameraposisjoner, men å tilnærme positurene med SfM-verktøy på forhånd viser overlegne resultater.
+
+Ved å undersøke anvendelsen av å gjengi nye visninger for kanttilfelle-scenarier, finner vi at gjengivelsene ikke matcher kvaliteten på de opprinnelige bildene. Imidlertid er de stort sett vellykkede i å produsere klare og strukturelt nøyaktige gjengivelser, noe som bekrefter NeRF sitt potensiale og effektiviteten av tilnærmingen.
+
+
+
+
+
+
+
+
+
+Feltet Neural Radiance Fields (NeRF) har opplevd en økning i forskning og utvikling de siste årene, med betydelige forbedringer av modellytelse og et økende omfang av bruksområder. Midt i denne veksten har bruken av NeRF-er i autonome kjøresystemer dukket opp som et lovende område for utforskning, ettersom NeRF-er kan muliggjøre generering av fotorealistiske edge case-scenarier og et miljø for å evaluere autonome kjøretøy.
+
+Det primære forskningsmålet med denne oppgaven er å designe og utvikle en ende-til-ende-pipeline for å generere NeRF-er, utnytte kjøretøyfangede videosekvenser og tilsvarende kameraposisjoner med varierende grad av nøyaktighet.
+
+Til å begynne med opprettes en datafangst-pipeline for CARLA, som gir syntetiske data fra et kontrollert miljø. Å koble denne datafangst-pipeline med en NeRF-pipeline letter opprettelsen av en ytelsesbaseline for ytterligere eksperimenter. Etter å ha oppnådd en baseline og en ende-til-ende-pipeline, utforsker oppgaven storskala NeRF-tilnærminger og implementerer en presterende prototype. Til slutt utvides rørledningen for å muliggjøre inndata av ekte data fanget av et spesialisert kjøretøy med nøyaktige GNSS og høyoppløselige kameraer.
+
+De fleste funnene er konsistente på tvers av syntetiske og reelle data; konfigurasjonen av datafangsten påvirker både dataene og den resulterende NeRFs kvalitet betydelig; en storstilt tilnærming der en scene læres av flere mindre NeRF-er, i motsetning til en enkelt NeRF, gir bedre resultater; Optimalisering av felles kameraposisjon reduserer effektivt virkningen av ufullkomne kamerapositurer, men å tilnærme positurene med SfM-verktøy på forhånd viser overlegne resultater.
+
+Ved å undersøke bruken av gjengivelse av nye visninger for kantcase-scenarier, finner vi at gjengivelsene ikke samsvarer med originalbildets kvalitet. Imidlertid lykkes de stort sett med å produsere klare og strukturelt nøyaktige gjengivelser, og bekrefter NeRFs potensial og effektiviteten til tilnærmingen.
+\end{comment}
