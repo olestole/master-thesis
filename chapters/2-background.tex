@@ -4,7 +4,7 @@ The background chapter of this paper focuses on the use of \acrshort{nerf}s for 
 
 The chapter also discusses the use of \acrfull{sfm} and COLMAP \cite{schoenberger2016sfm} as important tools for the pre-processing step in the NeRF pipeline, and presents several metrics for evaluating NeRFs. By providing an overview of these methods, techniques, tools, and metrics, the background chapter aims to establish a common ground for future chapters.
 
-This thesis assumes a foundational understanding of deep learning. For those seeking to acquire such knowledge, an excellent reference is the work of \textit{Goodfellow et al.} \cite{Goodfellow}.
+This thesis assumes a foundational understanding of deep learning. A great resource for individuals looking to acquire such knowledge is the publication by Goodfellow et al. \cite{Goodfellow}.
 
 Please note that, in order to cover the relevant background, some sections of the following chapter have been adapted from my unpublished project work on NeRFs for novel view synthesis and 3D reconstruction, which was completed as part of the course “TDT4501 Computer Science, Specialization Project”.
 
@@ -67,16 +67,16 @@ A typical neural fields algorithm in visual computing would first, across space-
 % --------------------- Neural Radiance Fields (NeRFs) ---------------------
 \subsection{Neural Radiance Fields}
 % ✅ Somewhat rewritten, but mostly old.
-The volumetric data we interact with through computer games, movies, and other computer graphic applications, are predominantly represented by meshes. A mesh is a collection of vertices, edges, and faces combined in order to define the shape of objects. Meshes are easy to manipulate and interact with. Another common representation of volume is voxels, where a 3D point in space is represented by a value, e.g. a color. Both of these modeling techniques are explicit representations. As we want to increase the resolution of a scene, we have to model increasingly smaller regions of space, i.e. increase the number of voxels/triangle-meshes in the volume. This doesn't scale well as the memory requirements increase as we increase the number of voxels/triangle-meshes. Due to memory constraints, we have to find another way to represent the scene, instead of representing it as explicit blocks in space. NeRF provides an implicit representation of the scene by utilizing an \acrshort{mlp}.
+The volumetric data we interact with through computer games, movies, and other computer graphic applications, are predominantly represented by meshes. A mesh is a collection of vertices, edges, and faces combined in order to define the shape of objects. Meshes are easy to manipulate and interact with. Another common representation of volume is voxels, where a 3D point in space is represented by a value, e.g. a color. Both of these modeling techniques are \textit{explicit} representations. As we want to increase the resolution of a scene, we have to model increasingly smaller regions of space, i.e. increase the number of voxels/triangle-meshes in the volume. This doesn't scale well as the memory requirements increase as we increase the number of voxels/triangle-meshes. Due to memory constraints, we have to find another way to represent the scene, instead of representing it as explicit blocks or meshes in space. NeRF provides an \textit{implicit} representation of the scene by utilizing an \acrshort{mlp}.
 
-NeRF is a neural volumetric representation. The name, neural radiance fields, gives us a clue as to what it is. It is a field, a space full of particles, where each particle has a given radiance, a color emitted by the particle in a certain direction, and the field is represented with a neural network. NeRF parameterizes 3D scenes as 3D neural fields, mapping 3D coordinates to radiance and density. The 3D scene can subsequently be rendered via volume rendering, as discussed in \autoref{sec:volumerendering}.
+NeRF is a neural volumetric representation. The name, neural radiance fields, provides a clue as to what it is. It is a field, a space full of particles, where each particle has a given radiance, a color emitted by the particle in a certain direction, and the field is represented with a neural network. NeRF parameterizes 3D scenes as 3D neural fields, mapping 3D coordinates to radiance and density. The 3D scene can subsequently be rendered via volume rendering, as discussed in \autoref{sec:volumerendering}.
 
 % OLD
 %Most of the volumetric data we interact with through computer games, movies, and other computer graphic applications, are represented by meshes. A mesh is a collection of vertices, edges, and faces that can be combined in order to define the shape of objects. Meshes are easy to manipulate and interact with. Another common representation of volume is voxels, where a 3D point in space is represented by a value, e.g. a color. Both of these modeling techniques are explicit representations. As we want to increase the resolution of a scene, we have to model increasingly smaller regions of space, i.e. increase the number of voxels/triangle-meshes in the volume. This doesn't scale well as the memory requirements increase as we increase the number of voxels/triangle-meshes. We have to find another way to represent the scene, instead of representing it as explicit blocks in space. NeRF provides an implicit representation of the scene by utilizing a multi-layered perceptron (MLP).
 
 %NeRF is a neural volumetric representation. The name, neural radiance fields, gives us a clue as to what it is. It is a field, a space full of particles, where each particle has a given radiance, a color emitted by the particle in a certain direction, and the field is represented with a neural network. NeRF parameterizes 3D scenes as 3D neural fields, mapping 3D coordinates to radiance and density. The 3D scene can subsequently be rendered via volume rendering, as discussed in \autoref{sec:volumerendering}.
 
-\subsection{Differentiable rendering} 
+\subsection{Differentiable Rendering} 
 NeRFs are made possible due to differentiable rendering, a major breakthrough in 3D reconstruction. Differentiable rendering enables the rendering process to be implemented in a way that is amenable to gradient-based optimization. This in turn allows for the use of techniques such as backpropagation to optimize the parameters of a scene in order to produce a desired visual result. It allows reconstruction of 3D neural fields representing shape and/or appearance given only 2D images, instead of 3D supervision. This is particularly valuable as 3D data is often expensive to obtain, while 2D images are ubiquitous. As a result, non-experts can become 3D content creators without the barrier of specialized hardware, which has important social implications \cite{xie_neural_2022}.
 
 % Differentiable rendering enables 3D content creation from omni-present 2D images, making it accessible to non-experts without specialized hardware. This has important social implications, as 3D data acquisition is often expensive. \cite{xie_neural_2022}.
@@ -93,7 +93,7 @@ The first paper to present NeRFs was \textit{NeRF - Representing Scenes as Neura
 %NeRF does this by querying an underlying MLP overfit to a specific scene, which represents a continuous volumetric field.
 %NeRF renders pixels by emitting rays into the scene. The rays are represented by the ray equation $\pmb{r}(t) = \pmb{o} + t\pmb{d}$ where $\pmb{o}$ is the ray's origin, usually the center of the camera, and $\pmb{d}$ is the ray's direction.
 
-Given multiple 2D images and their corresponding camera poses, which can be retrieved from calibrated camera rigs or approximated with \acrfull{sfm} techniques as will be discussed in \autoref{sec:colmap}, NeRF builds a dataset by sampling points in the volume. Points are sampled along a ray $\pmb{r}(t)$ with origin $\textbf{o}$, the camera's center of projection, and viewing direction $\textbf{d}$. The sampling rate of significant parts of the volumetric scene is increased with a technique called hierarchical sampling, which will be discussed in \autoref{sec:hierarchicalsampling}.
+Given multiple 2D images and their corresponding camera poses, which can be retrieved from calibrated camera rigs or approximated with \acrfull{sfm} techniques as will be discussed in \autoref{sec:colmap}, NeRF builds a dataset by sampling points in the volume. Points are sampled along a ray $\pmb{r}(t)$ with origin $\textbf{o}$, the camera's center of projection, and viewing direction $\textbf{d}$. The sampling rate of significant parts of the volumetric scene is increased with a technique called \textit{hierarchical sampling}, which will be discussed in \autoref{sec:hierarchicalsampling}.
 
 %Sample points along a ray $\pmb{r}(t)$, defined by the ray function \autoref{eq:ray-equation}.
 
@@ -101,11 +101,11 @@ Given multiple 2D images and their corresponding camera poses, which can be retr
 
 %$\pmb{o}$ is the origin and $\pmb{d}$ is the ray's direction. 
 % TODO: Make sure it's right to suffix the points with _k
-Points $\pmb{x}_k = \pmb{r}(t_k)$, where $t_k \in t$ is a 3D-coordinate, in conjunction with their viewing direction $\pmb{d}_k$, make up the dataset in which the \acrshort{mlp} is trained on. It's been shown that MLPs have a hard time learning high-frequency signals given low-dimensional input \cite{tancik_fourier_2020}. In order to remedy this, the points are normalized to lie in the interval of $[-1, 1]$ and the signals' dimensionality is increased by applying positional encoding, which will be further explained in \autoref{sec:positionalencoding}. The dimensionality of the points and their corresponding viewing directions are increased by applying $\gamma(\cdot)$, shown in \autoref{eq:positionalencoding}.
+Points (3D-coordinates) $\pmb{x}_k = \pmb{r}(t_k)$, where $t_k \in t$, in conjunction with their viewing direction $\pmb{d}_k$, make up the dataset in which the \acrshort{mlp} is trained on. It's been shown that MLPs have a hard time learning high-frequency signals given low-dimensional input \cite{tancik_fourier_2020}. In order to remedy this, the points are normalized to lie in the interval of $[-1, 1]$ and the signals' dimensionality is increased by applying positional encoding. The dimensionality of the points and their corresponding viewing directions are increased by applying $\gamma(\cdot)$, shown in \autoref{eq:positionalencoding}. Positional encoding will be further explained in \autoref{sec:positionalencoding}.
 
 \input{equations/positional-encoding.tex}
 
-A predicted color can be obtained by passing the encoded 3D coordinate and its corresponding encoded camera pose through the \acrshort{mlp} denoted $F_{\theta}$, where $\theta$ represents the network parameters. The output of $F_\theta$ is a 4D vector containing a color $RGB$ and a density $\sigma$. In order to retain multiview consistency, NeRF first predicts the volume density $\sigma$ as a function of just the location $\textbf{x}$. Subsequently, the RGB color $\pmb{c}$ is predicted as a function of both the location and viewing direction.
+A predicted color can be obtained by passing the encoded 3D coordinate and its corresponding encoded camera pose through the \acrshort{mlp} denoted $F_{\theta}$, where $\theta$ represents the network parameters. The output of $F_\theta$ is a 4D vector containing a color $RGB$ and a density $\sigma$. In order to retain multiview consistency, NeRF first predicts the volume density $\sigma$ as a function of only the location $\textbf{x}$. Subsequently, the RGB color $\pmb{c}$ is predicted as a function of both the location and viewing direction.
 
 
 Using the points' density $\sigma$ and color $\pmb{c}$ we can approximate the volume rendering, as discussed in \autoref{sec:volumerendering}, to synthesize a novel view of the scene. The expected color $C(\pmb{r})$ can be derived by \autoref{eq:volume-rendering}, which further can be approximated with numerical quadrature as shown in \autoref{eq:numerical-quadrature-loss}.
@@ -117,24 +117,13 @@ Using the points' density $\sigma$ and color $\pmb{c}$ we can approximate the vo
 
 The transmittance $T(t)$ represents the probability that the ray will not intersect any objects up to point $t$. $\sigma(\pmb{r}(t))$ and $c(\pmb{r}(t), \pmb{d})$ represents the density and color of point $\pmb{r}(t)$, respectively.
 
-Since volume rendering is differentiable, we optimize the loss between the synthesized and ground truth observed image. This is done by calculating the total squared error between the ground truth pixel colors $C(\pmb{r})$ and the synthesized pixel color $\hat{C}(\pmb{r})$ over all the rays $\pmb{r} \in \mathcal{R}$. Both the coarse and fine networks, subscripted with $c$ and $f$ respectively and later elaborated upon in \autoref{sec:hierarchicalsampling}, are optimized over.
+Since volume rendering is differentiable, we optimize the loss between the synthesized and ground truth observed image. This is done by calculating the total squared error between the ground truth pixel colors $C(\pmb{r})$ and the synthesized pixel color $\hat{C}(\pmb{r})$ over all the rays $\pmb{r} \in \mathcal{R}$. This loss is called the \textit{photometric loss}. Both the coarse and fine networks, subscripted with $c$ and $f$ respectively and later elaborated upon in \autoref{sec:hierarchicalsampling}, are optimized over.
 
 \input{equations/nerf-loss.tex}
-
-An overview of the NeRF pipeline can be viewed in \autoref{fig:nerf-pipeline}
-
-\input{figures/nerf-pipeline.tex}
 
 % ✅ Somewhat rewritten
 \subsubsection{Positional Encoding} \label{sec:positionalencoding}
 Positional encoding is one of the many proposed encoding schemes, first introduced in the original NeRF paper. It is a method used to increase the dimensionality of an input vector, as it's shown that deep networks are biased toward learning lower-frequency functions. It is important to note that positional encoding in the context of NeRF is distinct from the positional encoding employed in transformers.
-
-% ✅ Somewhat rewritten
-\subsubsection{Hierarchical sampling} \label{sec:hierarchicalsampling}
-When training a NeRF, different sampling strategies can be utilized. The sampling strategy is an important choice as it is core to how the dataset for the \acrshort{mlp} is constructed. The original NeRF paper \cite{mildenhallNeRFRepresentingScenes2020} proposed the use of a sampling approach called hierarchical sampling. This method involves training two MLPs: a \textit{coarse} \acrshort{mlp} and a \textit{fine} \acrshort{mlp}. During training, the coarse \acrshort{mlp} employs stratified sampling, as described in \autoref{sec:stratifiedsampling}, which involves uniform interval sampling within each bin along the ray. The coarse \acrshort{mlp} outputs a \acrfull{pdf} that highlights the samples that significantly contribute to the final predicted RGB value. This \acrshort{pdf} is then passed to the fine \acrshort{mlp} which sample points along the ray in accordance with the \acrshort{pdf}. This strategy of having a coarse network predict the important areas to sample, i.e. the regions containing volume, facilitates the fine network in generating improved predictions.
-
-% Point from Mip-NeRF 360. Doesn't fit very well here, but it's a good point!
-%The only reason why the coarse network is supervised is to guide the sampling of the fine network. This is the motivation behind improvements in e.g. Mip-NeRF 360
 
 % ✅ Rewritten
 \subsubsection{Stratified sampling} \label{sec:stratifiedsampling}
@@ -147,6 +136,19 @@ Stratified sampling is a sampling method that has proven benefits in machine lea
 \end{itemize}
 
 \input{figures/stratified-sampling.tex}
+
+% ✅ Somewhat rewritten
+\subsubsection{Hierarchical sampling} \label{sec:hierarchicalsampling}
+When training a NeRF, different sampling strategies can be utilized. The sampling strategy is an important choice as it is core to how the dataset for the \acrshort{mlp} is constructed. The original NeRF paper \cite{mildenhallNeRFRepresentingScenes2020} proposed the use of a sampling approach called hierarchical sampling. This method involves training two MLPs: a \textit{coarse} \acrshort{mlp} and a \textit{fine} \acrshort{mlp}. During training, the coarse \acrshort{mlp} employs stratified sampling which involves uniform interval sampling within each bin along the ray. The coarse \acrshort{mlp} outputs a \acrfull{pdf} that highlights the samples that significantly contribute to the final predicted RGB value. This \acrshort{pdf} is then passed to the fine \acrshort{mlp} which sample points along the ray in accordance with the \acrshort{pdf}. This strategy of having a coarse network predict the important areas to sample, i.e. the regions containing volume, facilitates the fine network in generating improved predictions.
+
+% Point from Mip-NeRF 360. Doesn't fit very well here, but it's a good point!
+%The only reason why the coarse network is supervised is to guide the sampling of the fine network. This is the motivation behind improvements in e.g. Mip-NeRF 360
+
+
+
+An overview of the NeRF pipeline can be viewed in \autoref{fig:nerf-pipeline}
+
+\input{figures/nerf-pipeline.tex}
 
 
 % --------------------- Structure from motion ---------------------
@@ -162,19 +164,19 @@ Stratified sampling is a sampling method that has proven benefits in machine lea
 % ❌ Pretty happy with how this reads. Haven't changed anything
 %\subsection{COLMAP} \label{sec:colmap}
 COLMAP is a general-purpose SfM \cite{schoenberger2016sfm} and \acrfull{mvs} \cite{schoenberger2016mvs} pipeline. The general overview of the pipeline contains the following steps:
-\begin{itemize}
+\begin{enumerate}
     \item Feature detection and extraction
     \item Feature matching and geometric verification
     \item Structure and motion reconstruction
-\end{itemize}
+\end{enumerate}
 
-During the first step, \acrfull{sift} \cite{Lowe2004} is used to extract features in the images. These sparse feature points in the image are found and their appearances are described using numerical descriptors.
+During the first step, \acrfull{sift} \cite{Lowe2004} is used to extract features in the images. This algorithm finds sparse feature points in the image and describes their appearances using numerical descriptors.
 
 % TODO: Elaborate on the different match-options; Exhaustive Matching, Sequential Matching, Vocabulary Tree Matching. Runtimes, found in the paper, can be added to appendix.
 
-During the second step, features are matched. Correspondences between the feature points are matched across different images, leveraging feature matching and geometric verification. There are different options for matching algorithms. Exhaustive matching would match every image against every other image, leading to the best reconstruction results. The time complexity is not an issue if the number of images is relatively low (several hundreds). Another option is sequential matching which is useful if the captured images are in sequential order, e.g. if they're sampled from a video.
+During the second step, features are matched. Correspondences between the feature points are matched across different images, leveraging feature matching and geometric verification. There are different options for matching algorithms. \textit{Exhaustive matching} would match every image against every other image, leading to the best reconstruction results. The time complexity is not an issue if the number of images is relatively low (several hundreds). Another option is \textit{sequential matching} which is useful if the captured images are in sequential order, e.g. if they're sampled from a video.
 
-During the third step, structure and motion is reconstructed. First COLMAP will generate a sparse reconstruction of the scene, extracting the camera poses (camera extrinsics). The sparse output serves as input to the Multi-View Stereo to recover a dense representation of the scene. The dense representation estimates the dense surfaces. In NeRF-application COLMAP is primarily used as a preprocessing step for retrieving the camera poses of input images. Because of this, the pipeline is usually ceased after the sparse reconstruction.
+During the third step, structure and motion is reconstructed. First, COLMAP will generate a sparse reconstruction of the scene, extracting the camera poses (camera extrinsics). The sparse output serves as input to the \acrfull{mvs} to recover a dense representation of the scene. The dense representation estimates the dense surfaces. In NeRF-applications, COLMAP is primarily used as a preprocessing step for retrieving the camera poses of input images. Because of this, the pipeline is usually ceased after the sparse reconstruction.
 
 \input{tables/colmap-feature-complexity.tex}
 
@@ -196,7 +198,7 @@ There is definitively literature on the topic of the time and memory complexity 
 \section{Nerfstudio} \label{sec:nerfstudio}
 %Since publication of the original NeRF paper, a multitude of different methods regarding NeRF has been published. Some of the papers are published with corresponding source code and some not. However, it's no easy task to compare the different methods on self-captured data. Nerfstudio is an open-source framework/API that 
 
-With the magnitude of different published methods regarding NeRF, some with corresponding source code and some not, it's not trivial to compare them on self-captured data. Nerfstudio \cite{nerfstudio} is an open-source framework/API that streamlines the creation, training, and visualization of NeRFs. The components that make up NeRFs are modularized in a way that allows interpretable implementation of different NeRF methods. In addition, Nerfstudio ships with implemented versions of some of the most important published methods to date for real-world captures. The core concepts within Nerfstudio are presented in \autoref{fig:nerfstudio-pipeline-components}. 
+Since the publication of the original NeRF paper \cite{mildenhallNeRFRepresentingScenes2020}, a multitude of different methods regarding NeRF has been published. With the magnitude of published methods, some with corresponding source code and some not, it's not trivial to compare them on self-captured data. Nerfstudio \cite{nerfstudio} is an open-source framework/API that streamlines the process, training, evaluation, and rendering of NeRFs. The components that make up NeRFs are modularized in a way that allows interpretable implementation of different NeRF methods. In addition, Nerfstudio ships with implemented versions of some of the most important published methods to date for real-world captures. The core concepts within Nerfstudio are presented in \autoref{fig:nerfstudio-pipeline-components}. 
 
 \input{figures/nerfstudio-pipeline-components}
 
@@ -205,7 +207,7 @@ With the magnitude of different published methods regarding NeRF, some with corr
 
 
 \section{CARLA} \label{sec:carla}
-CARLA \cite{Dosovitskiy17} is an open-source simulator for \acrshort{ad} research which enable the capture of synthetic data in a controllable and programmable environment. Its highly customizable simulation environment allows for the creation and testing of a wide range of driving scenarios and conditions. CARLA includes a variety of sensors, such as cameras, \acrfull{lidar}, and \acrfull{gps}/\acrfull{gnss}, which can be used to collect visual and non-visual data. We can interact with CARLA’s features via a Python API, which allows for the control of vehicle position, orientation, and most other behaviors within the simulation. This flexibility enables the generation of diverse and realistic data, making CARLA, among many other things, a powerful tool for the development and testing of data capture pipelines. Data captured from CARLA can be seen in \autoref{fig:carla-3-camera-setup}.
+CARLA \cite{Dosovitskiy17} is an open-source simulator for \acrshort{ad} research which enables the capture of synthetic data in a controllable and programmable environment. Its highly customizable simulation environment allows for the creation and testing of a wide range of driving scenarios and conditions. CARLA includes a variety of sensors, such as cameras, \acrfull{lidar}, and \acrfull{gps}/\acrfull{gnss}, which can be used to collect both visual and non-visual data. We can interact with the CARLA simulator via a Python API, which allows for the control of vehicle position, orientation, and most other behaviors within the simulation. This flexibility enables the generation of diverse and realistic data, making CARLA, among many other things, a powerful tool for the development and testing of data capture pipelines. Data captured from CARLA can be seen in \autoref{fig:carla-3-camera-setup}.
 
 \input{figures/carla-3-camera-setup}
 
@@ -225,12 +227,12 @@ Evaluating the quality of NeRFs is a difficult task due to the visual nature of 
 
 \input{equations/psnr.tex}
 
-and $MAX_I$ represents the dynamic range of an image, i.e. the largest range of pixel values that the picture may contain. This is 255 when pixels are represented with 8 bits per sample. In more general terms, $MAX_I$ is $2^B-1$ when samples are recorded with $B$ bits per sample. Due to the high dynamic range of many signals, \acrshort{psnr} is typically expressed as a logarithmic number using the decibel (dB) scale.
+and $MAX_I$ represents the dynamic range of an image, i.e. the largest range of pixel values that the picture may contain. This is 255 when pixels are represented with 8 bits per sample. In more general terms, $MAX_I$ is $2^B-1$ when samples are recorded with $B$ bits per sample. Due to the high dynamic range of many signals, \acrshort{psnr} is typically expressed as a logarithmic number using the \acrfull{db} scale.
 
 
 % ✅ Rewritten
 \subsection[SSIM]{\acrfull{ssim}}
-While \acrshort{mse} and \acrshort{psnr} are effective measures of reconstruction error, they do not evaluate an image in the same manner as humans. Rather than comparing pixel values in order to conclude if two images are similar, humans assess images holistically. \acrshort{ssim} attempts to replicate this approach by comparing the luminance $l$, contrast $c$, and structure $s$ between two windows $\pmb{x}$ and $\pmb{y}$ of a common size $N \times N$.
+While \acrshort{mse} and \acrshort{psnr} are effective measures of reconstruction error, they do not evaluate an image in the same manner as humans. Rather than comparing pixel values in order to conclude if two images are similar, humans assess images holistically. \acrshort{ssim} attempts to replicate this approach by comparing an image's luminance $l$, contrast $c$, and structure $s$ between two windows $\pmb{x}$ and $\pmb{y}$ of a common size $N \times N$.
 
 % OLD
 %Although MSE and PSNR are good measures of the reconstruction error, they don't examine an image the same way humans do. We don't compare pixel-value to pixel-value in order to conclude if two images are similar, we look at it in a more holistic way. SSIM tries to capture this by instead comparing luminance $l$, contrast $c$ and structure $s$ between two windows $x$ and $y$ of common size $N \times N$.
@@ -253,7 +255,9 @@ While \acrshort{mse} and \acrshort{psnr} are effective measures of reconstructio
 
 % ✅ Rewritten
 \subsection[LPIPS]{\acrfull{lpips}}
-\acrshort{lpips} \cite{zhang_unreasonable_2018} is a perceptual similarity metric based on deep network activations. Unlike \acrshort{mse}, \acrshort{psnr} and \acrshort{ssim} which uses relatively shallow functions in order to determine similarity across images, \acrshort{lpips} leverages deep neural networks to obtain a metric that perceives similarity in a way that is similar to humans. The dataset used to train \acrshort{lpips} includes two types of perceptual judgments: \acrfull{2afc} and \acrfull{jnd}. In \acrshort{2afc}, people were asked to select which of two distorted images was “closer” to the reference, while in \acrshort{jnd}, people were presented with two image patches, one reference and one distorted, and asked if they were the same. By training on this dataset, \acrshort{lpips} is able to capture higher-level features of images that are more relevant to human perception, such as object shapes and textures, making it a more effective similarity metric than traditional metrics like \acrshort{mse}, \acrshort{psnr}, and \acrshort{ssim}. Image patches with a low \acrshort{lpips} score are perceptually similar.
+\acrshort{lpips} \cite{zhang_unreasonable_2018} is a perceptual similarity metric based on deep network activations. Unlike \acrshort{mse}, \acrshort{psnr} and \acrshort{ssim} which uses relatively shallow functions in order to determine similarity across images, \acrshort{lpips} leverages deep neural networks to obtain a metric that perceives similarity in a way that is similar to humans. 
+
+The dataset used to train \acrshort{lpips} includes two types of perceptual judgments; \acrfull{2afc} and \acrfull{jnd}. In \acrshort{2afc}, people were asked to select which of two distorted images was “closer” to the reference, while in \acrshort{jnd}, people were presented with two image patches, one reference and one distorted, and asked if they were the same. Some samples from the dataset is depicted in \autoref{fig:lpips}. By training on this dataset, \acrshort{lpips} is able to capture higher-level features of images that are more relevant to human perception, such as object shapes and textures. This makes it a more effective similarity metric than traditional metrics like \acrshort{mse}, \acrshort{psnr}, and \acrshort{ssim}. Image patches with a low \acrshort{lpips} score are perceptually similar.
 
 \input{figures/lpips.tex}
 
@@ -266,20 +270,20 @@ Since the publication of the original NeRF paper, there has been a surge of rela
 
 % --------------------- mip-NeRF ---------------------
 \subsection[Mip-NeRF]{Mip-NeRF: A Multiscale Representation for Anti-Aliasing Neural Radiance Fields} \label{sec:mipnerf}
-NeRF demonstrates impressive performance when training and testing images are captured at similar distances from the scene, without the need to account for scale or aliasing effects. When you add more cameras, pulled away from the scene, NeRF starts to deteriorate because it's a single-scale model now trying to solve a multi-scale problem. As a consequence, renderings from the NeRF exhibit aliasing artifacts in distant views and excessive blur in close-up views.
+NeRF demonstrates impressive performance when the training and evaluation images are captured at similar distances from the scene, without the need to account for scale or aliasing effects. When you add more cameras, pulled away from the scene, NeRF starts to deteriorate because it's a single-scale model now trying to solve a multi-scale problem. As a consequence, renderings from the NeRF exhibit aliasing artifacts in distant views and excessive blur in close-up views.
 
-A solution to this problem would be to adopt a technique that is used in offline ray tracing, supersampling. With supersampling, we would march multiple rays through the same pixel's footprint. This technique doesn't resolve the issue of aliasing effects, but it does result in improved visual quality of the rendered image. However, doing so would be very computationally expensive and it would further increase the lengthy training times of NeRF, which already relies on querying an underlying \acrshort{mlp} hundreds of times for a single ray.
+A solution to this problem would be to adopt a technique that is used in offline ray tracing, \textit{supersampling}. With supersampling, we would march multiple rays through the same pixel's footprint. This technique doesn't resolve the issue of aliasing effects, but it does result in improved visual quality of the rendered image. However, doing so would be very computationally expensive and it would further increase the lengthy training times of NeRF, which already relies on querying an underlying \acrshort{mlp} hundreds of times for a single ray.
 
-Another sampling strategy apart from casting rays through each pixels' footprint would be to cast a cone, as seen in \autoref{fig:mip-nerf-frustums}. The cone's radius is determined by the size of the pixel's footprint on the image plane, thereby enabling the cone to model the whole volume of space visible by the pixel. When the pixel's cone is rendered, all the content within that visible volume will be averaged out, instead of rendering out whatever intersects with the infinitely narrow ray cast by NeRF. The cone is divided into conical frustums. The frustums are approximated with a multivariate Gaussian since they're easier to manipulate and have a closed-form solution.
-
-\input{figures/mip-nerf-frustums.tex}
+Another sampling strategy apart from casting rays through each pixels' footprint would be to cast a cone, as seen in \autoref{fig:mip-nerf-frustums}. The cone's radius is determined by the size of the pixel's footprint on the image plane, thereby enabling the cone to model the whole volume of space visible by the pixel. When the pixel's cone is rendered, all the content within that visible volume will be averaged out, instead of rendering out whatever intersects with the infinitely narrow ray cast by NeRF. The cone is divided into conical \textit{frustums}. The frustums are approximated with a multivariate Gaussian since they're easier to manipulate and have a closed-form solution.
 
 Instead of positionally encoding a single point along the ray, we compute the expected positional encoding with respect to the 
 constructed Gaussian. With this encoding, Mip-NeRF is able to reason about the scale of its input by analyzing the scale of the encodings. This allows the model to understand the difference between small and large volumes. This encoding scheme is called \acrfull{ipe}, and has a simple closed-form solution that can be computed quickly.
 
+\input{figures/mip-nerf-frustums.tex}
+
 This method draws inspiration from mipmapping \cite{williams1983pyramidal}, a technique traditionally used in computer graphics pipelines to mitigate aliasing artifacts. Mipmapping involves generating a pre-filtered set of discretely downsampled signals, typically images, which accelerates rendering by shifting the responsibility of anti-aliasing to a pre-computation phase. Mip-NeRF extends NeRF to simultaneously represent the pre-filtered radiance field for a continuous space of scales, thereof "Mip-NeRF".
 
-\autoref{fig:mip-nerf-pipeline-overview} provides an overview of the Mip-NeRF pipeline. The primary distinction from the NeRF pipeline, as depicted in \autoref{fig:nerf-pipeline}, is the incorporation of the Mip-NeRF field, which utilizes Integrated Positional Encoding.
+\autoref{fig:mip-nerf-pipeline-overview} provides an overview of the Mip-NeRF pipeline. The primary distinction from the NeRF pipeline, as depicted in \autoref{fig:nerf-pipeline}, is the incorporation of the Mip-NeRF field, which utilizes \acrshort{ipe}.
 
 \input{figures/mip-nerf-pipeline-overview.tex}
 
@@ -287,15 +291,15 @@ This method draws inspiration from mipmapping \cite{williams1983pyramidal}, a te
 
 % --------------------- mip-NeRF 360 ---------------------
 \subsection[Mip-NeRF 360]{Mip-NeRF 360: Unbounded Anti-Aliased Neural Radiance Fields} \label{sec:mipnerf360}
-Mip-NeRF introduces several valuable techniques for advancing the capabilities of NeRFs. However, the techniques are primarily focused on forward-facing scenes \cite{mildenhall2019llff} as opposed to unbounded scenes that are object-centric, featuring elaborate backgrounds and images captured from $360^\circ$ around the object. To extend the capabilities of Mip-NeRF to unbounded scenes, Mip-NeRF 360 \cite{barron_mip-nerf_2022} proposes three primary techniques, which we will cover in this subsection.
+Mip-NeRF introduces several valuable techniques for advancing the capabilities of NeRFs. However, the techniques are primarily focused on forward-facing scenes \cite{mildenhall2019llff} as opposed to unbounded scenes that are object-centric, featuring elaborate backgrounds and images captured from $360^\circ$ around the object. To extend the capabilities of Mip-NeRF to unbounded scenes, Mip-NeRF 360 \cite{barron_mip-nerf_2022} proposes three primary techniques, which are covered in this subsection.
 
-\textbf{Representation}:
+\subsubsection{Representation}
 %Problem: Unbounded scenes are large, but mip-NeF needs a bounded domain
 %Solution: Apply a Kalman-like warp to mip-NeRF Gaussians to warp the mip-NeRF into non-Euclidean space.
-The first challenge with extending Mip-NeRF to unbounded scenes is that such scenes are large, but Mip-NeRF requires a bounded domain. Mip-NeRF handles scenes unbounded in one direction by warping the space into projective space, \acrfull{ndc}, but the challenge arises when the scene is unbounded in all directions. A solution is to apply a Kalman-like warp to Mip-NeRF Gaussians in order to warp the Mip-NeRF into non-Euclidean space. All the Gaussians outside a sphere of radius one will smoothly be warped into a non-euclidean space within a sphere of radius two. This non-Euclidean space is used to represent the input to the \acrshort{mlp}. 
+The first challenge with extending Mip-NeRF to unbounded scenes is that such scenes are large, but Mip-NeRF requires a bounded domain. Mip-NeRF handles scenes unbounded in one direction by warping the space into \textit{projective space}, \acrfull{ndc}, but the challenge arises when the scene is unbounded in all directions. A solution is to apply a Kalman-like warp to Mip-NeRF Gaussians in order to warp the Mip-NeRF into non-Euclidean space. All the Gaussians outside a sphere of radius one will smoothly be warped into a non-euclidean space within a sphere of radius two. This non-Euclidean space is used to represent the input to the \acrshort{mlp}. 
 
 
-\textbf{Efficiency:}
+\subsubsection{Efficiency}
 %Problem: Large scenes require more network capacity, but using a large MLP is too expensive (given that you have to query it hundred of times for a single ray)
 %Solution: "Distill" scene geometry from a large NeRF MLP into a small MLP while training. Train a small proposal MLP to bound the geometry predicted by a large NeRF MLP which makes training ~3 times faster
 Expanding a bounded scene to an unbounded scene results in larger scenes that require a more substantial network capacity. However, using a large \acrshort{mlp} is too expensive given that it has to be queried hundreds of times for a single ray. A solution is to distill scene geometry from a large NeRF \acrshort{mlp} into a small \textit{proposal MLP} while training. The proposal \acrshort{mlp} will only output a set of weights, no colors. By feeding a set of location points through the proposal \acrshort{mlp}, the outputted weights can then be used as a \acrshort{pdf} to resample the ray, similar to how the coarse network in hierarchical sampling guides the fine network's sampling. The resampled points are then used to render a color, which as normal is supervised with photometric loss. Rather than supervising the proposal \acrshort{mlp} to accurately reconstruct the image, which is done for both the coarse and fine MLPs in Mip-NeRF, the output weights are supervised to be consistent with the output weights from the NeRF \acrshort{mlp}. This is accomplished using a loss function that encourages the outputted weight histograms to be consistent with one another. This is made possible with some strong assertions on the relation between the two distributions, which ultimately summarizes the same underlying and true distribution. This new approach to training accelerates training speeds by 300\%.
@@ -304,7 +308,7 @@ Expanding a bounded scene to an unbounded scene results in larger scenes that re
 %To make this work we need a loss function that encourages histograms with different bin endpoints to be consistent with one another. To achieve this we make some strong assertions on the relation between the two distributions, summarizing the same underlying, true distribution. The loss function will penalize any excess mass that violates the upper bound imposed on the proposal MLP.
 
 
-\textbf{Ambiguity:}
+\subsubsection{Ambiguity}
 %Problem: 3D reconstruction becomes more ambigious as you increase the scene size. Results in more artifacts
 %Solution: Utilize a novel regularizer designed specifically for mip-NeRF ray intervals. The regularizer encourages each ray's histogram to be as close to a delta function as possible. 
 Reconstructing 3D content from 2D photos is inherently ambiguous since the content of unbounded scenes can be everywhere and will only be seen by a tiny number of rays. This problem becomes more pronounced as scene size increases. The original NeRF-paper partially addressed this behavior by introducing random Gaussian noise to the output $\sigma$ values, before passing them through the \acrfull{relu} \cite{agarap_deep_2019}. This stimulated densities to drift toward either zero or infinity, which slightly enhanced visual performance. However this regularization is insufficient for the more challenging task that Mip-NeRF 360 tackles. Instead, Mip-NeRF 360 introduces a novel regularizer, specifically designed for Mip-NeRF ray intervals, that encourages each ray's histogram to be as close to a delta function as possible. This regularizer reduces the occurrences of "floaters", which are semi-transparent objects that appear to be floating in space.
@@ -315,9 +319,9 @@ Reconstructing 3D content from 2D photos is inherently ambiguous since the conte
 
 
 \subsection[Block-NeRF]{Block-NeRF: Scalable Large Scene Neural View Synthesis} \label{sec:block-nerf}
-Block-NeRF \cite{tancik_block-nerf_2022} is a paper that demonstrates a method for reconstructing large-scale scenes using NeRFs. This is achieved by splitting large areas into multiple blocks of a certain radius, with each block having a connected NeRF referred to as a Block-NeRF. The different Block-NeRFs are trained on images within their respective radius of responsibility. At inference time, only the Block-NeRFs with a radius that spans the requested location are kept. These have all been trained on image data from the requested location and can render an output. Some of the remaining Block-NeRFs might still lack a direct line of sight to the requested location, which results in low "visibility", which will be discussed further in \autoref{sec:visibility-prediction}. These Block-NeRFs are also filtered out, resulting in a pool of Block-NeRFs with good visibility. The color outputs of the remaining Block-NeRFs are merged to render the final image output.
+Block-NeRF \cite{tancik_block-nerf_2022} is a paper that demonstrates a method for reconstructing large-scale scenes using NeRFs. This is achieved by splitting large areas into multiple blocks of a certain radius, with each block having a connected NeRF referred to as a Block-NeRF. The different Block-NeRFs are trained on images within their respective radius of responsibility. At inference time, only the Block-NeRFs with a radius that spans the requested location are kept. These have all been trained on image data from the requested location and can render an output. Some of the remaining Block-NeRFs might still lack a direct line of sight to the requested location, which results in low "visibility", which will be discussed further in \autoref{sec:visibility-prediction}. These Block-NeRFs are also filtered out, resulting in a pool of Block-NeRFs with good visibility. The remaining Block-NeRFs render the given location, and their outputs are merged to render the final image output.
 
-Block-NeRF leverages multiple techniques in order to enable the reconstruction of large scenes. These include appearance embeddings, learned pose refinement and visibility prediction.
+Block-NeRF leverages multiple techniques in order to enable the reconstruction of large scenes. These include \textit{appearance embeddings}, \textit{learned pose refinement} and \textit{visibility prediction}.
 
 \subsubsection{Appearance embeddings} \label{sec:appearance-embeddings}
 Per-image appearance conditioning is a technique that was first proposed for NeRFs in NeRF\nobreakdash-W \cite{martin-brualla_nerf_2021} and has since been employed in multiple other methods. The appearance embeddings help reduce artifacts in the scene, especially "ghosting" artifacts which present themselves as fog in the final render. The appearance embedding is a vector in a low-dimensional space, unique for every input image, that is optimized jointly with the NeRF in order to allow the NeRF to process and represent 3D scenes with variable lighting, exposures, weather, and post-processing effects. To account for these variations, the final part of the \acrshort{mlp} is conditioned by passing the viewing direction concatenated with the appearance embedding.

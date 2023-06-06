@@ -1,12 +1,14 @@
 \chapter{Additional Material} \label{app:additional}
 
 \section{Parameters for the training in Nerfstudio} \label{sec:nerfstudio-train-parameters}
+This section provide the full configuration for the models trained in Nerfstudio.
 
 \subsection{Nerfacto}
-\begin{table}[h]
+\begin{table}[H]
+    \centering
     \begin{tabular}{|l|l|}
     \hline
-    Description                                             & Default Value \\
+    \textbf{Description}                                             & \textbf{Default Value} \\
     \hline
     How far along the ray to start sampling.                & 0.05 \\
     How far along the ray to stop sampling.                 & 1000.0 \\
@@ -28,7 +30,7 @@
     Whether use single jitter or not for the proposal networks. & True \\
     Whether to predict normals or not.                      & False \\
     \midrule\midrule
-    Description of corresponding proposal density fields    & Default Value \\
+    \textbf{Description of corresponding proposal density fields}    & \textbf{Default Value} \\
     \hline
     Dimension of hidden layer           & 16 \\
     Hashmap size                        & $2^{17}$ \\
@@ -42,8 +44,8 @@
 \end{table}
 
 \subsection{Instant-ngp}
-\begin{table}[h]
-    %\centering
+\begin{table}[H]
+    \centering
     \begin{tabular}{|l|l|}
     \hline
     \textbf{Description} & \textbf{Value} \\ 
@@ -63,25 +65,9 @@
     \label{tab:instant-ngp-parameter-overview}
 \end{table}
 
-\subsection{NeRF}
-\begin{table}[h]
-    %\centering
-    \begin{tabular}{|l|l|}
-    \hline
-    \textbf{Description} & \textbf{Value} \\ 
-    \hline
-    Number of samples in coarse field evaluation & 64 \\
-    Number of samples in fine field evaluation & 128 \\
-    Specifies whether or not to include ray warping based on time. & False \\
-    \hline
-    \end{tabular}
-    \caption{An overview of the parameters in the default NeRF model}
-    \label{tab:nerf-parameter-overview}
-\end{table}
-
 \subsection{mip-NeRF}
-\begin{table}[h]
-    %\centering
+\begin{table}[H]
+    \centering
     \begin{tabular}{|l|l|}
     \hline
     \textbf{Description} & \textbf{Value} \\ 
@@ -109,54 +95,61 @@ If the appendix is in the form of a ready-made PDF file, it should be supported 
 \includepdf[pages=-]{appendices/NTNUProsjektavtale.pdf}
 \end{comment}
 
+
+
+
+
+
+
+\clearpage
 \section{Results}
+This section presents the complete results of the experiments where some results were condensed to convey the primary findings.
 
 \subsection{Block-NeRF}
 % The full Block-NeRF evaluation table. Only the condensed version containing the average across the different segments are included in the result-section
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
-\begin{tabular}{l l | C{2.2} C{1.3} C{1.3}}
+\begin{tabular}{l | C{2.2} C{1.3} C{1.3}}
 \hline
-& \textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
+\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
 \hline
-0 & Segment 1 & 24.960262 & 0.815270 & 0.161623 \\
-1 & Segment 2 & 25.660400 & 0.824085 & 0.164296 \\
-2 & Segment 3 & 23.914209 & 0.755183 & 0.194245 \\
-3 & Segment 4 & 23.363695 & 0.764547 & 0.216242 \\
+Segment 1 & 24.960262 & 0.815270 & 0.161623 \\
+Segment 2 & 25.660400 & 0.824085 & 0.164296 \\
+Segment 3 & 23.914209 & 0.755183 & 0.194245 \\
+Segment 4 & 23.363695 & 0.764547 & 0.216242 \\
 \hline
-\multicolumn{2}{l}{Average difference from one NeRF} &\cellcolor{green} 0.2768 &\cellcolor{green} 0.02277125 &  \cellcolor{red} -0.015 % Unsure if I'll include this
 \end{tabular}
-\caption{Results for each segment when the basline-segment spanning the entire block has been split into 4 Block-NeRFs.}
+\caption{Results for each segment when the baseline-segment spanning the entire block has been split into 4 Block-NeRFs.}
 \label{tab:block-nerf-four-segments-full}
 \end{table}
 
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
-\begin{tabular}{l l | C{2.2} C{1.3} C{1.3}}
+\begin{tabular}{l | C{2.2} C{1.3} C{1.3}}
 \hline
-& \textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
+\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
 \hline
-0 & Segment 1 & 25.047100 & 0.826931 & 0.138852 \\
-1 & Segment 2 & \cellcolor{green} 25.703838 & 0.831167 & 0.156331 \\
-2 & Segment 3 & 24.924395 & 0.830144 & 0.149870 \\
-3 & Segment 4 & \cellcolor{red} 22.726223 & \cellcolor{red} 0.713277 & \cellcolor{red} 0.207025 \\
-4 & Segment 5 & 25.468483 & 0.837942 & \cellcolor{green} 0.131815 \\
-5 & Segment 6 & 25.670006 & \cellcolor{green} 0.841962 & 0.147232 \\
-6 & Segment 7 & 25.661350 & 0.820813 & 0.163685 \\
-7 & Segment 8 & 25.070913 & 0.777114 & 0.154277 \\
-8 & Segment 9 & 24.803871 & 0.814633 & 0.154028 \\
-9 & Segment 10 & 23.693977 & 0.753770 & 0.185557 \\
-10& Segment 11 & 23.936722 & 0.757462 & 0.179283 \\
-11& Segment 12 & 24.584238 & 0.807874 & 0.144022 \\
+Segment 1 & 25.047100 & 0.826931 & 0.138852 \\
+Segment 2 & \cellcolor{green} 25.703838 & 0.831167 & 0.156331 \\
+Segment 3 & 24.924395 & 0.830144 & 0.149870 \\
+Segment 4 & \cellcolor{red} 22.726223 & \cellcolor{red} 0.713277 & \cellcolor{red} 0.207025 \\
+Segment 5 & 25.468483 & 0.837942 & \cellcolor{green} 0.131815 \\
+Segment 6 & 25.670006 & \cellcolor{green} 0.841962 & 0.147232 \\
+Segment 7 & 25.661350 & 0.820813 & 0.163685 \\
+Segment 8 & 25.070913 & 0.777114 & 0.154277 \\
+Segment 9 & 24.803871 & 0.814633 & 0.154028 \\
+Segment 10 & 23.693977 & 0.753770 & 0.185557 \\
+Segment 11 & 23.936722 & 0.757462 & 0.179283 \\
+Segment 12 & 24.584238 & 0.807874 & 0.144022 \\
 \hline
-\multicolumn{2}{l}{Average metrics of 12 block NeRF} & \cellcolor{green} 24.774259 & \cellcolor{green} 0.801090 & \cellcolor{green} 0.159331 \\
-\multicolumn{2}{l}{Average metrics of 1 block NeRF} & \cellcolor{red} 22.515461 & \cellcolor{red} 0.654036 & \cellcolor{red} 0.424356 \\
+Average metrics of 12 Block-NeRF & \cellcolor{green} 24.774259 & \cellcolor{green} 0.801090 & \cellcolor{green} 0.159331 \\
+Average metrics of 1 Block-NeRF & \cellcolor{red} 22.515461 & \cellcolor{red} 0.654036 & \cellcolor{red} 0.424356 \\
 \hline
 \end{tabular}
 \caption{Results for exp\_block\_nerf\_long\_path\_2-block\_10}
@@ -164,13 +157,9 @@ If the appendix is in the form of a ready-made PDF file, it should be supported 
 \end{table}
 
 
-
-
-
-
 \subsection{Real data} \label{app:real-data}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -192,7 +181,7 @@ GPS w/o optimizer, 4 BNs      & 14.578463 & 0.6671365 & 0.65638525 & 00:00:00 \\
 \label{tab:trip088-results}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -238,37 +227,37 @@ GPS w/ optimizer, 12 BNs      & 22.65892333 & 0.848332 & 0.393478 & 00:00:00 \\
 \end{comment}
 
 \subsection{Adding noise} \label{app:noise}
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
-\begin{tabular}{l l | C{2.2} C{1.3} C{1.3} | C{2.2} C{1.3} C{1.3}}
+\begin{tabular}{l | C{2.2} C{1.3} C{1.3} | C{2.2} C{1.3} C{1.3}}
 \hline
-& \textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
+\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
 \hline
-& & \multicolumn{6}{c}{\textbf{Baseline segment}} \\
+& \multicolumn{6}{c}{\textbf{Baseline segment}} \\
 \hline
-& & \multicolumn{3}{c}{\textbf{With camera optimizer}} & \multicolumn{3}{c}{\textbf{Without camera optimizer}} \\
+& \multicolumn{3}{c}{\textbf{With camera optimizer}} & \multicolumn{3}{c}{\textbf{Without camera optimizer}} \\
 \hline
-0 & $\mathcal{N}(0, 0.0)$   & 23.412970 & 0.713507 & 0.320640 & 24.702831 & 0.792646 & 0.179289 \\
-1 & $\mathcal{N}(0, 0.1^2)$ & 22.513981 & 0.674136 & 0.321364 & 22.463675 & 0.677371 & 0.280633 \\
-2 & $\mathcal{N}(0, 0.2^2)$ & 21.343519 & 0.616709 & 0.338266 & 21.212559 & 0.601917 & 0.366598 \\
-3 & $\mathcal{N}(0, 0.3^2)$ & 20.520330 & 0.577203 & 0.345663 & 20.468809 & 0.560959 & 0.399360 \\
-4 & $\mathcal{N}(0, 0.5^2)$ & 19.075649 & 0.501499 & 0.371572 & 19.366894 & 0.499264 & 0.474444 \\
-5 & $\mathcal{N}(0, 1.0^2)$ & 17.670620 & 0.433909 & 0.432940 & 18.207266 & 0.444120 & 0.560452 \\
-6 & $\mathcal{N}(0, 3.0^2)$ & 16.662760 & 0.408036 & 0.637326 & 16.322678 & 0.385614 & 0.647966 \\
+$\mathcal{N}(0, 0.0)$   & 23.412970 & 0.713507 & 0.320640 & 24.702831 & 0.792646 & 0.179289 \\
+$\mathcal{N}(0, 0.1^2)$ & 22.513981 & 0.674136 & 0.321364 & 22.463675 & 0.677371 & 0.280633 \\
+$\mathcal{N}(0, 0.2^2)$ & 21.343519 & 0.616709 & 0.338266 & 21.212559 & 0.601917 & 0.366598 \\
+$\mathcal{N}(0, 0.3^2)$ & 20.520330 & 0.577203 & 0.345663 & 20.468809 & 0.560959 & 0.399360 \\
+$\mathcal{N}(0, 0.5^2)$ & 19.075649 & 0.501499 & 0.371572 & 19.366894 & 0.499264 & 0.474444 \\
+$\mathcal{N}(0, 1.0^2)$ & 17.670620 & 0.433909 & 0.432940 & 18.207266 & 0.444120 & 0.560452 \\
+$\mathcal{N}(0, 3.0^2)$ & 16.662760 & 0.408036 & 0.637326 & 16.322678 & 0.385614 & 0.647966 \\
 \hline
-& & \multicolumn{6}{c}{\textbf{Shorter segment}} \\
+& \multicolumn{6}{c}{\textbf{Shorter segment}} \\
 \hline
-& & \multicolumn{3}{c}{\textbf{With camera optimizer}} & \multicolumn{3}{c}{\textbf{Without camera optimizer}} \\
+& \multicolumn{3}{c}{\textbf{With camera optimizer}} & \multicolumn{3}{c}{\textbf{Without camera optimizer}} \\
 \hline
-0 & $\mathcal{N}(0, 0.0)$   & 24.831890 & 0.824606 & 0.102266 & 25.677803 & 0.861634 & 0.076989 \\ 
-1 & $\mathcal{N}(0, 0.1^2)$ & 23.028709 & 0.752731 & 0.114806 & 23.318026 & 0.755237 & 0.146877 \\ 
-2 & $\mathcal{N}(0, 0.2^2)$ & 20.674553 & 0.613583 & 0.148965 & 21.383156 & 0.628668 & 0.209283 \\ 
-3 & $\mathcal{N}(0, 0.3^2)$ & 20.502602 & 0.595552 & 0.154787 & 21.101936 & 0.612378 & 0.232985 \\ 
-4 & $\mathcal{N}(0, 0.5^2)$ & 19.059755 & 0.482721 & 0.197262 & 20.071671 & 0.513037 & 0.299472 \\ 
-5 & $\mathcal{N}(0, 1.0^2)$ & 18.085838 & 0.406564 & 0.338364 & 18.290358 & 0.417969 & 0.404933 \\ 
-6 & $\mathcal{N}(0, 3.0^2)$ & 15.709220 & 0.344876 & 0.612587 & 15.077240 & 0.362973 & 0.698665 \\ 
+$\mathcal{N}(0, 0.0)$   & 24.831890 & 0.824606 & 0.102266 & 25.677803 & 0.861634 & 0.076989 \\ 
+$\mathcal{N}(0, 0.1^2)$ & 23.028709 & 0.752731 & 0.114806 & 23.318026 & 0.755237 & 0.146877 \\ 
+$\mathcal{N}(0, 0.2^2)$ & 20.674553 & 0.613583 & 0.148965 & 21.383156 & 0.628668 & 0.209283 \\ 
+$\mathcal{N}(0, 0.3^2)$ & 20.502602 & 0.595552 & 0.154787 & 21.101936 & 0.612378 & 0.232985 \\ 
+$\mathcal{N}(0, 0.5^2)$ & 19.059755 & 0.482721 & 0.197262 & 20.071671 & 0.513037 & 0.299472 \\ 
+$\mathcal{N}(0, 1.0^2)$ & 18.085838 & 0.406564 & 0.338364 & 18.290358 & 0.417969 & 0.404933 \\ 
+$\mathcal{N}(0, 3.0^2)$ & 15.709220 & 0.344876 & 0.612587 & 15.077240 & 0.362973 & 0.698665 \\ 
 \hline
 \end{tabular}
 \caption{Results for Gaussian Noise experiment on both the baseline and shorter segments. The shorter segments are 10\% the size of the baseline segment, approximately 50m in length.}

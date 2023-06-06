@@ -1,4 +1,4 @@
-\chapter{Experiments and results} \label{sec:experiments-and-results}
+\chapter{Experiments and Results} \label{sec:experiments-and-results}
 This chapter provides a detailed account of the experimental methodology and results obtained to establish a baseline for NeRFs trained on synthetic data captured from the CARLA simulator. The defined baseline is then utilized to conduct further experiments investigating the impact of various settings and methods for training NeRFs, including pre-processing, different NeRF-models, and camera optimization. Furthermore, the experiments’ insights are applied to evaluate the proposed pipeline’s transferability from synthetic to real data.
 
 The results obtained from the experiments are evaluated both quantitatively, using the metrics discussed in \autoref{sec:evaluating-nerfs}, and qualitatively. The included qualitative results are frames extracted from video renders of the respective NeRFs. Although the frames convey important results, the video renders provide a much clearer understanding of correspondences between frames, potential artifacts, learned geometry, and other relevant information. To showcase these results, a companion page is available where different renders from this chapter's experiments can be browsed and compared.
@@ -12,7 +12,7 @@ Quantitative results are highlighted in the tables, with \ulcolor[green]{green} 
 \newpage
 \section{Experiment 1: Defining a Baseline}
 
-To facilitate comparison between experiments, it is crucial to establish a baseline. However, no existing baselines for NeRF models trained on synthetic data captured in CARLA currently exist. Therefore, this study defined a baseline by optimizing settings across various categories in CARLA, including camera setup, capacity, camera settings, vehicle speed, and number of frames. Both a quantitative and qualitative assessment was conducted for the results of each experiment. Based on the assessment, one of the configurations was selected and kept for further experiments.
+To facilitate comparison between experiments, it is crucial to be in possession of a baseline. However, no existing baselines for NeRF models trained on synthetic data captured in CARLA currently exist. Therefore, this study established a baseline by optimizing settings across various categories in CARLA, including camera setup, capacity, camera settings, vehicle speed, and number of frames. Both a quantitative and qualitative assessment was conducted for the results of each experiment. Based on the assessment, one of the configurations was selected and kept for further experiments.
 
 By establishing this baseline, it can be used as a reference point for improving both the data capture and NeRF models on synthetic data. The metrics used to evaluate the baseline (\acrshort{psnr}, \acrshort{ssim}, and \acrshort{lpips}) are widely used in NeRF research, ensuring the comparability of results with future experiments and research.
 
@@ -48,7 +48,7 @@ Experiment & Camera setup & Distance & Image freq. & Image res. & Speed \\
 
 
 \subsection{Experiment 1.1: Camera Setup} \label{sec:exp-camera-setup}
-The CARLA simulator provides a convenient way to attach multiple cameras with varying settings to a vehicle. To optimize the performance of NeRFs on RGB images, a series of experiments were conducted to determine the optimal camera setup based on the three metrics: \acrshort{psnr}, \acrshort{ssim}, \acrshort{lpips}. All cameras were positioned at the same base translation, at the roof of the ego vehicle approximately 3 meters above ground level. While this camera placement may be considered unrealistically elevated, it facilitates an unobstructed capture of the scene without interference from the ego vehicle. The camera setups tested in this study were:
+The CARLA simulator provides a convenient way to attach multiple cameras with varying settings to a vehicle. To optimize the performance of NeRFs on RGB images, a series of experiments were conducted to determine the optimal camera setup. All cameras were positioned at the same base translation, at the roof of the ego vehicle approximately 3 meters above ground level. While this camera placement may be considered unrealistically elevated, it facilitates an unobstructed capture of the scene without interference from the ego vehicle. The camera setups tested in this study were:
 
 % TODO: Add figure with the camera setups?
 \begin{itemize}
@@ -181,7 +181,7 @@ The results show that the quality of the rendered images degrades as the segment
 
 \subsection{Experiment 1.3: Number of Frames} \label{sec:exp-number-of-frames}
 %The number of input images used to train the NeRF should significantly affect its performance. 
-A NeRF's dataset is comprised of images and corresponding camera poses. The size of this dataset determines the amount of information available for the NeRF to learn the underlying 3D scene structure and appearance. A larger dataset can provide more diverse and detailed information about the scene, which can help the NeRF to capture fine-grained details and generalize better to novel views. Given that the NeRF is set to sample batches across all input images, as is the case for the chosen configuration previously discussed in \autoref{sec:nerfstudio-pipeline}, a larger set of input images should result in higher-quality image synthesis. To test this hypothesis, we conducted an experiment in which we varied the number of frames captured from a CARLA run, resulting in different-sized datasets. The results of this experiment are shown in \autoref{tab:exp_frames-2}.
+A NeRF's dataset is comprised of images and corresponding camera poses. The size of this dataset determines the amount of information available for the NeRF to learn the underlying 3D scene's structure and appearance. A larger dataset can provide more diverse and detailed information about the scene, which can help the NeRF to capture fine-grained details and generalize better to novel views. Given that the NeRF is set to sample batches across all input images, a larger set of input images should result in higher-quality image synthesis. To test this hypothesis, we conducted an experiment in which we varied the number of frames captured from a CARLA run, resulting in different-sized datasets. The results of this experiment are shown in \autoref{tab:exp_frames-2}.
 
 \begin{table}[ht]
 \centering
@@ -191,11 +191,11 @@ A NeRF's dataset is comprised of images and corresponding camera poses. The size
 \hline
 \textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
 \hline
-Capture data every tick & \cellcolor{green} 23.258400 & 0.723872 & 0.228383 \\
-\cellcolor{blue}Capture data every 2$^{\text{nd}}$ tick & 23.251682 & \cellcolor{green} 0.727191 & \cellcolor{green} 0.221351 \\
-Capture data every 3$^{\text{rd}}$ tick & 22.557207 & 0.696930 & 0.239964 \\
-Capture data every 4$^{\text{th}}$ tick & 22.219042 & 0.685168 & 0.250390 \\
-Capture data every 5$^{\text{th}}$ tick & \cellcolor{red} 21.917959 & \cellcolor{red} 0.678348 & \cellcolor{red} 0.258932 \\
+Capture data every frame & \cellcolor{green} 23.258400 & 0.723872 & 0.228383 \\
+\cellcolor{blue}Capture data every 2$^{\text{nd}}$ frame & 23.251682 & \cellcolor{green} 0.727191 & \cellcolor{green} 0.221351 \\
+Capture data every 3$^{\text{rd}}$ frame & 22.557207 & 0.696930 & 0.239964 \\
+Capture data every 4$^{\text{th}}$ frame & 22.219042 & 0.685168 & 0.250390 \\
+Capture data every 5$^{\text{th}}$ frame & \cellcolor{red} 21.917959 & \cellcolor{red} 0.678348 & \cellcolor{red} 0.258932 \\
 \hline
 \end{tabular}
 \caption[Results for experiment 1.3: Number of frames]{Comparison of different data capture frequencies' impact on the NeRF's performance}
@@ -280,7 +280,8 @@ Speed & 100\% (default: 30km/h) \\
 
 \autoref{fig:image-size-comparison} depicts the resulting image synthesis of the same frame across the models trained on low-, medium-, and high-resolution data. Although the quantitative results indicate that the $200 \times 150$-dataset performs best, the qualitative results demonstrate that NeRF trained on higher-resolution data is able to represent fine-grained details and produce more visually pleasing images. Based on both the qualitative and quantitative assessments, the configuration with an image resolution of $400 \times 300$ was chosen as the baseline for further experiments.
 
-\include{figures/image-size-comparison}
+\input{figures/image-size-comparison}
+\clearpage
 
 % Add to discussion
 % When using lower resolution images, the LPIPS and SSIM metrics may become less sensitive because they are less affected by small differences between the synthesized and ground-truth images. This is because lower resolution images have fewer pixels, which can make the metrics less precise in measuring the perceptual similarity between the images. However, using lower resolution images can also lead to a loss of detail and fidelity in the synthesized images. When using high-resolution images, these metrics may become less effective because they are more sensitive to small differences between the synthesized and ground-truth images. In other words, the NeRF may generate high-quality images that are perceptually similar to the ground-truth images, but small differences in the pixel values or noise can cause a significant decrease in the LPIPS and SSIM scores.
@@ -294,7 +295,7 @@ Speed & 100\% (default: 30km/h) \\
 
 
 \subsection{Experiment 1.5: Vehicle Speed} \label{sec:exp-speed}
-Higher vehicle speeds result in the capture of larger portions of the scene in a shorter amount of time. However, the motion of the vehicle during capture can lead to image blurring and distortion, potentially decreasing the performance of the resulting NeRF. To investigate the impact of vehicle speed on the quality of the captured data and the resulting NeRF, we conducted a series of experiments at varying speeds.
+Higher vehicle speeds result in the capture of larger portions of the scene in a shorter amount of time. However, the motion of the vehicle during capture can lead to image blurring and distortion, potentially decreasing the performance of the resulting NeRF. To investigate the impact of vehicle speed on the quality of the captured data and the resulting NeRF, we conducted a series of experiments where data was captured at varying speeds.
 
 
 
@@ -361,9 +362,9 @@ The results of the experiments, presented in \autoref{tab:exp_speed-2}, indicate
 
 
 \subsection{Experiment 1.6: Assessing the Combined Baseline} \label{sec:exp-combined-baseline}
-The configurations selected for the baseline used in further experiments are a combination of the configurations that produced the best results across the previous experiments. The baseline’s distance is the only setting that deviates from the configurations that produced the best results in previous experiments, and it will remain constant with a full lap around the block. As a result, the baseline's configurations consist of two forward-facing RGB-cameras, counterrotated with $-10^\circ$- and $10^\circ$ yaw, capturing data every second tick, along a city-block that spans $\sim450$ meters in distance, with an image size of $400 \times 300$, and a vehicle speed that's 50\% slower than the default of 30 km/h. 
+The configurations selected for the baseline used in further experiments are a combination of the configurations that produced the best results across the previous experiments. The baseline’s distance is the only setting that deviates from the configurations that produced the best results, and it will remain constant with a full lap around the block. As a result, the baseline's configurations, depicted in \autoref{tab:exp-combined-baseline-stable-variables}, consist of two forward-facing RGB-cameras, counterrotated with $-10^\circ$- and $10^\circ$ yaw, capturing data every second frame, along a city-block that spans $\sim450$ meters in distance, with an image size of $400 \times 300$, and a vehicle speed that's 50\% slower than the default of 30 km/h. With this configuration, the baseline achieves a \acrshort{psnr}, \acrshort{ssim}, and \acrshort{lpips} of 24.20, 0.767, and 0.167 respectively, as presented in \autoref{tab:exp_combined_baseline_2-0}.
 
-The baseline's high scores across all three metrics, \acrshort{psnr}, \acrshort{ssim}, and \acrshort{lpips}, as presented in \autoref{tab:exp_combined_baseline_2-0}, demonstrate that this configuration yields high-quality data capture. As a result, the combined baseline can serve as a useful starting point for future research and applications.
+The baseline's high scores across all three metrics demonstrate that this configuration yields high-quality data capture. As a result, the combined baseline can serve as a useful starting point for future research and applications.
 
 
 \begin{table}[ht]
@@ -377,7 +378,7 @@ The baseline's high scores across all three metrics, \acrshort{psnr}, \acrshort{
 Combined baseline & 24.197817 & 0.766733 & 0.168807 \\
 \hline
 \end{tabular}
-\caption[Results for experiment 1.6: Combined baseline]{The baseline metrics for a Nerfacto model trained on synthetic data captured from CARLA.}
+\caption[Results for experiment 1.6: Combined baseline]{The baseline metrics for a Nerfacto model trained on synthetic data captured from CARLA, with the configurations depicted in \autoref{tab:exp-combined-baseline-stable-variables}.}
 \label{tab:exp_combined_baseline_2-0}
 
 \vspace{0.5cm}
@@ -390,7 +391,7 @@ Combined baseline & 24.197817 & 0.766733 & 0.168807 \\
 \hline
 \cellcolor{blue}Camera setup &\cellcolor{blue}Two cameras, $[-10^{\circ}, 10^{\circ}]$ yaw  \\
 \cellcolor{blue}Distance &\cellcolor{blue}4 turns \\
-\cellcolor{blue}Ticks per image &\cellcolor{blue}Capture data every 2$^{\text{nd}}$ tick \\
+\cellcolor{blue}Image capture freq. &\cellcolor{blue}Capture data every 2$^{\text{nd}}$ frame \\
 \cellcolor{blue}Image resolution &\cellcolor{blue}Image resolution of $400 \times 300$ \\
 \cellcolor{blue}Speed &\cellcolor{blue}50\% speed \\
 \hline
@@ -414,7 +415,7 @@ Combined baseline & 24.197817 & 0.766733 & 0.168807 \\
 
 
 %\section{Experiment 2: Camera Poses With Simulated Inaccuracies}
-\section{Experiment 2: Simulated Noise Conditions}
+\section{Experiment 2: Simulated Noise Conditions} \label{sec:gaussian-noise}
 % The NAPLab vehicle is equipped with two Swift Navigation Duro Ruggedized Receivers, which offer superior positioning accuracy compared to regular GPS/GNSS systems. According to the manufacturer’s documentation, each Duro module has a horizontal position accuracy of 0.75 meters (CEP 50 in SBAS mode) without RTK, and can achieve centimeter-level accuracy with RTK enabled. This high level of accuracy enables the capture of rough camera poses alongside image capturing.
 
 During the capture of images and corresponding camera poses from a vehicle in a real-world scenario, the accuracy of camera poses is often impaired, primarily due to imperfections in \acrshort{gps}/\acrshort{gnss}-readings. To investigate the impact of noisy camera poses and the effectiveness of camera pose optimization, an experiment was conducted in which Gaussian noise was introduced to the camera poses obtained from the CARLA pipeline. The addition of Gaussian noise to the camera poses simulates the effects of imperfect camera poses in real-world data capture. The magnitude of the added noise is determined by the standard deviation of the Gaussian distribution, which increases progressively throughout the experiments. The results for the runs with and without camera optimization are presented in \autoref{tab:exp-gaussian-noise} and \autoref{fig:noise-combined-comparison}, with a full table of additional increments in \autoref{app:noise}.
@@ -457,7 +458,7 @@ $\mathcal{N}(0, 3.0^2)$ & 15.709220 &\cellcolor{red} 0.344876 & 0.612587 &\cellc
 %\input{figures/noise-short-segments}
 \input{figures/noise-combined-comparison}
 
-The NeRF's quality degrade across all metrics as the noise increases. While the difference in quantitative results between the runs with and without camera pose optimization may appear small, the qualitative comparison depicted in \autoref{fig:noise-combined-comparison} provides clear evidence of the optimization's efficacy. In addition, it seems to have a more substantial impact on shorter segments, than larger ones.
+As seen from the results in \autoref{tab:exp-gaussian-noise}, the NeRF's quality degrade across all metrics as the noise increases. While the difference in quantitative results between the runs with and without camera pose optimization may appear small, the qualitative comparison depicted in \autoref{fig:noise-combined-comparison} provides clear evidence of the optimization's efficacy. In addition, it seems to have a more substantial impact on shorter segments, than larger ones.
 
 \begin{comment}
 Information about GNSS-error
@@ -472,7 +473,7 @@ https://junipersys.com/support/article/6614#:~:text=Just%20as%20a%20general%20ob
 
 \subsection{Experiment 2.1: COLMAP versus Camera Pose Optimization}
 
-The camera optimization in the previous experiment shows promising results. In order to further investigate the effect of direct camera optimization on vehicle-captured data, a comparison to COLMAP's result on the same dataset is conducted. \autoref{tab:colmap-vs-poses} presents the results from the NeRF trained on the same images as in the experiment above, but with camera poses approximated with the SfM tool COLMAP.
+The camera optimization in the previous experiment shows promising results. In order to further investigate the effect of direct camera optimization on vehicle-captured data, a comparison to COLMAP's result on the same dataset is conducted. \autoref{tab:colmap-vs-poses} presents the results from the NeRF trained on the same images as in \hyperref[sec:gaussian-noise]{Experiment 2}, but with camera poses approximated with the \acrshort{sfm} tool, COLMAP.
 
 \begin{table}[ht]
 \centering
@@ -542,7 +543,7 @@ Comparing the results in \autoref{tab:colmap-vs-poses} and \autoref{tab:exp-gaus
 
 \newpage
 
-\section{Experiment 3: Comparing Different Models}
+\section{Experiment 3: Comparing NeRF-models}
 Nerfstudio has implemented multiple well-known NeRF-models including Instant-ngp \cite{mullerInstantNeuralGraphics2022} and Mip-NeRF \cite{barronMipNeRFMultiscaleRepresentation2021}. In this experiment, we investigate the model's impact on the output. The comparison of the different models is presented in \autoref{tab:different-models} and \autoref{fig:different-models}.
 
 \begin{table}[ht]
@@ -551,7 +552,7 @@ Nerfstudio has implemented multiple well-known NeRF-models including Instant-ngp
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{l | C{2.2} C{1.3} C{1.3} | r}
 \hline
-\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & Iterations \\
+\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{Iterations} \\
 \hline
 Nerfacto        & 24.197817                     &\cellcolor{green} 0.766733     &\cellcolor{green} 0.168807 & 15'000 \\
 Instant-ngp     &\cellcolor{green} 24.253278   & 0.7564714                     & 0.231680 & 15'000 \\
@@ -594,7 +595,7 @@ Single NeRF &\cellcolor{red} 24.197817 &\cellcolor{red} 0.766733 &\cellcolor{gre
 \hline
 %Average difference from one NeRF &\cellcolor{green} 0.2768 &\cellcolor{green} 0.02277125 &  \cellcolor{red} -0.015 % Unsure if I'll include this
 \end{tabular}
-\caption[Results for experiment 4: Block-NeRF on 4-segment dataset]{The average metrics across the four segments compared to the combined baseline on the same scene. The full overview of each segment's metrics can be viewed in the appendix in \autoref{tab:block-nerf-four-segments-full}.}
+\caption[Results for experiment 4: Block-NeRF on 4-segment dataset]{The average metrics across the four segments compared to the metrics for a single NeRF trained on the same scene. The full overview of each segment's metrics can be viewed in the appendix in \autoref{tab:block-nerf-four-segments-full}.}
 \label{tab:exp_combined_baseline_block_nerf}
 \end{table}
 
@@ -623,7 +624,7 @@ Despite the significantly lower quality of the single NeRF implementation compar
 
 \input{figures/block-nerf-frame-comparison}
 
-This issue could possibly be attributed to the hard cutoff between each block, in which $\text{block}_i$ only trains on a single data-bin $\text{data}_i$ where each data-bin is a disjunct collection of images and corresponding camera poses. A possible solution to the issue is to include an overlap of data from the previous and successive data-bin. Let $\text{data}_i$ be the $i$-th data-bin with the corresponding interval $[i, {i+1}]$. Then, the new interval for $\text{block}_i$ with overlap can be defined as $[i - \delta, {i+1} + \delta]$ where $\delta$ is the size of the overlap. In other words, the new interval includes not only the data-bin $\text{data}_i$, but also a portion of the previous data-bin $\text{data}_{i-1}$ and a portion of the successive data-bin $\text{data}_{i+2}$. A quantitative and qualitative comparison of the effects from this can be seen in \autoref{tab:block-nerf-overlap-comparison} and \autoref{fig:overlap} respectively.
+This issue could possibly be attributed to the hard cutoff between each Block-NeRF, in which $\text{Block-NeRF}_i$ only trains on a single data-bin $\text{data}_i$ where each data-bin is a disjunct collection of images and corresponding camera poses. A possible solution to the issue is to include an overlap of data from the previous and successive data-bin. Let $\text{data}_i$ be the $i$-th data-bin with the corresponding interval $[i, {i+1}]$. Then, the new interval for $\text{Block-NeRF}_i$ with overlap can be defined as $[i - \delta, {i+1} + \delta]$ where $\delta$ is the size of the overlap. In other words, the new interval includes not only the data-bin $\text{data}_i$, but also a portion of the previous data-bin $\text{data}_{i-1}$ and a portion of the successive data-bin $\text{data}_{i+2}$. A quantitative and qualitative comparison of the effects from this can be seen in \autoref{tab:block-nerf-overlap-comparison} and \autoref{fig:overlap} respectively.
 
 \begin{table}[ht]
 \centering
@@ -663,7 +664,7 @@ As shown in \autoref{fig:overlap}, an increase in $\delta$ results in a signific
 
 
 \section{Experiment 5: Real Data}
-The implementation of the real data-capture pipeline and the subsequent \texttt{NAPLabDataParser} allows the end-to-end pipeline to be run with data captured from the \acrshort{naplab} car. With the ability to conduct experiments on real data, we want to investigate the quality of the capture, if the captured data is suitable for training NeRFs, how the camera poses estimated from the \acrshort{gps} compare to the camera poses approximated with COLMAP, how splitting up the data and leveraging a Block-NeRF approach affects performance, and how camera optimization affects the results.
+The implementation of the real data-capture pipeline and the subsequent \texttt{NAPLabDataParser} allows the end-to-end pipeline to be run with data captured from the \acrshort{naplab} car. The real data captured was split into three datasets and is presented in \autoref{fig:naplab-dataset}. With the ability to conduct experiments on real data, we want to investigate the quality of the capture, if the captured data is suitable for training NeRFs, how the camera poses estimated from the \acrshort{gps} compare to the camera poses approximated with COLMAP, how splitting up the data and leveraging a Block-NeRF approach affects performance, and how camera optimization affects the results.
 
 In order to test the aforementioned aspects, eight different pipeline runs are conducted on the three datasets previously presented in \autoref{fig:naplab-dataset}. The experimental results for dataset 1 are presented in \autoref{tab:trip086-results}. As the results for datasets 2 and 3 show similar results, they have been moved to \autoref{app:real-data}.
 
@@ -695,7 +696,7 @@ COLMAP w/o optimizer, 4 BNs   &\cellcolor{green} 27.264171 &\cellcolor{green} 0.
 
 
 
-The results highlight interesting trade-offs between the applied approaches. Notably, the Block-NeRF runs with camera poses approximated by COLMAP without further optimization, yielded the best metrics across all the experiments. Disregarding both Block-NeRF runs, the NeRF trained on images with camera poses approximated with COLMAP and not further optimized yielded the best quantitative results. In contrast, the experiments leveraging \acrshort{gps} readings for camera pose approximations with or without optimization were less successful across all metrics, with the non-optimized \acrshort{gps} approach scoring the lowest across all three metrics.
+The results highlight interesting trade-offs between the applied approaches. Notably, the Block-NeRF runs with camera poses approximated by COLMAP without further optimization, yielded the best metrics across all the experiments. Disregarding both Block-NeRF runs, the NeRF trained on images with camera poses approximated by COLMAP without further optimization yielded the best quantitative results. In contrast, the experiments leveraging \acrshort{gps} readings for camera pose approximations with or without optimization were less successful across all metrics, with the non-optimized \acrshort{gps} approach scoring the lowest across all three metrics.
 
 
 % Of the runs that don't leverage the naive Block-NeRF approach, the run with camera poses approximated with COLMAP and further optimized camera poses achieves the significantly best PSNR. The COLMAP run without optimizer achieves best SSIM and LPIPS, although the metrics are very similar to the run with optimizer. The qualitative results from the two runs are very different. The run with optimized camera poses appear much more blurry than the one without optimized camera poses.
@@ -714,7 +715,6 @@ Delving deeper into qualitative outcomes, a stark contrast is observed between t
 
 This observation highlights the intriguing impact of pose optimization on image clarity and indicates that while certain metrics might be optimized, subjective visual quality and the overall objective might vary significantly. These results collectively underline the complex interplay between technical metrics and perceptual outcomes in the realm of NeRF generation.
 \end{comment}
-
 
 \section{Experiment 6: Novel Views Along Altered Trajectory} \label{sec:altered-trajectories}
 
