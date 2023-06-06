@@ -8,11 +8,20 @@ Først etableres en datainnsamlings-pipeline for CARLA, som gir tilgang til synt
 
 Resultatene er stort sett konsistente mellom syntetiske og ekte data; konfigurasjonen av datainnsamlingen har en betydelig innvirkning på kvaliteten av både dataene og den resulterende NeRF-modellen; en tilnærming som involverer flere mindre NeRF-modeller i stedet for én stor NeRF-modell, viser seg å være mer effektiv for å lære en scene i stor skala; parallell optimalisering av kameraposisjonen reduserer effekten av uperfekte kameraposisjoner, men forhåndsprosessering av kameraposisjonene med Structure-from-Motion (SfM) verktøy gir overlegne resultater.
 
-Når det gjelder å generere nye visninger for usette, spesielle scenarier, finner vi at gjengivelsene ikke helt matcher kvaliteten på de originale bildene. Likevel er de i stor grad vellykkede i å produsere klare og strukturelt nøyaktige gjengivelser, noe som bekrefter NeRF-er sitt potensiale og effektiviteten av tilnærmingen.
+Avslutningsvis undersøkes anvendelsen for å generere bilder fra usette, spesielle scenarier. Til tross for at de genererte bildene ikke gjenspeiler samme kvalitet som de originale bildene er de i stor grad vellykkede i å produsere klare og strukturelt nøyaktige gjengivelser. Dette bekrefter NeRF sitt potensiale i anvendelser for autonome kjøretøy.
+
+%Når det gjelder å generere nye visninger for usette, spesielle scenarier, finner vi at gjengivelsene ikke helt matcher kvaliteten på de originale bildene. Likevel er de i stor grad vellykkede i å produsere klare og strukturelt nøyaktige gjengivelser, noe som bekrefter NeRF-er sitt potensiale og effektiviteten av tilnærmingen.
 
 
 
 \begin{comment}
+Wrapping up, the application of rendering novel views for generating data from edge case scenarios is investigated. Although the renderings don't match the original images' quality, they are largely successful in producing clear and structurally accurate renderings. This reaffirms NeRFs' effectiveness and potential for \acrshort{ad} applications.
+
+Avslutningsvis undersøkes bruken av å gjengi nye visninger for å generere data fra kant-case-scenarier. Selv om gjengivelsene ikke samsvarer med originalbildenes kvalitet, er de stort sett vellykkede med å produsere klare og strukturelt nøyaktige gjengivelser. Dette bekrefter NeRFs effektivitet og potensial for \acrshort{ad}-applikasjoner.
+
+
+
+
 Feltet for Neural Radiance Fields (NeRF) har opplevd en oppsving i forskning og utvikling de siste årene, med betydelige forbedringer i modellprestasjon og en økende rekkevidde av anvendelsesområder. Midt i denne veksten har bruken av NeRFs i autonome kjøretøy fremstått som et lovende forskningsområde, da NeRFs kan generere et miljø for å evaluere autonome kjøretøy i tillegg til å generere fotorealistiske bilder av sjeldne scenarier.
 
 Det primære forskningsmålet med denne masteroppgaven er å utforme og utvikle en ende-til-ende-pipeline for å generere NeRFs, ved å benytte videosekvenser fra kjøretøy med tilhørende kameraposisjoner av varierende nøyaktighetsgrad.
