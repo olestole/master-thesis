@@ -123,7 +123,7 @@ The chosen research method for this report is experimental research. The experim
 \section{Contribution}
 One of the primary contributions of this master's thesis is the establishment of a pipeline from CARLA \cite{Dosovitskiy17} to Nerfstudio \cite{nerfstudio}. This pipeline serves as a tool for conducting a variety of experiments, which could further be applied to real-world scenarios. By permitting the manipulation of various experiment settings, such as the camera setup, vehicle speed, route, and image resolution, this pipeline streamlines the process. Furthermore, the pipeline's data output is compatible with most NeRFs, thereby enabling the training of NeRFs on synthetic data captured in CARLA. This consequently facilitates the refinement of settings to enhance the resulting image synthesis based on the evaluation of the NeRF. In addition to the pipeline for synthetic data, the pipeline is also extended to allow the input of real data captured by the \acrfull{naplab} car \cite{naplab}.
 
-In addition to the pipeline, this thesis introduces a baseline for NeRFs trained on synthetic data captured in CARLA. This baseline can be used to augment both the data capture and the NeRF models on synthetic data. It offers a platform for experimenting with data capture and NeRF settings, and its evaluation metrics (PSNR, SSIM, and LPIPS) align with those widely used in NeRF research, ensuring comparability.
+In addition to the pipeline, this thesis introduces a baseline for NeRFs trained on synthetic data captured in CARLA. This baseline can be used to augment both the data capture and the NeRF models on synthetic data. It offers a platform for experimenting with data capture and NeRF settings, and its evaluation metrics (\acrshort{psnr}, \acrshort{ssim}, and \acrshort{lpips}) align with those widely used in NeRF research, ensuring comparability.
 
 Another contribution lies in the development of a \acrfull{poc} for large-scale NeRF approach with the Nerfstudio API. By creating a naive Block-NeRF implementation, it demonstrates how such an approach can dramatically enhance the quality of large-scale NeRFs. This \acrshort{poc} provides a testing ground for determining crucial parameters when capturing large-scale data for NeRFs, such as the segment size, the overlap between the blocks, and image merging techniques.
 
@@ -143,9 +143,9 @@ Lastly, the thesis includes the creation of a utility for generating side-by-sid
         \item Can be used to experiment with data capture- and NeRF-settings.
         \item The metrics used to evaluate the baseline (PSNR, SSIM and LPIPS) are widely used throughout NeRF-research and makes comparable.
     \end{itemize}
-    \item Block NeRF in Nerfstudio API
+    \item Block-NeRF in Nerfstudio API
     \begin{itemize}
-        \item Creates a naive Block NeRF implementation with the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
+        \item Creates a naive Block-NeRF implementation with the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
         \item The PoC allows testing which parameters are important when capturing large-scale data for NeRFs. E.g. the segment size, overlap between the blocks, and image merging techniques.
     \end{itemize}
     \item Side-by-side view
@@ -194,8 +194,8 @@ Summarizes the main findings of the study and further suggests a direction for f
 4. How does the speed of the vehicle affect the quality of the data captured by the mounted cameras in the context of training NeRFs?
 5. How effective is the camera pose optimization step in the Nerfacto-pipeline in reducing noise in the rendered images?
 6. How does the use of Gaussian noise in the experiments affect the evaluation of the impact of camera optimization in the Nerfacto-pipeline?
-7. How does the Block NeRF implementation compare to the traditional NeRF implementation in terms of efficacy and computational requirements?
-8. What improvements can be made to the Block NeRF implementation to further mitigate the differences in quality between blocks?
+7. How does the Block-NeRF implementation compare to the traditional NeRF implementation in terms of efficacy and computational requirements?
+8. What improvements can be made to the Block-NeRF implementation to further mitigate the differences in quality between blocks?
 9. How was the implementation of the CARLA to NerfStudio pipeline executed?
 
 
@@ -210,8 +210,8 @@ Summarizes the main findings of the study and further suggests a direction for f
 4. What role does the established baseline play in advancing NeRF-models on synthetic data captured in CARLA, and how can it be utilized more efficiently?
 5. How can the data capture settings be optimized to improve the quality and consistency of synthetic data for NeRF training, leveraging the baseline established?
 6. Which metrics, in addition to PSNR, SSIM, and LPIPS, can be employed to provide a more comprehensive evaluation of the NeRF baseline?
-7. How does the integration of Block NeRF in the Nerfstudio API improve the quality of large scene NeRFs, and what are the key parameters influencing this improvement?
-8. What strategies can be used to identify and modify the essential parameters (such as segment size, block overlap, image merging techniques) when capturing large scale data for NeRFs using Block NeRF in the Nerfstudio API?
+7. How does the integration of Block-NeRF in the Nerfstudio API improve the quality of large scene NeRFs, and what are the key parameters influencing this improvement?
+8. What strategies can be used to identify and modify the essential parameters (such as segment size, block overlap, image merging techniques) when capturing large scale data for NeRFs using Block-NeRF in the Nerfstudio API?
 9. How does the side-by-side view feature leveraging FFMPEG enhance the qualitative assessment of the resulting NeRF, and how can this be further improved?
 10. What potential future extensions can be envisioned for the CARLA-Nerfstudio pipeline to accommodate real data, moving beyond synthetic data environments, and what would be the challenges associated with such extensions?
 \end{comment}
@@ -247,8 +247,8 @@ For the qualitative assessment, we will conduct an in-depth analysis of the vide
     - Can be used to further improve both the data capture and the NeRF-models on synthetic data.
     - Can be used to experiment with data capture- and NeRF-settings.
     - The metrics used to evaluate the baseline (PSNR, SSIM and LPIPS) are widely used throughout NeRF-research and makes comparable.
-- Block NeRF in Nerfstudio API
-    - Creates a naive Block NeRF implementation in the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
+- Block-NeRF in Nerfstudio API
+    - Creates a naive Block-NeRF implementation in the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
     - The PoC allows testing which parameters are important when capturing large scale data for NeRFs. E.g. the segment size, overlap between the blocks, image merging techniques.
 - Side-by-side view
     - Leverage FFMPEG to create a script for generating side-by-side views of the rendered NeRF and the ground truth.

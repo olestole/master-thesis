@@ -260,7 +260,7 @@ During the training of a NeRF, a batch of pixels is created for each training it
 
 
 \subsubsection{Evaluate}
-To quantitatively evaluate the quality of the NeRF models, we utilize the metrics PSNR, SSIM, and LPIPS, as elaborated upon in \autoref{sec:evaluating-nerfs}. During the evaluation, the camera poses from the evaluation dataset are fed into the trained model which subsequently renders the novel views. The rendered images are then compared against the corresponding ground truth images from the evaluation dataset according to the aforementioned metrics. 
+To quantitatively evaluate the quality of the NeRF models, we utilize the metrics \acrshort{psnr}, \acrshort{ssim}, and \acrshort{lpips}, as elaborated upon in \autoref{sec:evaluating-nerfs}. During the evaluation, the camera poses from the evaluation dataset are fed into the trained model which subsequently renders the novel views. The rendered images are then compared against the corresponding ground truth images from the evaluation dataset according to the aforementioned metrics. 
 
 The Nerfstudio API provides a script to load a model-checkpoint and compute these metrics, providing a quantitative assessment of the trained NeRF. To further facilitate the comparison of NeRF models across multiple experiments, an additional script was developed. This script load the evaluation outputs, compares the resulting metrics and produces a formatted LaTeX table that highlights the best and worst metrics.
 
@@ -315,7 +315,7 @@ Question: How do I find a CARLA-baseline?
 
 A pipeline to evaluate numerous CARLA configurations to identify a configuration that generates high-quality data for NeRF training has been established. In order to facilitate further experiments, a baseline need to be created.
 
-The experiments chosen to define a suitable baseline are mostly based on heuristics and knowledge of what's important for good NeRF results. When capturing video or images for a NeRF it’s important that the scene is well-lit, that you capture non-blurry images, and that there are no transient objects present. If the camera poses of the images you capture are to be approximated with the use of SfM-methods like COLMAP, it's also very important that the images have an overlap in order to secure feature-matching across the images. The five experiments chosen to define the baseline, which will be elaborated upon in \autoref{sec:experiments-and-results}, were:
+The experiments chosen to define a suitable baseline are mostly based on heuristics and knowledge of what's important for good NeRF results. When capturing video or images for a NeRF it’s important that the scene is well-lit, that the captured images aren't blurry, and that there are no transient objects present. If the camera poses of the captured images are to be approximated with the use of SfM-methods like COLMAP, it's also very important that the images have an overlap in order to secure feature-matching across the images. The five experiments chosen to define the baseline, which will be elaborated upon in \autoref{sec:experiments-and-results}, were:
 
 \begin{itemize}
     \item \textbf{Camera setup:} How many cameras should be mounted to the ego vehicle, and in what translation and rotation?
@@ -359,7 +359,7 @@ With a defined baseline, we can now evaluate the impact of different NeRF- and c
     \item \textbf{Noisy sensor readings:} Noise in the camera pose due to inaccurate readings from the GPS/GNSS.
     \item \textbf{Approximated poses vs. perfect poses:} How effective is COLMAP in approximating the camera poses, as opposed to the perfect camera poses extracted from CARLA?
     \item \textbf{Different models:} How do the different NeRF models perform against each other?
-    \item \textbf{Improve capacity - Block NeRF PoC}: How can we train NeRFs on increasingly larger scenes?
+    \item \textbf{Improve capacity - Block-NeRF PoC}: How can we train NeRFs on increasingly larger scenes?
 \end{itemize}
 
 
@@ -433,7 +433,7 @@ The NeRF model in the defined baseline has proven to perform well. When we chang
 
 As discussed in \autoref{sec:block-nerf} it is an open research field within the NeRF community to expand the capability of NeRFs to enable the representation of large scenes. Compared to the other fields covered in NeRF research, there aren't a lot of papers exploring large-scale NeRFs, which might be due to the amount of data needed and the corresponding data capture endeavor. Luckily, we have constructed a pipeline that automates synthetic data capture and the subsequent processing, training, evaluation and rendering of the NeRF. Due to this we expand the pipeline to enable the evaluation of a large-scale NeRF approach, based on a naive implementation of Block-NeRf \cite{tancik_block-nerf_2022}.
 
-% Explain the naive Block NeRF implementation
+% Explain the naive Block-NeRF implementation
 One of the main challenges in implementing Block-NeRF is obtaining the camera poses for the captured images. Traditional SfM methods, such as COLMAP, become computationally expensive and slow when dealing with large datasets, as is demonstrated by the feature matching complexity overview presented in Table \ref{tab:colmap-feature-complexity}. However, being in possession of the image's corresponding camera poses simplifies the process. Assuming we have both, the steps for creating a Block-NeRF model can be summarized as follows:
 
 \begin{itemize}
@@ -447,7 +447,7 @@ One of the main challenges in implementing Block-NeRF is obtaining the camera po
     
     \item \textbf{Create a camera path spanning the segments contained in the complete dataset:}
     
-    There are multiple options for creating the camera path: The camera path can be created in the Nerfstudio viewer, you could leverage a previously exported camera path, or you could use a helper function to leverage the camera path of the input images which will later also be used to generate the side-by-side render. No matter which option you choose, an important aspect in this naive implementation is that the camera-to-world matrices in the camera path are in the same scale and coordinate system as the Block-NeRF's \texttt{transforms.json}-files.
+    There are multiple options for creating the camera path: The camera path can be created in the Nerfstudio viewer, a previously exported camera path can be used, or a helper function could be utilized to leverage the camera path of the input images which will later also be used to generate the side-by-side render. No matter which option is chosen, an important aspect in this naive implementation is that the camera-to-world matrices in the camera path are in the same scale and coordinate system as the Block-NeRF's \texttt{transforms.json}-files.
     
     \item \textbf{Create a lookup table for which Block to render which camera pose:}
 
@@ -502,7 +502,7 @@ One of the main challenges in implementing Block-NeRF is obtaining the camera po
 
 \input{figures/block-nerf-file-structure}
 
-%A large part of what is tricky with implementing Block-NeRF is obtaining the captured images' camera poses. COLMAP becomes painfully slow with large datasets, as can be seen by the feature matching complexity overview in \autoref{tab:colmap-feature-complexity}. When you capture the images' corresponding camera pose simultaneously as you capture the image, it's another story. With both the images and camera poses, the main steps in creating the Block NeRF are 1) splitting the dataset into multiple smaller datasets, 2) training separate NeRFs on the split datasets, 3) creating a camera path and modifying it to take into account the offset between each NeRF, 4) and lastly rendering the camera path by combining renders from suitable NeRFs.
+%A large part of what is tricky with implementing Block-NeRF is obtaining the captured images' camera poses. COLMAP becomes painfully slow with large datasets, as can be seen by the feature matching complexity overview in \autoref{tab:colmap-feature-complexity}. When you capture the images' corresponding camera pose simultaneously as you capture the image, it's another story. With both the images and camera poses, the main steps in creating the Block-NeRF are 1) splitting the dataset into multiple smaller datasets, 2) training separate NeRFs on the split datasets, 3) creating a camera path and modifying it to take into account the offset between each NeRF, 4) and lastly rendering the camera path by combining renders from suitable NeRFs.
 
 
 

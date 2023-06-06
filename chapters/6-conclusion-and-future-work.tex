@@ -26,7 +26,7 @@ The primary research goal of this thesis was to design and develop an end-to-end
 
 Initially, a data capture pipeline was created for CARLA, which provided synthetic data from a controlled environment. Connecting this data capture pipeline with the Nerfstudio pipeline facilitated the creation of a performance baseline for further experiments. During the creation of the baseline, multiple configurations and settings were evaluated, underscoring their significance on the resulting image synthesis. Some of the configurations that proved important were camera setup, segment length, dataset size, image resolution, and vehicle speed.
 
-Having obtained a baseline, further experiments were conducted, revealing important findings: NeRFs trained with jointly optimized camera poses consistently achieved higher scores than non-optimized camera poses on the metrics PSNR, SSIM and LPIPS, and proved particularly effective on shorter segments. However, pre-processing an approximation of the camera poses with COLMAP outperformed camera pose optimization, especially in high-noise situations, arguing for its consideration despite an upfront processing-time investment.
+Having obtained a baseline, further experiments were conducted, revealing important findings: NeRFs trained with jointly optimized camera poses consistently achieved higher scores than non-optimized camera poses on the metrics \acrshort{psnr}, \acrshort{ssim} and \acrshort{lpips}, and proved particularly effective on shorter segments. However, pre-processing an approximation of the camera poses with COLMAP outperformed camera pose optimization, especially in high-noise situations, arguing for its consideration despite an upfront processing-time investment.
 
 Progressing into the exploration of large-scale NeRF approaches, a naive prototype was implemented. Despite being a prototype with rudimentary features, the high-quality results were consistent across multiple scenes. The approach provided the ability to represent large scenes while still retaining sharp details and high visual quality.
 
@@ -43,7 +43,7 @@ Subsequent experimentation built upon this baseline, revealing important finding
 
 Progressing into the exploration of large-scale NeRF approaches, we implemented a naive variant. The promising results of this implementation were evident across multiple scenes, with image synthesis displaying sharper details and a notable improvement in overall visual quality.
 
-Applying the acquired knowledge from the previous experiments, a dataparser for the NAPLab vehicle was created, allowing the end-to-end pipeline to be used on real data. Despite lower-quality image synthesis due to the uncontrollable environment, many of the findings from the controllable, virtual environment held true. Although optimizing camera poses performed better than not optimizing them, COLMAP outperformed joint camera optimization overall. Additionally, the naive Block NeRF implementation performed better than a single NeRF.
+Applying the acquired knowledge from the previous experiments, a dataparser for the NAPLab vehicle was created, allowing the end-to-end pipeline to be used on real data. Despite lower-quality image synthesis due to the uncontrollable environment, many of the findings from the controllable, virtual environment held true. Although optimizing camera poses performed better than not optimizing them, COLMAP outperformed joint camera optimization overall. Additionally, the naive Block-NeRF implementation performed better than a single NeRF.
 \end{comment}
 
 \begin{comment}
@@ -57,8 +57,8 @@ Following the successful implementation of a dataparser for real-world data, we 
     - Can be used to further improve both the data capture and the NeRF-models on synthetic data.
     - Can be used to experiment with data capture- and NeRF-settings.
     - The metrics used to evaluate the baseline (PSNR, SSIM and LPIPS) are widely used throughout NeRF-research and makes comparable.
-- Block NeRF in Nerfstudio API
-    - Creates a naive Block NeRF implementation in the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
+- Block-NeRF in Nerfstudio API
+    - Creates a naive Block-NeRF implementation in the Nerfstudio API, demonstrating how such an approach can substantially increase the quality of large scene NeRFs.
     - The PoC allows testing which parameters are important when capturing large scale data for NeRFs. E.g. the segment size, overlap between the blocks, image merging techniques.
 - Side-by-side view
     - Leverage FFMPEG to create a script for generating side-by-side views of the rendered NeRF and the ground truth.
