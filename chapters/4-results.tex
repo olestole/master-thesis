@@ -417,7 +417,7 @@ Combined baseline & 24.197817 & 0.766733 & 0.168807 \\
 \section{Experiment 2: Simulated Noise Conditions}
 % The NAPLab vehicle is equipped with two Swift Navigation Duro Ruggedized Receivers, which offer superior positioning accuracy compared to regular GPS/GNSS systems. According to the manufacturer’s documentation, each Duro module has a horizontal position accuracy of 0.75 meters (CEP 50 in SBAS mode) without RTK, and can achieve centimeter-level accuracy with RTK enabled. This high level of accuracy enables the capture of rough camera poses alongside image capturing.
 
-During the capture of images and corresponding camera poses from a vehicle in a real-world scenario, the accuracy of camera poses is often impaired, primarily due to imperfections in GPS/GNSS-readings. To investigate the impact of noisy camera poses and the effectiveness of camera pose optimization, an experiment was conducted in which Gaussian noise was introduced to the camera poses obtained from the CARLA pipeline. The addition of Gaussian noise to the camera poses simulates the effects of imperfect camera poses in real-world data capture. The magnitude of the added noise is determined by the standard deviation of the Gaussian distribution, which increases progressively throughout the experiments. The results for the runs with and without camera optimization are presented in \autoref{tab:exp-gaussian-noise} and \autoref{fig:noise-combined-comparison}, with a full table of additional increments in \autoref{app:noise}.
+During the capture of images and corresponding camera poses from a vehicle in a real-world scenario, the accuracy of camera poses is often impaired, primarily due to imperfections in \acrshort{gps}/\acrshort{gnss}-readings. To investigate the impact of noisy camera poses and the effectiveness of camera pose optimization, an experiment was conducted in which Gaussian noise was introduced to the camera poses obtained from the CARLA pipeline. The addition of Gaussian noise to the camera poses simulates the effects of imperfect camera poses in real-world data capture. The magnitude of the added noise is determined by the standard deviation of the Gaussian distribution, which increases progressively throughout the experiments. The results for the runs with and without camera optimization are presented in \autoref{tab:exp-gaussian-noise} and \autoref{fig:noise-combined-comparison}, with a full table of additional increments in \autoref{app:noise}.
 
 % I've tried combining both the baseline and shorter segments into single table.
 \begin{table}[ht]
@@ -663,7 +663,7 @@ As shown in \autoref{fig:overlap}, an increase in $\delta$ results in a signific
 
 
 \section{Experiment 5: Real Data}
-The implementation of the real data-capture pipeline and the subsequent \texttt{NAPLabDataParser} allows the end-to-end pipeline to be run with data captured from the NAPLab car. With the ability to conduct experiments on real data, we want to investigate the quality of the capture, if the captured data is suitable for training NeRFs, how the camera poses estimated from the GPS compare to the camera poses approximated with COLMAP, how splitting up the data and leveraging a Block-NeRF approach affects performance, and how camera optimization affects the results.
+The implementation of the real data-capture pipeline and the subsequent \texttt{NAPLabDataParser} allows the end-to-end pipeline to be run with data captured from the \acrshort{naplab} car. With the ability to conduct experiments on real data, we want to investigate the quality of the capture, if the captured data is suitable for training NeRFs, how the camera poses estimated from the \acrshort{gps} compare to the camera poses approximated with COLMAP, how splitting up the data and leveraging a Block-NeRF approach affects performance, and how camera optimization affects the results.
 
 In order to test the aforementioned aspects, eight different pipeline runs are conducted on the three datasets previously presented in \autoref{fig:naplab-dataset}. The experimental results for dataset 1 are presented in \autoref{tab:trip086-results}. As the results for datasets 2 and 3 show similar results, they have been moved to \autoref{app:real-data}.
 
@@ -679,13 +679,13 @@ COLMAP w/ optimizer           & 21.990341 & 0.791958 & 0.404055         & 00:26:
 COLMAP w/o optimizer          & 24.589824 & 0.862041 & 0.272113         & 00:26:45 \\
 COLMAP w/ optimizer, 4 BNs    & 22.581596	& 0.79431075 & 0.25169325   & 00:26:45 \\
 COLMAP w/o optimizer, 4 BNs   &\cellcolor{green} 27.264171 &\cellcolor{green} 0.8992085 &\cellcolor{green} 0.1979095       & 00:26:45 \\
-GPS w/ optimizer              & 20.001791 & 0.753200 & 0.491038         & 00:00:00 \\
-GPS w/o optimizer             &\cellcolor{red} 17.044231 & 0.737539 &\cellcolor{red} 0.550054         & 00:00:00 \\
-GPS w/ optimizer, 4 BNs       & 20.115084 & 0.74115775 & 0.39719275     & 00:00:00 \\
-GPS w/o optimizer, 4 BNs      & 19.37362825 &\cellcolor{red} 0.73673875 & 0.5112605    & 00:00:00 \\
+\acrshort{gps} w/ optimizer              & 20.001791 & 0.753200 & 0.491038         & 00:00:00 \\
+\acrshort{gps} w/o optimizer             &\cellcolor{red} 17.044231 & 0.737539 &\cellcolor{red} 0.550054         & 00:00:00 \\
+\acrshort{gps} w/ optimizer, 4 BNs       & 20.115084 & 0.74115775 & 0.39719275     & 00:00:00 \\
+\acrshort{gps} w/o optimizer, 4 BNs      & 19.37362825 &\cellcolor{red} 0.73673875 & 0.5112605    & 00:00:00 \\
 \hline
 \end{tabular}
-\caption[Results from experiment 5: Real data]{Results from training NeRF on dataset 1. The transformation matrices are approximated with COLMAP or estimated from GPS-readings. "BN" is an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
+\caption[Results from experiment 5: Real data]{Results from training NeRF on dataset 1. The transformation matrices are approximated with COLMAP or estimated from \acrshort{gps}-readings. "BN" is an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
 \label{tab:trip086-results}
 \end{table}
 
@@ -695,7 +695,7 @@ GPS w/o optimizer, 4 BNs      & 19.37362825 &\cellcolor{red} 0.73673875 & 0.5112
 
 
 
-The results highlight interesting trade-offs between the applied approaches. Notably, the Block-NeRF runs with camera poses approximated by COLMAP without further optimization, yielded the best metrics across all the experiments. Disregarding both Block-NeRF runs, the NeRF trained on images with camera poses approximated with COLMAP and not further optimized yielded the best quantitative results. In contrast, the experiments leveraging GPS readings for camera pose approximations with or without optimization were less successful across all metrics, with the non-optimized GPS approach scoring the lowest across all three metrics.
+The results highlight interesting trade-offs between the applied approaches. Notably, the Block-NeRF runs with camera poses approximated by COLMAP without further optimization, yielded the best metrics across all the experiments. Disregarding both Block-NeRF runs, the NeRF trained on images with camera poses approximated with COLMAP and not further optimized yielded the best quantitative results. In contrast, the experiments leveraging \acrshort{gps} readings for camera pose approximations with or without optimization were less successful across all metrics, with the non-optimized \acrshort{gps} approach scoring the lowest across all three metrics.
 
 
 % Of the runs that don't leverage the naive Block-NeRF approach, the run with camera poses approximated with COLMAP and further optimized camera poses achieves the significantly best PSNR. The COLMAP run without optimizer achieves best SSIM and LPIPS, although the metrics are very similar to the run with optimizer. The qualitative results from the two runs are very different. The run with optimized camera poses appear much more blurry than the one without optimized camera poses.
