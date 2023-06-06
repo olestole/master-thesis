@@ -193,6 +193,16 @@ memory complexity: O(n * k), where k is the number of top-retrieved images that 
 There is definitively literature on the topic of the time and memory complexity of vocabulary tree-based matching and image retrieval
 \end{comment}
 
+\section{Nerfstudio} \label{sec:nerfstudio}
+%Since publication of the original NeRF paper, a multitude of different methods regarding NeRF has been published. Some of the papers are published with corresponding source code and some not. However, it's no easy task to compare the different methods on self-captured data. Nerfstudio is an open-source framework/API that 
+
+With the magnitude of different published methods regarding NeRF, some with corresponding source code and some not, it's not trivial to compare them on self-captured data. Nerfstudio \cite{nerfstudio} is an open-source framework/API that streamlines the creation, training, and visualization of NeRFs. The components that make up NeRFs are modularized in a way that allows interpretable implementation of different NeRF methods. In addition, Nerfstudio ships with implemented versions of some of the most important published methods to date for real-world captures. The core concepts within Nerfstudio are presented in \autoref{fig:nerfstudio-pipeline-components}. 
+
+\input{figures/nerfstudio-pipeline-components}
+
+%\textbf{\texttt{DataManagers} and \texttt{DataParsers}}:
+
+
 
 \section{CARLA} \label{sec:carla}
 CARLA \cite{Dosovitskiy17} is an open-source simulator for autonomous driving research which enable the capture of synthetic data in a controllable and programmable environment. Its highly customizable simulation environment allows for the creation and testing of a wide range of driving scenarios and conditions. CARLA includes a variety of sensors, such as cameras, \acrfull{lidar}, and \acrfull{gps}/\acrfull{gnss}, which can be used to collect visual and non-visual data. We can interact with CARLA’s features via a Python API, which allows for the control of vehicle position, orientation, and most other behaviors within the simulation. This flexibility enables the generation of diverse and realistic data, making CARLA, among many other things, a powerful tool for the development and testing of data capture pipelines. Data captured from CARLA can be seen in \autoref{fig:carla-3-camera-setup}.
@@ -210,7 +220,7 @@ Evaluating the quality of NeRFs is a difficult task due to the visual nature of 
 % Evaluating the quality of NeRFs is inherently hard since it's a visual modality. After a NeRF is trained it will eventually be used to render an image. Image similarity metrics are consequently the most important metric to evaluate the quality of a NeRF. The assessment of image similarity has been a long-standing challenge in computer graphics, but the following metrics are commonly used throughout most papers comparing NeRFs.
 
 % ✅ Not much done, already well-written subsection.
-\subsection[PSNR]{\acrfull{psnr}}
+\subsection[PSNR]{\acrfull{psnr}} \label{sec:psnr}
 PSNR is a common measure for quantifying reconstruction quality for images and videos. It builds upon Mean Squared Error (MSE) which measures the absolute difference between each pixel in two images $I_1$ and $I_2$.
 
 \input{equations/psnr.tex}
@@ -333,12 +343,9 @@ The main technique proposed by Instant-NeRF is a new parametric encoding for the
 %The only difference is essentially how spatial data is represented, i.e. parametric encoding. Instant-NGP encodes spatial data at multiple resolutions using hash tables, thereof the name multiresolution hash tables. During backpropagation, the MLP's weights and the feature vectors in the hash tables are both updated.
 %In a fully connected MLP, every weight and bias must be updated on back-propagation. With parametric encodings, only a very small number of feature vectors must be updated. Also, by reducing the size of the MLP, such parametric models can be trained to convergence much faster without sacrificing approximation quality. You trade a larger memory footprint by allocating hash tables, but in return you have to update a far lower number of trainable parameters per back-propagation, leading to an increased training and inference speed.
 
-
-\subsection{Nerfstudio} \label{sec:nerfstudio}
-With the magnitude of different published methods regarding NeRF, some with corresponding source code and some not, it's not trivial to compare them on self-captured data. Nerfstudio \cite{nerfstudio} is an open-source framework/API that streamlines the creation, training, and visualization of NeRFs. The components that make up NeRFs are modularized in a way that allows interpretable implementation of different NeRF methods. In addition, it ships with implemented versions of some of the most important published methods to date for real-world captures; NeRF, Mip-NeRF, and Instant-ngp.
-
 \subsection{Nerfacto} \label{sec:nerfacto}
-Nerfstudio also provides its own method dubbed Nerfacto \cite{nerfstudio}. Nerfacto leverages techniques from several other published methods that have proved to work well for real data capture. The combination of techniques, partially depicted in \autoref{fig:nerfacto-pipeline-overview}, results in a method that strikes a great balance between quality and speed. The techniques highlighted by Nerfacto have already been discussed in \autoref{chap:relatedwork}. However, they will be briefly recapped and elaborated upon here:
+Nerfstudio, discussed in \autoref{sec:nerfstudio}, also provides its own method dubbed Nerfacto \cite{nerfstudio}. Nerfacto leverages techniques from several other published methods that have proved to work well for real data capture. The combination of techniques, partially depicted in \autoref{fig:nerfacto-pipeline-overview}, results in a method that strikes a great balance between quality and speed. 
+The primary techniques implemented in Nerfacto have already been discussed. However, they will be briefly listed and summarized in this section:
 
 \input{figures/nerfacto-pipeline-overview.tex}
 
@@ -351,6 +358,9 @@ Nerfstudio also provides its own method dubbed Nerfacto \cite{nerfstudio}. Nerfa
 \textbf{Proposal sampling}, as described in \autoref{sec:mipnerf360}, is a sampling technique used to increase the sampling density of areas that contribute most to the final render. Nerfacto extends the proposal sampler used in Mip-NeRF 360 \cite{barron_mip-nerf_2022} by utilizing two density functions implemented as small fused-MLP with hash encodings \cite{muller_instant_2022}. This provides accurate and fast density estimations.
 
 \textbf{Scene contraction}, as described in \autoref{sec:mipnerf360}, is a technique proposed in Mip-NeRF 360 \cite{barron_mip-nerf_2022} to extend Mip-NeRF to support unbounded scenes.
+
+
+
 
 \subsection[Wayve - NeRFs for Autonomous Driving]{Wayve - Building City-Scale Neural Radiance Fields for Autonomous Driving} \label{sec:wayve}
 Wayve, a London-based company, is a leading innovator in autonomous vehicle technology. At Nvidia GTC, they presented a talk on how they leverage NeRFs to extend their pipeline used to train autonomous vehicles. Their initial need was a simulator that was indistinguishable from reality, but building such a simulator is very time-consuming, challenging, and expensive. Their solution was to use NeRFs to automatically "build the simulator with data."
