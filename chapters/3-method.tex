@@ -241,7 +241,7 @@ During training, the parameters in the model are optimized to represent the 3D s
 
 For the Nerfacto-model, the primary model used throughout this thesis and previously discussed in \autoref{sec:nerfacto}, the training process entails backpropagating the loss and updating both the NeRF \acrshort{mlp} and the proposal \acrshort{mlp}. The Nerfacto-model leverages three different losses to guide the training; \textit{photometric loss}, \textit{interlevel loss}, and \textit{distortion loss}. Photometric loss is the standard NeRF-loss explained in \autoref{eq:nerf-loss}. Interlevel- and distortion-loss are both from the Mip-NeRF 360\cite{barron_mip-nerf_2022} implementation explained in \autoref{sec:mipnerf360}. The interlevel loss encourages the model to generate consistent predictions across different levels of the multi-scale hierarchy, while the distortion loss encourages the model to generate smooth and continuous predictions.
 
-Nerfstudio provides an API to configure all aspects of the pipeline, including dataset-split, number of pixels to sample, which optimizer to use, the configuration of the optimizer's exponential decay, the neural network's dimensionality, and much more. The implementation details and configurations used for the models in this thesis are attached in \autoref{sec:nerfstudio-train-parameters}.
+Nerfstudio provides an API to configure all aspects of the pipeline, including dataset-split, number of pixels to sample, which optimizer to use, the configuration of the optimizer's exponential decay, the \acrshort{ann}'s dimensionality, and much more. The implementation details and configurations used for the models in this thesis are attached in \autoref{sec:nerfstudio-train-parameters}.
 
 
 
