@@ -2,7 +2,7 @@
 
 The background chapter of this paper focuses on the use of \acrshort{nerf}s for representing and rendering 3D scenes. The chapter discusses several important NeRF methods, including NeRF \cite{mildenhall_nerf_2020}, Mip-NeRF \cite{barron_mip-nerf_2021}, mip-NeRF 360 \cite{barron_mip-nerf_2022}, Block-NeRF \cite{tancik_block-nerf_2022}, and Instant-ngp \cite{muller_instant_2022}. Additionally, the chapter covers several key techniques used in the NeRF pipeline, including positional encoding, hierarchical sampling, stratified sampling, appearance embeddings, learned pose refinement, and visibility prediction.
 
-The chapter also discusses the use of \acrfull{sfm} and COLMAP \cite{schoenberger2016sfm} as important tools for the pre-processing step in the NeRF pipeline, and presents several metrics for evaluating NeRFs. By providing an overview of these methods, techniques, tools, and metrics, the background chapter aims to establish a common ground for future chapters.
+The chapter also discusses the use of \acrfull{sfm} and COLMAP \cite{schonberger_structure--motion_2016} as important tools for the pre-processing step in the NeRF pipeline, and presents several metrics for evaluating NeRFs. By providing an overview of these methods, techniques, tools, and metrics, the background chapter aims to establish a common ground for future chapters.
 
 This thesis assumes a foundational understanding of deep learning. A great resource for individuals looking to acquire such knowledge is the publication by Goodfellow et al. \cite{Goodfellow}.
 
@@ -139,7 +139,7 @@ Stratified sampling is a sampling method that has proven benefits in machine lea
 
 % ✅ Somewhat rewritten
 \subsubsection{Hierarchical sampling} \label{sec:hierarchicalsampling}
-When training a NeRF, different sampling strategies can be utilized. The sampling strategy is an important choice as it is core to how the dataset for the \acrshort{mlp} is constructed. The original NeRF paper \cite{mildenhallNeRFRepresentingScenes2020} proposed the use of a sampling approach called hierarchical sampling. This method involves training two MLPs: a \textit{coarse} \acrshort{mlp} and a \textit{fine} \acrshort{mlp}. During training, the coarse \acrshort{mlp} employs stratified sampling which involves uniform interval sampling within each bin along the ray. The coarse \acrshort{mlp} outputs a \acrfull{pdf} that highlights the samples that significantly contribute to the final predicted RGB value. This \acrshort{pdf} is then passed to the fine \acrshort{mlp} which sample points along the ray in accordance with the \acrshort{pdf}. This strategy of having a coarse network predict the important areas to sample, i.e. the regions containing volume, facilitates the fine network in generating improved predictions.
+When training a NeRF, different sampling strategies can be utilized. The sampling strategy is an important choice as it is core to how the dataset for the \acrshort{mlp} is constructed. The original NeRF paper \cite{mildenhall_nerf_2020} proposed the use of a sampling approach called hierarchical sampling. This method involves training two MLPs: a \textit{coarse} \acrshort{mlp} and a \textit{fine} \acrshort{mlp}. During training, the coarse \acrshort{mlp} employs stratified sampling which involves uniform interval sampling within each bin along the ray. The coarse \acrshort{mlp} outputs a \acrfull{pdf} that highlights the samples that significantly contribute to the final predicted RGB value. This \acrshort{pdf} is then passed to the fine \acrshort{mlp} which sample points along the ray in accordance with the \acrshort{pdf}. This strategy of having a coarse network predict the important areas to sample, i.e. the regions containing volume, facilitates the fine network in generating improved predictions.
 
 % Point from Mip-NeRF 360. Doesn't fit very well here, but it's a good point!
 %The only reason why the coarse network is supervised is to guide the sampling of the fine network. This is the motivation behind improvements in e.g. Mip-NeRF 360
@@ -163,14 +163,14 @@ An overview of the NeRF pipeline can be viewed in \autoref{fig:nerf-pipeline}
 
 % ❌ Pretty happy with how this reads. Haven't changed anything
 %\subsection{COLMAP} \label{sec:colmap}
-COLMAP is a general-purpose SfM \cite{schoenberger2016sfm} and \acrfull{mvs} \cite{schoenberger2016mvs} pipeline. The general overview of the pipeline contains the following steps:
+COLMAP is a general-purpose SfM \cite{schonberger_structure--motion_2016} and \acrfull{mvs} \cite{schoenberger2016mvs} pipeline. The general overview of the pipeline contains the following steps:
 \begin{enumerate}
     \item Feature detection and extraction
     \item Feature matching and geometric verification
     \item Structure and motion reconstruction
 \end{enumerate}
 
-During the first step, \acrfull{sift} \cite{Lowe2004} is used to extract features in the images. This algorithm finds sparse feature points in the image and describes their appearances using numerical descriptors.
+During the first step, \acrfull{sift} \cite{lowe_distinctive_2004} is used to extract features in the images. This algorithm finds sparse feature points in the image and describes their appearances using numerical descriptors.
 
 % TODO: Elaborate on the different match-options; Exhaustive Matching, Sequential Matching, Vocabulary Tree Matching. Runtimes, found in the paper, can be added to appendix.
 
@@ -198,7 +198,7 @@ There is definitively literature on the topic of the time and memory complexity 
 \section{Nerfstudio} \label{sec:nerfstudio}
 %Since publication of the original NeRF paper, a multitude of different methods regarding NeRF has been published. Some of the papers are published with corresponding source code and some not. However, it's no easy task to compare the different methods on self-captured data. Nerfstudio is an open-source framework/API that 
 
-Since the publication of the original NeRF paper \cite{mildenhallNeRFRepresentingScenes2020}, a multitude of different methods regarding NeRF has been published. With the magnitude of published methods, some with corresponding source code and some not, it's not trivial to compare them on self-captured data. Nerfstudio \cite{nerfstudio} is an open-source framework/API that streamlines the process, training, evaluation, and rendering of NeRFs. The components that make up NeRFs are modularized in a way that allows interpretable implementation of different NeRF methods. In addition, Nerfstudio ships with implemented versions of some of the most important published methods to date for real-world captures. The core concepts within Nerfstudio are presented in \autoref{fig:nerfstudio-pipeline-components}. 
+Since the publication of the original NeRF paper \cite{mildenhall_nerf_2020}, a multitude of different methods regarding NeRF has been published. With the magnitude of published methods, some with corresponding source code and some not, it's not trivial to compare them on self-captured data. Nerfstudio \cite{nerfstudio} is an open-source framework/API that streamlines the process, training, evaluation, and rendering of NeRFs. The components that make up NeRFs are modularized in a way that allows interpretable implementation of different NeRF methods. In addition, Nerfstudio ships with implemented versions of some of the most important published methods to date for real-world captures. The core concepts within Nerfstudio are presented in \autoref{fig:nerfstudio-pipeline-components}. 
 
 \input{figures/nerfstudio-pipeline-components}
 
