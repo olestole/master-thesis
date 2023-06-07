@@ -348,7 +348,7 @@ The main technique proposed by Instant-NeRF is a new parametric encoding for the
 %In a fully connected MLP, every weight and bias must be updated on back-propagation. With parametric encodings, only a very small number of feature vectors must be updated. Also, by reducing the size of the MLP, such parametric models can be trained to convergence much faster without sacrificing approximation quality. You trade a larger memory footprint by allocating hash tables, but in return you have to update a far lower number of trainable parameters per back-propagation, leading to an increased training and inference speed.
 
 \subsection{Nerfacto} \label{sec:nerfacto}
-Nerfstudio, discussed in \autoref{sec:nerfstudio}, also provides its own method dubbed Nerfacto \cite{nerfstudio}. Nerfacto leverages techniques from several other published methods that have proved to work well for real data capture. The combination of techniques, partially depicted in \autoref{fig:nerfacto-pipeline-overview}, results in a method that strikes a great balance between quality and speed. 
+Nerfstudio, discussed in \autoref{sec:nerfstudio}, also provides its own method dubbed Nerfacto \cite{tancik_nerfstudio_2023}. Nerfacto leverages techniques from several other published methods that have proved to work well for real data capture. The combination of techniques, partially depicted in \autoref{fig:nerfacto-pipeline-overview}, results in a method that strikes a great balance between quality and speed. 
 The primary techniques implemented in Nerfacto have already been discussed. However, they will be briefly listed and summarized in this section:
 
 \input{figures/nerfacto-pipeline-overview.tex}

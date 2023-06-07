@@ -372,3 +372,4 @@
 \RequirePackage[parfill]{parskip}         % New-line instead of indentation between paragraphs
 
 
+\RequirePackage{tabularx}           % Expand the table to use full width
