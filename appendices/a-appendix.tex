@@ -3,50 +3,104 @@
 \section{Parameters for the training in Nerfstudio} \label{sec:nerfstudio-train-parameters}
 This section provide the full configuration for the models trained in Nerfstudio.
 
-\subsection{Nerfacto}
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|l|l|}
-    \hline
-    \textbf{Description}                                             & \textbf{Default Value} \\
-    \hline
-    How far along the ray to start sampling.                & 0.05 \\
-    How far along the ray to stop sampling.                 & 1000.0 \\
-    %Whether to randomize the background color.              & \"last\_sample\" \\
-    %Number of samples per ray for the proposal network.     & \(256, 96\) \\
-    Number of samples per ray for the nerf network.         & 48 \\
-    Sample every n steps after the warmup                   & 5 \\
-    Scales n from 1 to proposal\_update\_every over this many steps & 5000 \\
-    Number of proposal network iterations.                  & 2 \\
-    Use the same proposal network. Otherwise use different ones. & False \\
-    Proposal loss multiplier.                               & 1.0 \\
-    Distortion loss multiplier.                             & 0.002 \\
-    Orientation loss multipier on computed noramls.         & 0.0001 \\
-    Predicted normal loss multiplier.                       & 0.001 \\
-    Whether to use proposal weight annealing.               & True \\
-    Whether to use average appearance embedding or zeros for inference. & True \\
-    Slope of the annealing function for the proposal weights & 10.0 \\
-    Max num iterations for the annealing function.          & 1000 \\
-    Whether use single jitter or not for the proposal networks. & True \\
-    Whether to predict normals or not.                      & False \\
-    \midrule\midrule
-    \textbf{Description of corresponding proposal density fields}    & \textbf{Default Value} \\
-    \hline
-    Dimension of hidden layer           & 16 \\
-    Hashmap size                        & $2^{17}$ \\
-    Number of levels of the hashmap     & 5 \\
-    Maximum resolution of the hashmap (density field 1)         & 64 \\
-    Maximum resolution of the hashmap (density field 2)         & 256 \\
-    \hline
-    \end{tabular}
-    \caption{An overview of the parameters in the default Nerfacto model}
-    \label{tab:nerfacto-parameter-overview}
-\end{table}
 
-\subsection{Instant-ngp}
-\begin{table}[H]
+\begin{comment}
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Description}                                             & \textbf{Default Value} \\
+\hline
+How far along the ray to start sampling.                & 0.05 \\
+How far along the ray to stop sampling.                 & 1000.0 \\
+%Whether to randomize the background color.              & \"last\_sample\" \\
+%Number of samples per ray for the proposal network.     & \(256, 96\) \\
+Number of samples per ray for the nerf network.         & 48 \\
+Sample every n steps after the warmup                   & 5 \\
+Scales n from 1 to proposal\_update\_every over this many steps & 5000 \\
+Number of proposal network iterations.                  & 2 \\
+Use the same proposal network. Otherwise use different ones. & False \\
+Proposal loss multiplier.                               & 1.0 \\
+Distortion loss multiplier.                             & 0.002 \\
+Orientation loss multipier on computed noramls.         & 0.0001 \\
+Predicted normal loss multiplier.                       & 0.001 \\
+Whether to use proposal weight annealing.               & True \\
+Whether to use average appearance embedding or zeros for inference. & True \\
+Slope of the annealing function for the proposal weights & 10.0 \\
+Max num iterations for the annealing function.          & 1000 \\
+Whether use single jitter or not for the proposal networks. & True \\
+Whether to predict normals or not.                      & False \\
+DF: Dimension of hidden layer           & 16 \\
+DF: Hashmap size                        & $2^{17}$ \\
+DF: Number of levels of the hashmap     & 5 \\
+DF: Maximum resolution of the hashmap (density field 1)         & 64 \\
+DF: Maximum resolution of the hashmap (density field 2)         & 256 \\
+\hline
+\end{tabular}
+\caption{An overview of the parameters in the default Nerfacto model. Rows prefixed with \textit{DF} describe the model's corresponding Density Fields.}
+\label{tab:nerfacto-parameter-overview}
+\end{table}
+\end{comment}
+
+
+
+% TODO: Uncomment before submitting
+\begin{comment}
+\begin{longtable}{|l|l|}
+\caption{An overview of the parameters in the default Nerfacto model. Rows prefixed with \textit{DF} describe the model's corresponding \textit{Density Fields}.} \label{tab:nerfacto-parameter-overview} \\
+
+
+\hline \multicolumn{1}{|c|}{\textbf{Description}} & \multicolumn{1}{c|}{\textbf{Default Value}} \\ \hline 
+\endfirsthead
+
+ 
+
+\multicolumn{2}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline \multicolumn{1}{|c|}{\textbf{Description}} & \multicolumn{1}{c|}{\textbf{Default Value}} \\ \hline 
+\endhead
+
+ 
+
+\hline \multicolumn{2}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
+How far along the ray to start sampling.                & 0.05 \\
+How far along the ray to stop sampling.                 & 1000.0 \\
+%Whether to randomize the background color.              & \"last\_sample\" \\
+%Number of samples per ray for the proposal network.     & \(256, 96\) \\
+Number of samples per ray for the nerf network.         & 48 \\
+Sample every n steps after the warmup                   & 5 \\
+Scales n from 1 to \texttt{proposal\_update\_every} num steps & 5000 \\
+Number of proposal network iterations.                  & 2 \\
+Use the same proposal network. & False \\
+Proposal loss multiplier.                               & 1.0 \\
+Distortion loss multiplier.                             & 0.002 \\
+Orientation loss multipier on computed noramls.         & 0.0001 \\
+Predicted normal loss multiplier.                       & 0.001 \\
+Use proposal weight annealing.               & True \\
+Use average appearance embedding or zeros for inference. & True \\
+Slope of the annealing function for the proposal weights & 10.0 \\
+Max num iterations for the annealing function.          & 1000 \\
+Use single jitter or not for the proposal networks. & True \\
+Predict normals or not.                      & False \\
+DF: Dimension of hidden layer           & 16 \\
+DF: Hashmap size                        & $2^{17}$ \\
+DF: Number of levels of the hashmap     & 5 \\
+DF: Maximum resolution of the hashmap (density field 1)         & 64 \\
+DF: Maximum resolution of the hashmap (density field 2)         & 256 \\
+\end{longtable}
+\end{comment}
+
+
+
+
+\begin{table}[ht]
     \centering
-    \begin{tabular}{|l|l|}
+    \begin{tabularx}{\textwidth}{|X|l|}
     \hline
     \textbf{Description} & \textbf{Value} \\ 
     \hline
@@ -60,15 +114,14 @@ This section provide the full configuration for the models trained in Nerfstudio
     How far along ray to stop sampling. & 1e3 \\
     Whether to use an appearance embedding. & False \\
     Whether to randomize the background color. & True \\ \hline
-    \end{tabular}
+    \end{tabularx}
     \caption{An overview of the parameters in the default Instant-ngp model}
     \label{tab:instant-ngp-parameter-overview}
 \end{table}
 
-\subsection{mip-NeRF}
-\begin{table}[H]
+\begin{table}[ht]
     \centering
-    \begin{tabular}{|l|l|}
+    \begin{tabularx}{\textwidth}{|X|l|}
     \hline
     \textbf{Description} & \textbf{Value} \\ 
     \hline
@@ -79,7 +132,7 @@ This section provide the full configuration for the models trained in Nerfstudio
     The loss coeficcient for the fine MLP.              & 1.0 \\
     Number of rays per chunk during eval                & 4096 \\
     \hline
-    \end{tabular}
+    \end{tabularx}
     \caption{An overview of the parameters in the default Mip-NeRF model}
     \label{tab:mip-nerf-parameter-overview}
 \end{table}

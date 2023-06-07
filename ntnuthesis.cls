@@ -133,6 +133,9 @@
     }
 }
 
+% Empty option is set to remove compile warning for table in Overleaf
+\DeclareOption{table}{}
+
 \ProcessOptions
 
 %% CLASS FILE LOADING
@@ -367,3 +370,5 @@
 
 
 \RequirePackage[parfill]{parskip}         % New-line instead of indentation between paragraphs
+
+
