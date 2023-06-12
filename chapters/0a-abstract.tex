@@ -8,7 +8,6 @@ Initially, a data capture pipeline is created for CARLA, providing synthetic dat
 
 Most of the findings from the experiments are consistent across synthetic and real data; the configuration of the data-capture significantly affects the data and the resulting NeRF's quality; a large-scale approach where a scene is learned by multiple smaller NeRFs, contrary to a single NeRF, performs better; joint camera pose optimization efficiently reduces the impact of imperfect camera poses, but approximating the poses with \acrfull{sfm} a priori demonstrates superior results.
 
+Wrapping up, the application of rendering novel views for generating data from edge case scenarios is investigated. Although the renderings don't match the original images' quality, they are largely successful in producing clear and structurally accurate renderings. This reaffirms NeRFs' effectiveness and potential for \acrshort{ad} applications.
 %Investigating the application of rendering novel views for edge case scenarios we find that the renderings do not match the original images' quality. However, they are largely successful in producing clear and structurally accurate renderings, reaffirming NeRFs potential and the effectiveness of the approach.
 
-
-Wrapping up, the application of rendering novel views for generating data from edge case scenarios is investigated. Although the renderings do not match the original images' quality, they are largely successful in producing clear and structurally accurate renderings. This reaffirms NeRFs' effectiveness and potential for \acrshort{ad} applications.

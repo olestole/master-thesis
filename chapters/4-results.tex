@@ -6,7 +6,9 @@ The results obtained from the experiments are evaluated both quantitatively, usi
 Quantitative results are highlighted in the tables, with \ulcolor[green]{green} signifying the best results, and \ulcolor[red]{red} indicating the worst. \ulcolor[blue]{Blue} is employed to denote a configuration selected for subsequent experiments.
 
 \vspace{2mm} %5mm vertical space
-\noindent \textbf{\href{https://absorbing-peace-5f6.notion.site/NeRF-Renders-Master-thesis-34ff125e2200406588f002b36eeaacef}{Link to companion page with video renders}}
+\noindent \textbf{\href{https://nerf.olestole.com/}{Link to companion page with video renders\footnote{\url{https://nerf.olestole.com/}}}}
+
+
 
 
 \newpage
@@ -27,12 +29,12 @@ The CARLA configurations held constant for the respective experiments are depict
 \hline
 Experiment & Camera setup & Distance & Image freq. & Image res. & Speed \\
 \hline
-\hyperref[sec:exp-camera-setup]{1.1} & $-$                                                 & 125m                      & 3     & $600 \times 450$  & 100\% \\
-\hyperref[sec:exp-capacity]{1.2} &\cellcolor{blue} $[-10^{\circ}, 10^{\circ}]$ yaw     & $-$                       & 3     & $600 \times 450$  & 100\% \\
+\hyperref[sec:exp-camera-setup]{1.1} & $-$                                                 & 125m                                           & $3^{\text{rd}}$ frame     & $600 \times 450$  & 100\% \\
+\hyperref[sec:exp-capacity]{1.2} &\cellcolor{blue} $[-10^{\circ}, 10^{\circ}]$ yaw     & $-$                                                & $3^{\text{rd}}$ frame     & $600 \times 450$  & 100\% \\
 \hyperref[sec:exp-number-of-frames]{1.3} &\cellcolor{blue} $[-10^{\circ}, 10^{\circ}]$ yaw     &\cellcolor{blue} 4 turns   & $-$   & $600 \times 450$  & 100\% \\
-\hyperref[sec:exp-image-resolution]{1.4} &\cellcolor{blue} $[-10^{\circ}, 10^{\circ}]$ yaw     &\cellcolor{blue} 4 turns   &\cellcolor{blue} 2     & $-$               & 100\% \\
-\hyperref[sec:exp-speed]{1.5} &\cellcolor{blue} $[-10^{\circ}, 10^{\circ}]$ yaw     &\cellcolor{blue} 4 turns   &\cellcolor{blue} 2     &\cellcolor{blue} $400 \times 300$  & $-$ \\
-\hyperref[sec:exp-combined-baseline]{1.6} &\cellcolor{blue} $[-10^{\circ}, 10^{\circ}]$ yaw     &\cellcolor{blue} 4 turns   &\cellcolor{blue} 2     &\cellcolor{blue} $400 \times 300$  &\cellcolor{blue} 50\% \\
+\hyperref[sec:exp-image-resolution]{1.4} &\cellcolor{blue} $[-10^{\circ}, 10^{\circ}]$ yaw     &\cellcolor{blue} 4 turns    &\cellcolor{blue} $2^{\text{nd}}$ frame     & $-$               & 100\% \\
+\hyperref[sec:exp-speed]{1.5} &\cellcolor{blue} $[-10^{\circ}, 10^{\circ}]$ yaw     &\cellcolor{blue} 4 turns               &\cellcolor{blue} $2^{\text{nd}}$ frame     &\cellcolor{blue} $400 \times 300$  & $-$ \\
+\hyperref[sec:exp-combined-baseline]{1.6} &\cellcolor{blue} $[-10^{\circ}, 10^{\circ}]$ yaw     &\cellcolor{blue} 4 turns   &\cellcolor{blue} $2^{\text{nd}}$ frame     &\cellcolor{blue} $400 \times 300$  &\cellcolor{blue} 50\% \\
 \hline
 \end{tabular}
 \caption[Constant parameters for the experiments conducted to define a baseline]{Overview of the configurations that were kept constant for each experiment conducted to define the baseline. The configurations that were selected to be part of the baseline data capture configuration, based on the results from the experiments, are highlighted in \ulcolor[blue]{blue}}
