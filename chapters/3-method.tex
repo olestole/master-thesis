@@ -1,11 +1,12 @@
 \chapter{Methods}
 %The method chapter of this paper describes the process from creating a data capture pipeline, extending it to a full end-to-end capture-to-render pipeline with Nerfstudio, using the pipeline to create a data capture baseline, using the baseline to run further experiments, extending the baseline to support large scale scenes, and finally extending it to support real data.
 
-This chapter is split into multiple sections, all essential for the end-to-end pipeline, depicted in \autoref{fig:end-to-end-pipeline}, to allow the capture of data and subsequent training, evaluation, and render of a NeRF. The following sections thoroughly discuss the separate components that comprise the end-to-end pipeline.
+This chapter is split into multiple sections, all essential for the end-to-end pipeline, depicted in \autoref{fig:end-to-end-pipeline}, to allow the capture of data and subsequent training, evaluation, and render of a NeRF. The following sections thoroughly discuss the separate components that comprise the end-to-end pipeline. The code developed and used throughout the project can be found in the attached GitHub repositories\footnote{\url{https://github.com/olestole/nerfstudio}}\footnote{\url{https://github.com/olestole/carlo}}\footnote{\url{https://github.com/olestole/naplab-data-capture}}.
 
 % TODO: Write that we're going to use Nerfstudio here?
-
 \input{figures/end-to-end-pipeline}
+%\clearpage
+
 
 \begin{comment}
 This chapter elucidates the methodological approach employed in this research to explore the potential of Neural Radiance Fields (NeRF) in improving the synthetic data pipeline from CARLA to Nerfstudio. Our approach is underpinned by a systematic series of stages, each contributing to the robustness of the pipeline, and enabling us to establish a baseline leveraging synthetic data from CARLA.
@@ -91,7 +92,7 @@ The CARLA Run-loop includes the following steps:
     \item Spawn an ego vehicle.
     \item While the ego vehicle has not met a stop-criteria, such as having driven the set amount of distance/turns, keep driving and capture data.
     \begin{itemize}
-        \item Get the image from all the cameras mounted to the car: Each sensor in CARLA has a \texttt{listen} method, triggered whenever data is retrieved by the sensor. The Carlo-repository\footnote{\url{https://github.com/aasewold/carlo/}} simplifies the process of obtaining image data from the corresponding camera, a process which traditionally would involve managing the listen-callback, decoding the \texttt{carla.Image} data, and converting raw data bytes into \texttt{np.ndarrays}. Using the Carlo abstraction, the steps are reduced to creating a list of cameras, retrieving the \texttt{np.ndarray} containing the image data, stacking the camera outputs, and presenting the resulting image using a library like \texttt{OpenCV} \cite{opencv_library}.
+        \item Get the image from all the cameras mounted to the car: Each sensor in CARLA has a \texttt{listen} method, triggered whenever data is retrieved by the sensor. The Carlo-repository\footnote{\url{https://github.com/olestole/carlo/}} simplifies the process of obtaining image data from the corresponding camera, a process which traditionally would involve managing the listen-callback, decoding the \texttt{carla.Image} data, and converting raw data bytes into \texttt{np.ndarrays}. Using the Carlo abstraction, the steps are reduced to creating a list of cameras, retrieving the \texttt{np.ndarray} containing the image data, stacking the camera outputs, and presenting the resulting image using a library like \texttt{OpenCV} \cite{opencv_library}.
         \item Pass the captured image and corresponding camera pose to the \texttt{CarlaDataParser}'s \texttt{append\_frame} method.
     \end{itemize}
     \item Export the parsed CARLA-data with \texttt{CarlaDataParser}'s \texttt{export\_transforms} method.
@@ -173,11 +174,15 @@ Once calculated, the intrinsic values are added to the \texttt{transforms.json}-
 
 CARLA is built with Unreal Engine and subsequently uses its coordinate convention. The Unreal Engine coordinate convention, illustrated in \autoref{fig:carla-coordinates-system}, is a left-handed system where +X is forward, +Y is right, and +Z is up. Nerfstudio uses the OpenGL/Blender coordinate convention for cameras, which is a right-handed system, and its world space is oriented such that +X is right, +Y is forward, and +Z is up. The disparity in coordinate conventions between CARLA and Nerfstudio would make the NeRF-renderings non-interpretable, if we trained a NeRF directly on the transformation matrices exported from CARLA. In order to convert the transformation matrices that contain both rotation and translation we apply \texttt{CarlaDataParser}'s \texttt{carla\_to\_nerf}-transformation. The transformation from CARLA's left-handed coordinate system to NerfStudio's right-handed coordinate system can be represented as a matrix multiplication.
 
+\input{figures/carla-coordinates-system}
+
 Let $M_{carla}$ be the transformation matrix in CARLA convention, and $M_{nerf}$ be the transformation matrix in Nerfstudio convention. The transformation can be expressed as:
 
 $$M_{nerf} = R_{z}(90) \cdot R_{x}(-90) \cdot T \cdot M_{carla} $$
 
 where $T$ is a translation matrix to swap the y and z coordinates, and $R_{x}$, $R_{z}$ are rotation matrices around the x and z axes, respectively. The order of multiplication is from right to left.
+
+
 
 % ------
 \begin{comment}
@@ -222,8 +227,9 @@ Question: How can I train a NeRF that represent the same scene?
 Having obtained the synthetic data captured from CARLA in a format suitable for training NeRFs in Nerfstudio, the next step is to develop and utilize a pipeline that automates the processing, training, evaluation, and rendering of various experiments using this data and the Nerfstudio API. This section will elaborate on the pipeline and its components depicted in \autoref{fig:nerfstudio-pipeline}.
 
 \input{figures/nerfstudio-pipeline}
-
-The developed pipeline accepts a \texttt{Argument}-class used to configure the processing, training, evaluation, and rendering of the NerF. The most important parameters include:
+\begin{comment}
+    
+The developed pipeline accepts an \texttt{Argument}-class used to configure the processing, training, evaluation, and rendering of the NerF. The most important parameters include:
 
 \begin{itemize}
     \item \textbf{Input/output directory:} Defines where the data is located and where the output from the pipeline should be stored.
@@ -231,6 +237,7 @@ The developed pipeline accepts a \texttt{Argument}-class used to configure the p
     \item \textbf{Settings for camera optimizer:} Defines if the NeRF should treat the camera poses as learnable parameters and optimize the camera poses.
     \item \textbf{Settings for side-by-side rendering:} Defines, among other things, which input-camera should be used as ground truth when rendering side-by-side.
 \end{itemize}
+\end{comment}
 
 \subsubsection{Process}
 
@@ -239,7 +246,7 @@ In most scenarios when working with real data, such as images of an object captu
 \subsubsection{Train}
 During training, the parameters in the model are optimized to represent the 3D scene. A batch of pixels is created for each training iteration. The default batch of 4096 pixels is obtained by randomly sampling the training images which defaults to $90\%$ of the total dataset, leaving $10\%$ as an evaluation dataset. Rays are marched through the sampled pixels and the model's networks predict RGB values and densities for the points sampled along the rays. The points' values are composited and the photometric loss, in combination with more complex losses, is computed. The losses are backpropagated through the model's networks and the ADAM optimizer\cite{adam} is used to update the network parameters.
 
-For the Nerfacto-model, the primary model used throughout this thesis and previously discussed in \autoref{sec:nerfacto}, the training process entails backpropagating the loss and updating both the NeRF \acrshort{mlp} and the proposal \acrshort{mlp}. The Nerfacto-model leverages three different losses to guide the training; \textit{photometric loss}, \textit{interlevel loss}, and \textit{distortion loss}. Photometric loss is the standard NeRF-loss explained in \autoref{eq:nerf-loss}. Interlevel- and distortion-loss are both from the Mip-NeRF 360\cite{barron_mip-nerf_2022} implementation explained in \autoref{sec:mipnerf360}. The interlevel loss encourages the model to generate consistent predictions across different levels of the multi-scale hierarchy, while the distortion loss encourages the model to generate smooth and continuous predictions.
+For the Nerfacto-model, the primary model used throughout this thesis and previously discussed in \autoref{sec:nerfacto}, the training process entails backpropagating the loss and updating both the NeRF \acrshort{mlp} and the proposal \acrshort{mlp}. The Nerfacto-model leverages three different losses to guide the training; \textit{photometric loss}, \textit{interlevel loss}, and \textit{distortion loss}. Photometric loss is the standard NeRF-loss explained in \autoref{eq:nerf-loss}. Interlevel- and distortion-loss are both from the Mip-NeRF 360 \cite{barron_mip-nerf_2022} implementation explained in \autoref{sec:mipnerf360}. The interlevel loss encourages the model to generate consistent predictions across different levels of the multi-scale hierarchy, while the distortion loss encourages the model to generate smooth and continuous predictions.
 
 Nerfstudio provides an API to configure all aspects of the pipeline, including dataset-split, number of pixels to sample, which optimizer to use, the configuration of the optimizer's exponential decay, the \acrshort{ann}'s dimensionality, and much more. The implementation details and configurations used for the models in this thesis are attached in \autoref{sec:nerfstudio-train-parameters}.
 
@@ -564,12 +571,15 @@ The traditional approach for generating NeRFs involves the use of real data. The
 
 To capture data, we utilized the \acrshort{naplab} car \cite{naplab}. The \acrshort{naplab} car is fitted with multiple sensors, including cameras, \acrshort{gps}/\acrshort{gnss}, and \acrshort{lidar}. The cameras capture data with a resolution of $1920 \times 1080$. The \acrshort{gps}/\acrshort{gnss}-system consists of two Swift Navigation Duro Ruggedized Receivers \cite{swift_navigation_duro_manual}, which offer superior positioning accuracy compared to regular \acrshort{gps}/\acrshort{gnss} systems. According to the manufacturer's documentation, each Duro module has a horizontal position accuracy of 0.75 meters (\acrlong{cep} [\acrshort{cep}] of 50 in \acrlong{sbas} [\acrshort{sbas}] mode) without \acrfull{rtk}, and can achieve centimeter-level accuracy with \acrshort{rtk} enabled. This high level of accuracy enables the capture of rough camera poses alongside the images.
 
-After having captured data with the \acrshort{naplab} car, the data has to be parsed and processed before it can be transformed into the expected Nerfstudio-format. A repository\footnote{\url{https://github.com/aasewold/experiments/}} that streamlines the reading and parsing of \acrshort{naplab}'s data into a manageable format was leveraged. Firstly, in order to read the video data, FFMPEG is utilized to transform .h264-files into sequences of \texttt{np.ndarray}s that are subsequently served by a generator function. Secondly, the \acrshort{gps} data is read and parsed using regex and subsequently served by a generator function. The \acrshort{gps} data is formatted as \acrfull{nmea} sentences, a message standard used by \acrshort{gps} receivers to communicate with other devices. 
+After having captured data with the \acrshort{naplab} car, the data has to be parsed and processed before it can be transformed into the expected Nerfstudio-format. A repository\footnotemark{} that streamlines the reading and parsing of \acrshort{naplab}'s data into a manageable format was leveraged. Firstly, in order to read the video data, FFMPEG is utilized to transform .h264-files into sequences of \texttt{np.ndarray}s that are subsequently served by a generator function. Secondly, the \acrshort{gps} data is read and parsed using regex and subsequently served by a generator function. The \acrshort{gps} data is formatted as \acrfull{nmea} sentences, a message standard used by \acrshort{gps} receivers to communicate with other devices. 
 
-A key aspect of the data parsing is the synchronization of the camera with the \acrshort{gps} timestamp. This is achieved by leveraging functionality from the same repository that aligns the camera with the frame closest in time to the \acrshort{gps} timestamp. Following synchronization, the sensor data can be accessed and further processed using a regular loop.
+A key aspect of the data parsing is the synchronization of the camera with the \acrshort{gps} timestamp. This is achieved by leveraging functionality from the same repository\footnotemark[\value{footnote}] that aligns the camera with the frame closest in time to the \acrshort{gps} timestamp. Following synchronization, the sensor data can be accessed and further processed using a regular loop.
+
+\footnotetext{\url{https://github.com/olestole/naplab-data-capture}}
 
 The synchronized data need to be converted into Nerfstudio's data format in order to be used in the predefined pipeline. In order to achieve this, a \texttt{NAPLabDataParser} that implements the same methods as the \texttt{CarlaDataParser}, is created. The main difference is the implementation of the transformation function that converts the translation and rotation data from one coordinate convention to another. The transformation matrix construction process involves several steps:
 
+\clearpage
 \begin{enumerate}
     \item The initial \acrshort{gps} latitude, longitude, and altitude readings are stored as the reference point.
     \item The \texttt{geodetic2ned} function from the \texttt{pymap3d} library \cite{Hirsch_PyGemini} is used to transform \acrshort{gps} data into \acrfull{ned} coordinates.

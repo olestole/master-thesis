@@ -170,3 +170,65 @@ title = {{PyGemini}}
   month = {September},
   day = {2}
 }
+
+@misc{pawasauskas1997volume,
+  title={Volume Visualization With Ray Casting},
+  author={Pawasauskas, John},
+  year={1997},
+  howpublished={\url{https://web.cs.wpi.edu/~matt/courses/cs563/talks/powwie/p1/ray-cast.htm}},
+  note={Accessed on June 12, 2023}
+}
+
+
+@article{10.1145/378456.378484,
+author = {Drebin, Robert A. and Carpenter, Loren and Hanrahan, Pat},
+title = {Volume Rendering},
+year = {1988},
+issue_date = {Aug. 1988},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {22},
+number = {4},
+issn = {0097-8930},
+url = {https://doi.org/10.1145/378456.378484},
+doi = {10.1145/378456.378484},
+abstract = {A technique for rendering images of volumes containing mixtures of materials is presented. The shading model allows both the interior of a material and the boundary between materials to be colored. Image projection is performed by simulating the absorption of light along the ray path to the eye. The algorithms used are designed to avoid artifacts caused by aliasing and quantization and can be efficiently implemented on an image computer. Images from a variety of applications are shown.},
+journal = {SIGGRAPH Comput. Graph.},
+month = {jun},
+keywords = {computer tomography, non-destructive evaluation (NDE), medical imaging, scientific visualization, image processing, magnetic resonance imaging (MRI)}
+}
+
+@inproceedings{shearWarp,
+author = {Lacroute, Philippe and Levoy, Marc},
+title = {Fast Volume Rendering Using a Shear-Warp Factorization of the Viewing Transformation},
+year = {1994},
+isbn = {0897916670},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/192161.192283},
+doi = {10.1145/192161.192283},
+abstract = {Several existing volume rendering algorithms operate by factoring the viewing transformation into a 3D shear parallel to the data slices, a projection to form an intermediate but distorted image, and a 2D warp to form an undistorted final image. We extend this class of algorithms in three ways. First, we describe a new object-order rendering algorithm based on the factorization that is significantly faster than published algorithms with minimal loss of image quality. Shear-warp factorizations have the property that rows of voxels in the volume are aligned with rows of pixels in the intermediate image. We use this fact to construct a scanline-based algorithm that traverses the volume and the intermediate image in synchrony, taking advantage of the spatial coherence present in both. We use spatial data structures based on run-length encoding for both the volume and the intermediate image. Our implementation running on an SGI Indigo workstation renders a 2563 voxel medical data set in one second. Our second extension is a shear-warp factorization for perspective viewing transformations, and we show how our rendering algorithm can support this extension. Third, we introduce a data structure for encoding spatial coherence in unclassified volumes (i.e. scalar fields with no precomputed opacity). When combined with our shear-warp rendering algorithm this data structure allows us to classify and render a 2563 voxel volume in three seconds. The method extends to support mixed volumes and geometry and is parallelizable.},
+booktitle = {Proceedings of the 21st Annual Conference on Computer Graphics and Interactive Techniques},
+pages = {451–458},
+numpages = {8},
+keywords = {medical imaging, coherence, volume rendering, scientific visualization},
+series = {SIGGRAPH '94}
+}
+
+@article{textureSlicing,
+author = {Engel, Klaus and Bauer, M. and Greiner, G. and Ertl, Thomas},
+year = {2000},
+month = {06},
+pages = {},
+title = {Interactive Volume Rendering on Standard PC Graphics Hardware Using Multi-Textures and Multi-Stage Rasterization},
+volume = {147},
+journal = {Proceedings of the SIGGRAPH/Eurographics Workshop on Graphics Hardware},
+doi = {10.1145/346876.348238}
+}
+
+@article{splatting,
+  title={Footprint evaluation for volume rendering},
+  author={Lee Westover},
+  journal={Proceedings of the 17th annual conference on Computer graphics and interactive techniques},
+  year={1990}
+}

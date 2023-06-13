@@ -45,8 +45,9 @@ DF: Maximum resolution of the hashmap (density field 2)         & 256 \\
 
 
 % TODO: Uncomment before submitting
+%\begin{comment}
 \begin{longtable}{|l|l|}
-\caption{An overview of the parameters in the default Nerfacto model. Rows prefixed with \textit{DF} describe the model's corresponding \textit{Density Fields}.} \label{tab:nerfacto-parameter-overview} \\
+\caption[Overview of the default Nerfacto model's parameters]{An overview of the parameters in the default Nerfacto model. Rows prefixed with \textit{DF} describe the model's corresponding \textit{Density Fields}.} \label{tab:nerfacto-parameter-overview} \\
 
 
 \hline \multicolumn{1}{|c|}{\textbf{Description}} & \multicolumn{1}{c|}{\textbf{Default Value}} \\ \hline 
@@ -92,7 +93,7 @@ DF: Number of levels of the hashmap     & 5 \\
 DF: Maximum resolution of the hashmap (density field 1)         & 64 \\
 DF: Maximum resolution of the hashmap (density field 2)         & 256 \\
 \end{longtable}
-
+%\end{comment}
 
 
 \begin{table}[ht]
@@ -112,7 +113,7 @@ DF: Maximum resolution of the hashmap (density field 2)         & 256 \\
     Whether to use an appearance embedding. & False \\
     Whether to randomize the background color. & True \\ \hline
     \end{tabularx}
-    \caption{An overview of the parameters in the default Instant-ngp model}
+    \caption[Overview of the default Instant-ngp model's parameters]{An overview of the parameters in the default Instant-ngp model}
     \label{tab:instant-ngp-parameter-overview}
 \end{table}
 
@@ -130,8 +131,21 @@ DF: Maximum resolution of the hashmap (density field 2)         & 256 \\
     Number of rays per chunk during eval                & 4096 \\
     \hline
     \end{tabularx}
-    \caption{An overview of the parameters in the default Mip-NeRF model}
+    \caption[Overview of the default Mip-NeRF model's parameters]{An overview of the parameters in the default Mip-NeRF model}
     \label{tab:mip-nerf-parameter-overview}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabularx}{\textwidth}{|X|l|}
+    \hline
+    \textbf{Description} & \textbf{Value} \\ 
+    \hline
+    A & B \\
+    \hline
+    \end{tabularx}
+    \caption[Overview of the default Nerfacto-big model's parameters]{An overview of the parameters in the Nerfacto-big model}
+    \label{tab:nerfacto-big-parameter-overview}
 \end{table}
 
 
@@ -155,128 +169,8 @@ If the appendix is in the form of a ready-made PDF file, it should be supported 
 \section{Results}
 This section presents the complete results of the experiments where some results were condensed to convey the primary findings.
 
-\subsection{Block-NeRF}
-% The full Block-NeRF evaluation table. Only the condensed version containing the average across the different segments are included in the result-section
+\subsection{Simulated Noise Conditions} \label{app:noise}
 
-\begin{table}[H]
-\centering
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.5}
-\begin{tabular}{l | C{2.2} C{1.3} C{1.3}}
-\hline
-\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
-\hline
-Segment 1 & 24.960262 & 0.815270 & 0.161623 \\
-Segment 2 & 25.660400 & 0.824085 & 0.164296 \\
-Segment 3 & 23.914209 & 0.755183 & 0.194245 \\
-Segment 4 & 23.363695 & 0.764547 & 0.216242 \\
-\hline
-\end{tabular}
-\caption{Results for each segment when the baseline-segment spanning the entire block has been split into 4 Block-NeRFs.}
-\label{tab:block-nerf-four-segments-full}
-\end{table}
-
-
-\begin{table}[H]
-\centering
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.5}
-\begin{tabular}{l | C{2.2} C{1.3} C{1.3}}
-\hline
-\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
-\hline
-Segment 1 & 25.047100 & 0.826931 & 0.138852 \\
-Segment 2 & \cellcolor{green} 25.703838 & 0.831167 & 0.156331 \\
-Segment 3 & 24.924395 & 0.830144 & 0.149870 \\
-Segment 4 & \cellcolor{red} 22.726223 & \cellcolor{red} 0.713277 & \cellcolor{red} 0.207025 \\
-Segment 5 & 25.468483 & 0.837942 & \cellcolor{green} 0.131815 \\
-Segment 6 & 25.670006 & \cellcolor{green} 0.841962 & 0.147232 \\
-Segment 7 & 25.661350 & 0.820813 & 0.163685 \\
-Segment 8 & 25.070913 & 0.777114 & 0.154277 \\
-Segment 9 & 24.803871 & 0.814633 & 0.154028 \\
-Segment 10 & 23.693977 & 0.753770 & 0.185557 \\
-Segment 11 & 23.936722 & 0.757462 & 0.179283 \\
-Segment 12 & 24.584238 & 0.807874 & 0.144022 \\
-\hline
-Average metrics of 12 Block-NeRF & \cellcolor{green} 24.774259 & \cellcolor{green} 0.801090 & \cellcolor{green} 0.159331 \\
-Average metrics of 1 Block-NeRF & \cellcolor{red} 22.515461 & \cellcolor{red} 0.654036 & \cellcolor{red} 0.424356 \\
-\hline
-\end{tabular}
-\caption{Results for exp\_block\_nerf\_long\_path\_2-block\_10}
-\label{tab:block-nerf-twelve-segments-full}
-\end{table}
-
-
-\subsection{Real data} \label{app:real-data}
-
-\begin{table}[H]
-\centering
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.5}
-\begin{tabular}{l | C{2.2} C{1.3} C{1.3} c}
-\hline
-\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{Time processing} \\
-\hline
-COLMAP w/ optimizer           & 19.937267 & 0.723673 & 0.534969 & 00:10:25 \\
-COLMAP w/o optimizer          & 20.990921 & 0.757042 & 0.467530 & 00:10:25 \\
-COLMAP w/ optimizer, 4 BNs    & 20.365336 & 0.75952125 & 0.427666 & 00:10:25 \\
-COLMAP w/o optimizer, 4 BNs   & 20.45474375 & 0.761062 & 0.4253 & 00:10:25 \\
-GPS w/ optimizer              & 18.877967 & 0.710520 & 0.573053 & 00:00:00 \\
-GPS w/o optimizer             & 15.288701 & 0.692639 & 0.649337 & 00:00:00 \\
-GPS w/ optimizer, 4 BNs       & 18.4146345 & 0.69007725 & 0.560061 & 00:00:00 \\
-GPS w/o optimizer, 4 BNs      & 14.578463 & 0.6671365 & 0.65638525 & 00:00:00 \\
-\hline
-\end{tabular}
-\caption{Data from Trip088 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
-\label{tab:trip088-results}
-\end{table}
-
-\begin{table}[H]
-\centering
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.5}
-\begin{tabular}{l | C{2.2} C{1.3} C{1.3} c}
-\hline
-\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{Time processing} \\
-\hline
-COLMAP w/ optimizer           & 19.839231 & 0.681580 & 0.542084 & 00:08:45 \\
-COLMAP w/o optimizer          & 22.312044 & 0.751723 & 0.431454 & 00:08:45 \\
-COLMAP w/ optimizer, 4 BNs    & 20.97288575 & 0.6987495 & 0.3971635 & 00:08:45 \\
-COLMAP w/o optimizer, 4 BNs    & 23.39594125 & 0.794048 & 0.32915525 & 00:08:45 \\
-GPS w/ optimizer              & 18.165668 & 0.653362 & 0.597592 & 00:00:00 \\
-GPS w/o optimizer             & 13.796535 & 0.626601 & 0.719307 & 00:00:00 \\
-GPS w/ optimizer, 4 BNs       & 18.401476 & 0.6379955 & 0.5449655 & 00:00:00 \\
-GPS w/o optimizer, 4 BNs       & 14.37125725 & 0.6192 & 0.68332825 & 00:00:00 \\
-\hline
-\end{tabular}
-\caption{Data from Trip094 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
-\label{tab:trip094-results}
-\end{table}
-
-% Not sure if I should include the results for Trip067 as it hasn't been introduced as a dataset
-\begin{comment}
-\begin{table}[ht]
-\centering
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.5}
-\begin{tabular}{l | C{2.2} C{1.3} C{1.3} c}
-\hline
-\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{Time processing} \\
-\hline
-COLMAP w/ optimizer           & 23.486408   & 0.864474 & 0.421610 & 01:05:59 \\
-COLMAP w/o optimizer          & 22.640327   & 0.865871 & 0.401821 & 01:05:59 \\
-COLMAP w/ optimizer, 12 BNs   &\cellcolor{green} 25.65282775 &\cellcolor{green} 0.882313 &\cellcolor{green} 0.332909 & 01:05:59 \\
-GPS w/ optimizer              & 21.741020   & 0.849057 & 0.422538 & 00:00:00 \\
-GPS w/o optimizer             &\cellcolor{red} 21.625042   &\cellcolor{red} 0.847604 &\cellcolor{red} 0.422631 & 00:00:00 \\
-GPS w/ optimizer, 12 BNs      & 22.65892333 & 0.848332 & 0.393478 & 00:00:00 \\
-\hline
-\end{tabular}
-\caption{Data from Trip067 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 12 NeRFs evaluations.}
-\label{tab:trip067-results}
-\end{table}
-\end{comment}
-
-\subsection{Adding noise} \label{app:noise}
 \begin{table}[H]
 \centering
 \setlength{\tabcolsep}{6pt}
@@ -310,6 +204,127 @@ $\mathcal{N}(0, 1.0^2)$ & 18.085838 & 0.406564 & 0.338364 & 18.290358 & 0.417969
 $\mathcal{N}(0, 3.0^2)$ & 15.709220 & 0.344876 & 0.612587 & 15.077240 & 0.362973 & 0.698665 \\ 
 \hline
 \end{tabular}
-\caption{Results for Gaussian Noise experiment on both the baseline and shorter segments. The shorter segments are 10\% the size of the baseline segment, approximately 50m in length.}
+\caption[Full results for experiment 2: Simulated Noise Conditions]{Results for Simulated Noise Condition experiment on both the baseline and shorter segments. The shorter segments are 10\% the size of the baseline segment, approximately 50m in length.}
 \label{tab:exp-gaussian-noise-full}
 \end{table}
+
+\subsection{Block-NeRF}
+% The full Block-NeRF evaluation table. Only the condensed version containing the average across the different segments are included in the result-section
+
+\begin{table}[H]
+\centering
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{l | C{2.2} C{1.3} C{1.3}}
+\hline
+\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
+\hline
+Segment 1 & 24.960262 & 0.815270 & 0.161623 \\
+Segment 2 & 25.660400 & 0.824085 & 0.164296 \\
+Segment 3 & 23.914209 & 0.755183 & 0.194245 \\
+Segment 4 & 23.363695 & 0.764547 & 0.216242 \\
+\hline
+\end{tabular}
+\caption[Full results for experiment 4: Block-NeRF on 4-segment dataset]{Results for each segment when the baseline-segment spanning the entire block has been split into 4 Block-NeRFs.}
+\label{tab:block-nerf-four-segments-full}
+\end{table}
+
+
+\begin{table}[H]
+\centering
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{l | C{2.2} C{1.3} C{1.3}}
+\hline
+\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
+\hline
+Segment 1 & 25.047100 & 0.826931 & 0.138852 \\
+Segment 2 & \cellcolor{green} 25.703838 & 0.831167 & 0.156331 \\
+Segment 3 & 24.924395 & 0.830144 & 0.149870 \\
+Segment 4 & \cellcolor{red} 22.726223 & \cellcolor{red} 0.713277 & \cellcolor{red} 0.207025 \\
+Segment 5 & 25.468483 & 0.837942 & \cellcolor{green} 0.131815 \\
+Segment 6 & 25.670006 & \cellcolor{green} 0.841962 & 0.147232 \\
+Segment 7 & 25.661350 & 0.820813 & 0.163685 \\
+Segment 8 & 25.070913 & 0.777114 & 0.154277 \\
+Segment 9 & 24.803871 & 0.814633 & 0.154028 \\
+Segment 10 & 23.693977 & 0.753770 & 0.185557 \\
+Segment 11 & 23.936722 & 0.757462 & 0.179283 \\
+Segment 12 & 24.584238 & 0.807874 & 0.144022 \\
+\hline
+Average metrics of 12 Block-NeRF & \cellcolor{green} 24.774259 & \cellcolor{green} 0.801090 & \cellcolor{green} 0.159331 \\
+Average metrics of 1 Block-NeRF & \cellcolor{red} 22.515461 & \cellcolor{red} 0.654036 & \cellcolor{red} 0.424356 \\
+\hline
+\end{tabular}
+\caption[Full results for experiment 4: Block-NeRF on 12-segment dataset]{Results for each segment when the larger segment spanning approximately 1.2km has been split into 12 Block-NeRFs.}
+\label{tab:block-nerf-twelve-segments-full}
+\end{table}
+
+
+\subsection{Real data} \label{app:real-data}
+
+\begin{table}[H]
+\centering
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{l | C{2.2} C{1.3} C{1.3} c}
+\hline
+\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{Time processing} \\
+\hline
+COLMAP w/ optimizer           & 19.937267 & 0.723673 & 0.534969 & 00:10:25 \\
+COLMAP w/o optimizer          & 20.990921 & 0.757042 & 0.467530 & 00:10:25 \\
+COLMAP w/ optimizer, 4 BNs    & 20.365336 & 0.75952125 & 0.427666 & 00:10:25 \\
+COLMAP w/o optimizer, 4 BNs   & 20.45474375 & 0.761062 & 0.4253 & 00:10:25 \\
+GPS w/ optimizer              & 18.877967 & 0.710520 & 0.573053 & 00:00:00 \\
+GPS w/o optimizer             & 15.288701 & 0.692639 & 0.649337 & 00:00:00 \\
+GPS w/ optimizer, 4 BNs       & 18.4146345 & 0.69007725 & 0.560061 & 00:00:00 \\
+GPS w/o optimizer, 4 BNs      & 14.578463 & 0.6671365 & 0.65638525 & 00:00:00 \\
+\hline
+\end{tabular}
+\caption[Full results for experiment 5: Real data, dataset 2]{Data from dataset 2 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
+\label{tab:trip088-results}
+\end{table}
+
+\begin{table}[H]
+\centering
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{l | C{2.2} C{1.3} C{1.3} c}
+\hline
+\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{Time processing} \\
+\hline
+COLMAP w/ optimizer           & 19.839231 & 0.681580 & 0.542084 & 00:08:45 \\
+COLMAP w/o optimizer          & 22.312044 & 0.751723 & 0.431454 & 00:08:45 \\
+COLMAP w/ optimizer, 4 BNs    & 20.97288575 & 0.6987495 & 0.3971635 & 00:08:45 \\
+COLMAP w/o optimizer, 4 BNs    & 23.39594125 & 0.794048 & 0.32915525 & 00:08:45 \\
+GPS w/ optimizer              & 18.165668 & 0.653362 & 0.597592 & 00:00:00 \\
+GPS w/o optimizer             & 13.796535 & 0.626601 & 0.719307 & 00:00:00 \\
+GPS w/ optimizer, 4 BNs       & 18.401476 & 0.6379955 & 0.5449655 & 00:00:00 \\
+GPS w/o optimizer, 4 BNs       & 14.37125725 & 0.6192 & 0.68332825 & 00:00:00 \\
+\hline
+\end{tabular}
+\caption[Full results for experiment 5: Real data, dataset 3]{Data from dataset 3 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
+\label{tab:trip094-results}
+\end{table}
+
+% Not sure if I should include the results for Trip067 as it hasn't been introduced as a dataset
+\begin{comment}
+\begin{table}[ht]
+\centering
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{l | C{2.2} C{1.3} C{1.3} c}
+\hline
+\textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{Time processing} \\
+\hline
+COLMAP w/ optimizer           & 23.486408   & 0.864474 & 0.421610 & 01:05:59 \\
+COLMAP w/o optimizer          & 22.640327   & 0.865871 & 0.401821 & 01:05:59 \\
+COLMAP w/ optimizer, 12 BNs   &\cellcolor{green} 25.65282775 &\cellcolor{green} 0.882313 &\cellcolor{green} 0.332909 & 01:05:59 \\
+GPS w/ optimizer              & 21.741020   & 0.849057 & 0.422538 & 00:00:00 \\
+GPS w/o optimizer             &\cellcolor{red} 21.625042   &\cellcolor{red} 0.847604 &\cellcolor{red} 0.422631 & 00:00:00 \\
+GPS w/ optimizer, 12 BNs      & 22.65892333 & 0.848332 & 0.393478 & 00:00:00 \\
+\hline
+\end{tabular}
+\caption{Data from Trip067 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 12 NeRFs evaluations.}
+\label{tab:trip067-results}
+\end{table}
+\end{comment}

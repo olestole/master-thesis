@@ -14,7 +14,7 @@ Please note that, in order to cover the relevant background, some sections of th
 %Volume rendering is a technique for visualizing 3D data sets, such as those obtained from medical imaging scans. It works by computing a 2D projection of a 3D volume, using algorithms to assign colors and opacities to each point in the volume based on its physical characteristics, such as density or temperature. Many visual effects are volumetric in nature, e.g. fluids, clouds, flames, smoke, fog, and dust. These effects are challenging to simulate with geometric primitives like points, lines, triangles, or polygon meshes, and may be better simulated with volume rendering. A volume renderer may also be used to display not just the model's surfaces but all of its fine external and internal details, allowing the user to see inside the volume to get a better understanding of its internal structure. Because of this, volume rendering is a powerful tool for visualizing complex 3D data and can be used in a wide range of applications, including medical imaging, scientific visualization, and computer graphics \cite{max_optical_1995}.
 
 % REWRITTEN WITH AI AND FURTHER EDITING ✅
-Volume rendering is a powerful technique for visualizing 3D data sets, which is frequently used in a variety of fields, including medical imaging, scientific visualization, and computer graphics. The method involves the projection of a 3D volume onto a 2D plane, leveraging algorithms where colors and opacities are assigned to each point based on its physical characteristics, such as density or temperature. The resulting 2D image provides a representation of the entire 3D volume, allowing the user to visualize both the external and internal structure of the object. One of the main advantages of volume rendering is that it can simulate complex volumetric effects that are challenging to model using traditional geometric primitives, such as points, lines, triangles, or polygon meshes. Examples of such volumetric effects that may be better simulated with volume rendering include fluids, clouds, flames, smoke, fog, and dust \cite{max_optical_1995}.
+Volume rendering is a powerful technique for visualizing 3D data sets, which is frequently used in a variety of fields, including medical imaging, scientific visualization, and computer graphics \cite{10.1145/378456.378484}. The method involves the projection of a 3D volume onto a 2D plane, leveraging algorithms where colors and opacities are assigned to each point based on its physical characteristics, such as density or temperature. The resulting 2D image provides a representation of the entire 3D volume, allowing the user to visualize both the external and internal structure of the object. One of the main advantages of volume rendering is that it can simulate complex volumetric effects that are challenging to model using traditional geometric primitives, such as points, lines, triangles, or polygon meshes. Examples of such volumetric effects that may be better simulated with volume rendering include fluids, clouds, flames, smoke, fog, and dust \cite{max_optical_1995}.
 
 
 % COMMENTS FROM SPECIALIZATION-PROJECT
@@ -26,7 +26,7 @@ Volume rendering is a powerful technique for visualizing 3D data sets, which is 
 %Volume rendering enables photorealistic novel view synthesis \cite{xie_neural_2022}.
 
 % ALMOST NOTHING REWRITTEN ❌ It's already very good.
-There are multiple ways of rendering a volume. Well-known techniques include ray casting or raymarching, resampling or shear-warp, texture slicing, and splatting. The basic algorithm, depicted in \autoref{fig:volume-rendering}, can be broken into four steps:
+There are multiple ways of rendering a volume. Well-known techniques include ray casting or raymarching \cite{pawasauskas1997volume}, resampling or shear-warp \cite{shearWarp}, texture slicing \cite{textureSlicing}, and splitting \cite{splatting}. The basic algorithm, depicted in \autoref{fig:volume-rendering}, can be broken into four steps:
 
 \begin{itemize}
     \item \textbf{Ray casting:} Cast rays from the image plane into the volume. The volume is often enclosed within a bounding primitive like a cuboid.
@@ -127,7 +127,7 @@ Positional encoding is one of the many proposed encoding schemes, first introduc
 
 % ✅ Rewritten
 \subsubsection{Stratified sampling} \label{sec:stratifiedsampling}
-Stratified sampling is a sampling method that has proven benefits in machine learning as it helps prevent overfitting. The sampling method can be broken into three steps:
+Stratified sampling, illustrated in \autoref{fig:stratified-sampling}, is a sampling method that has proven benefits in machine learning as it helps prevent overfitting. The sampling method can be broken into three steps:
 
 \begin{itemize}
     \item \textbf{Partition the dataset into strata}: In the case of NeRF, the rays are partitioned into equally sized bins where the points contained within a bin $\pmb{x} \in [t_i, t_i+1]$ along the ray $\pmb{r}(t)$, comprises the respective stratum.
@@ -174,9 +174,9 @@ During the first step, \acrfull{sift} \cite{lowe_distinctive_2004} is used to ex
 
 % TODO: Elaborate on the different match-options; Exhaustive Matching, Sequential Matching, Vocabulary Tree Matching. Runtimes, found in the paper, can be added to appendix.
 
-During the second step, features are matched. Correspondences between the feature points are matched across different images, leveraging feature matching and geometric verification. There are different options for matching algorithms. \textit{Exhaustive matching} would match every image against every other image, leading to the best reconstruction results. The time complexity is not an issue if the number of images is relatively low (several hundreds). Another option is \textit{sequential matching} which is useful if the captured images are in sequential order, for example, if they are sampled from a video.
+During the second step, features are matched. Correspondences between the feature points are matched across different images, leveraging feature matching and geometric verification. There are different options for matching algorithms, some presented in \autoref{tab:colmap-feature-complexity}. \textit{Exhaustive matching} would match every image against every other image, leading to the best reconstruction results. The time complexity is not an issue if the number of images is relatively low (several hundreds). Another option is \textit{sequential matching} which is useful if the captured images are in sequential order, for example, if they are sampled from a video.
 
-During the third step, structure and motion is reconstructed. First, COLMAP will generate a sparse reconstruction of the scene, extracting the camera poses (camera extrinsics). The sparse output serves as input to the \acrshort{mvs} to recover a dense representation of the scene. The dense representation estimates the dense surfaces. In NeRF-applications, COLMAP is primarily used as a preprocessing step for retrieving the camera poses of input images. Because of this, the pipeline is usually ceased after the sparse reconstruction.
+During the third step, structure and motion is reconstructed. First, COLMAP will generate a sparse reconstruction of the scene, extracting the camera poses. The sparse output serves as input to the \acrshort{mvs} to recover a dense representation of the scene. The dense representation estimates the dense surfaces. In NeRF-applications, COLMAP is primarily used as a preprocessing step for retrieving the camera poses of input images. Because of this, the pipeline is usually ceased after the sparse reconstruction.
 
 \input{tables/colmap-feature-complexity.tex}
 
@@ -215,13 +215,13 @@ CARLA \cite{Dosovitskiy17} is an open-source simulator for \acrshort{ad} researc
 % --------------------- Evaluating NeRFs ---------------------
 % ✅ Rewritten
 \section{Evaluating NeRFs} \label{sec:evaluating-nerfs} 
-Evaluating the quality of NeRFs is a difficult task due to the visual nature of the modality. Once a NeRF is trained, it is typically employed to render an image, making image similarity metrics the most critical measure for evaluating NeRF quality. The evaluation of image similarity has been a persistent challenge in computer graphics, but the following metrics are commonly used throughout most papers comparing NeRFs.
+Evaluating the quality of NeRFs is a difficult task due to the visual nature of the modality. Once a NeRF is trained, it is typically employed to render an image, making image similarity metrics the most critical measure for evaluating NeRF quality. The evaluation of image similarity has been a persistent challenge in computer graphics, but the following metrics are commonly used throughout most papers comparing NeRFs \cite{vpqrg}.
 
 % OLD
 % Evaluating the quality of NeRFs is inherently hard since it's a visual modality. After a NeRF is trained it will eventually be used to render an image. Image similarity metrics are consequently the most important metric to evaluate the quality of a NeRF. The assessment of image similarity has been a long-standing challenge in computer graphics, but the following metrics are commonly used throughout most papers comparing NeRFs.
 
 % ✅ Not much done, already well-written subsection.
-\subsection[PSNR]{\acrfull{psnr}} \label{sec:psnr}
+\subsection{\acrfull{psnr}} \label{sec:psnr}
 \acrshort{psnr} is a common measure for quantifying reconstruction quality for images and videos. It builds upon \acrfull{mse} which measures the absolute difference between each pixel in two images $I_1$ and $I_2$.
 
 \input{equations/psnr.tex}
@@ -230,7 +230,7 @@ and $MAX_I$ represents the dynamic range of an image; the largest range of pixel
 
 
 % ✅ Rewritten
-\subsection[SSIM]{\acrfull{ssim}}
+\subsection{\acrfull{ssim}}
 While \acrshort{mse} and \acrshort{psnr} are effective measures of reconstruction error, they do not evaluate an image in the same manner as humans. Rather than comparing pixel values in order to conclude if two images are similar, humans assess images holistically. \acrshort{ssim} attempts to replicate this approach by comparing an image's luminance $l$, contrast $c$, and structure $s$ between two windows $\pmb{x}$ and $\pmb{y}$ of a common size $N \times N$.
 
 % OLD
@@ -253,7 +253,7 @@ While \acrshort{mse} and \acrshort{psnr} are effective measures of reconstructio
 
 
 % ✅ Rewritten
-\subsection[LPIPS]{\acrfull{lpips}}
+\subsection{\acrfull{lpips}}
 \acrshort{lpips} \cite{zhang_unreasonable_2018} is a perceptual similarity metric based on deep network activations. Unlike \acrshort{mse}, \acrshort{psnr} and \acrshort{ssim} which uses relatively shallow functions in order to determine similarity across images, \acrshort{lpips} leverages deep neural networks to obtain a metric that perceives similarity in a way that is similar to humans. 
 
 The dataset used to train \acrshort{lpips} includes two types of perceptual judgments; \acrfull{2afc} and \acrfull{jnd}. In \acrshort{2afc}, people were asked to select which of two distorted images was “closer” to the reference, while in \acrshort{jnd}, people were presented with two image patches, one reference and one distorted, and asked if they were the same. Some samples from the dataset is depicted in \autoref{fig:lpips}. By training on this dataset, \acrshort{lpips} is able to capture higher-level features of images that are more relevant to human perception, such as object shapes and textures. This makes it a more effective similarity metric than traditional metrics like \acrshort{mse}, \acrshort{psnr}, and \acrshort{ssim}. Image patches with a low \acrshort{lpips} score are perceptually similar.
@@ -366,7 +366,7 @@ The primary techniques implemented in Nerfacto have already been discussed. Howe
 
 
 \subsection[Wayve - NeRFs for Autonomous Driving]{Wayve - Building City-Scale Neural Radiance Fields for Autonomous Driving} \label{sec:wayve}
-Wayve, a London-based company, is a leading innovator in \acrshort{ad} technology. At Nvidia GTC, they presented a talk on how they leverage NeRFs to extend their pipeline used to train autonomous vehicles. Their initial need was a simulator that was indistinguishable from reality, but building such a simulator is very time-consuming, challenging, and expensive. Their solution was to use NeRFs to automatically "build the simulator with data."
+Wayve\footnote{\url{https://wayve.ai}}, a London-based company, is a leading innovator in \acrshort{ad} technology. At Nvidia GTC, they presented a talk on how they leverage NeRFs to extend their pipeline used to train autonomous vehicles. Their initial need was a simulator that was indistinguishable from reality, but building such a simulator is very time-consuming, challenging, and expensive. Their solution was to use NeRFs to automatically "build the simulator with data."
 
 The pipeline, partially depicted in \autoref{fig:wayve-pipeline}, begins by creating a large corpus of data, captured by a specialized Wayve-vehicle fitted with high-quality cameras. The corpus is then split into data segments spanning roughly 100 meters and containing a small overlap between the previous and successive segments. In order to mask out transient objects and separate foreground and background, a segmentation model is applied to each segment. After this, each segment utilizes COLMAP to approximate the images' corresponding camera poses. Once the camera poses are acquired, each of the NeRFs are trained in parallel with an undisclosed method. Using the capture trajectory, a camera path is created and rendered by swapping NeRFs on-demand when the current camera within the path is close to another NeRF's boundary. 
 
