@@ -67,7 +67,9 @@ DF: Maximum resolution of the hashmap (density field 2)         & 256 \\
 
 \hline
 \endlastfoot
-
+Max number of iterations & 15000 \\
+Number of rays per batch & 4096 \\
+Optimizer & Adam \\
 How far along the ray to start sampling.                & 0.05 \\
 How far along the ray to stop sampling.                 & 1000.0 \\
 %Whether to randomize the background color.              & \"last\_sample\" \\
@@ -77,6 +79,9 @@ Sample every n steps after the warmup                   & 5 \\
 Scales n from 1 to \texttt{proposal\_update\_every} num steps & 5000 \\
 Number of proposal network iterations.                  & 2 \\
 Use the same proposal network. & False \\
+Number of samples per ray for each proposal network & 256 \& 96 \\
+Dimension of hidden layers & 64 \\
+Maximum resolution of the hashmap for the base \acrshort{mlp} & 2048 \\
 Proposal loss multiplier.                               & 1.0 \\
 Distortion loss multiplier.                             & 0.002 \\
 Orientation loss multipier on computed noramls.         & 0.0001 \\
@@ -95,57 +100,104 @@ DF: Maximum resolution of the hashmap (density field 2)         & 256 \\
 \end{longtable}
 %\end{comment}
 
+\begin{longtable}{|l|l|}
+\caption[Overview of the default Nerfacto-big model's parameters]{An overview of the parameters in the Nerfacto-big model. Rows prefixed with \textit{DF} describe the model's corresponding \textit{Density Fields}.} \label{tab:nerfacto-big-parameter-overview} \\
+
+
+\hline \multicolumn{1}{|c|}{\textbf{Description}} & \multicolumn{1}{c|}{\textbf{Default Value}} \\ \hline 
+\endfirsthead
+
+ 
+
+\multicolumn{2}{c}%
+{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+\hline \multicolumn{1}{|c|}{\textbf{Description}} & \multicolumn{1}{c|}{\textbf{Default Value}} \\ \hline 
+\endhead
+
+ 
+
+\hline \multicolumn{2}{|r|}{{Continued on next page}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+Max number of iterations & 100000 \\
+Number of rays per batch & 4096 \\
+Optimizer & Rectified Adam \\
+How far along the ray to start sampling.                & 0.05 \\
+How far along the ray to stop sampling.                 & 1000.0 \\
+%Whether to randomize the background color.              & \"last\_sample\" \\
+%Number of samples per ray for the proposal network.     & \(256, 96\) \\
+Number of samples per ray for the nerf network.         & 128 \\
+Sample every n steps after the warmup                   & 5 \\
+Scales n from 1 to \texttt{proposal\_update\_every} num steps & 5000 \\
+Number of proposal network iterations.                  & 2 \\
+Use the same proposal network. & False \\
+Number of samples per ray for each proposal network & 512 \& 256 \\
+Dimension of hidden layers & 128 \\
+Maximum resolution of the hashmap for the base \acrshort{mlp} & 3000 \\
+Proposal loss multiplier.                               & 1.0 \\
+Distortion loss multiplier.                             & 0.002 \\
+Orientation loss multipier on computed noramls.         & 0.0001 \\
+Predicted normal loss multiplier.                       & 0.001 \\
+Use proposal weight annealing.               & True \\
+Use average appearance embedding or zeros for inference. & True \\
+Slope of the annealing function for the proposal weights & 10.0 \\
+Max num iterations for the annealing function.          & 1000 \\
+Use single jitter or not for the proposal networks. & True \\
+Predict normals or not.                      & False \\
+DF: Dimension of hidden layer           & 16 \\
+DF: Hashmap size                        & $2^{21}$ \\
+DF: Number of levels of the hashmap     & 5 \\
+DF: Maximum resolution of the hashmap (density field 1)         & 64 \\
+DF: Maximum resolution of the hashmap (density field 2)         & 256 \\
+\end{longtable}
+
 
 \begin{table}[ht]
-    \centering
-    \begin{tabularx}{\textwidth}{|X|l|}
-    \hline
-    \textbf{Description} & \textbf{Value} \\ 
-    \hline
-    Whether to create a scene collider to filter rays. & False \\
-    Number of samples in field evaluation. & 24 \\
-    Resolution of the grid used for the field. & 128 \\
-    Contraction type. & Unbounded Sphere \\
-    Cone angle & 0.004 \\
-    Minimum step size for rendering. & 0.01 \\
-    How far along ray to start sampling. & 0.05 \\
-    How far along ray to stop sampling. & 1e3 \\
-    Whether to use an appearance embedding. & False \\
-    Whether to randomize the background color. & True \\ \hline
-    \end{tabularx}
-    \caption[Overview of the default Instant-ngp model's parameters]{An overview of the parameters in the default Instant-ngp model}
-    \label{tab:instant-ngp-parameter-overview}
+\centering
+\begin{tabularx}{\textwidth}{|X|l|}
+\hline
+\textbf{Description} & \textbf{Value} \\ 
+\hline
+Max number of iterations & 15000 \\
+Number of rays per batch & 4096 \\
+Optimizer & Adam \\
+Whether to create a scene collider to filter rays. & False \\
+Number of samples in field evaluation. & 24 \\
+Resolution of the grid used for the field. & 128 \\
+Contraction type. & Unbounded Sphere \\
+Cone angle & 0.004 \\
+Minimum step size for rendering. & 0.01 \\
+How far along ray to start sampling. & 0.05 \\
+How far along ray to stop sampling. & 1e3 \\
+Whether to use an appearance embedding. & False \\
+Whether to randomize the background color. & True \\ \hline
+\end{tabularx}
+\caption[Overview of the default Instant-ngp model's parameters]{An overview of the parameters in the default Instant-ngp model}
+\label{tab:instant-ngp-parameter-overview}
 \end{table}
 
 \begin{table}[ht]
-    \centering
-    \begin{tabularx}{\textwidth}{|X|l|}
-    \hline
-    \textbf{Description} & \textbf{Value} \\ 
-    \hline
-    Whether to create a scene collider to filter rays.  & True \\
-    Near plane collider-plane.                          & 2.0 \\
-    Far plane collider-plane.                           & 6.0 \\
-    The loss coeficcient for the coarse MLP.            & 1.0 \\
-    The loss coeficcient for the fine MLP.              & 1.0 \\
-    Number of rays per chunk during eval                & 4096 \\
-    \hline
-    \end{tabularx}
-    \caption[Overview of the default Mip-NeRF model's parameters]{An overview of the parameters in the default Mip-NeRF model}
-    \label{tab:mip-nerf-parameter-overview}
-\end{table}
-
-\begin{table}[ht]
-    \centering
-    \begin{tabularx}{\textwidth}{|X|l|}
-    \hline
-    \textbf{Description} & \textbf{Value} \\ 
-    \hline
-    A & B \\
-    \hline
-    \end{tabularx}
-    \caption[Overview of the default Nerfacto-big model's parameters]{An overview of the parameters in the Nerfacto-big model}
-    \label{tab:nerfacto-big-parameter-overview}
+\centering
+\begin{tabularx}{\textwidth}{|X|l|}
+\hline
+\textbf{Description} & \textbf{Value} \\ 
+\hline
+Max number of iterations & 300000 \\
+Number of coarse samples & 128 \\
+Number of fine samples & 128 \\
+Optimizer & Rectified Adam \\
+Whether to create a scene collider to filter rays.  & True \\
+Near plane collider-plane.                          & 2.0 \\
+Far plane collider-plane.                           & 6.0 \\
+The loss coeficcient for the coarse MLP.            & 0.1 \\
+The loss coeficcient for the fine MLP.              & 1.0 \\
+Number of rays per chunk during eval                & 1024 \\
+\hline
+\end{tabularx}
+\caption[Overview of the default Mip-NeRF model's parameters]{An overview of the parameters in the default Mip-NeRF model}
+\label{tab:mip-nerf-parameter-overview}
 \end{table}
 
 
@@ -183,25 +235,25 @@ This section presents the complete results of the experiments where some results
 \hline
 & \multicolumn{3}{c}{\textbf{With camera optimizer}} & \multicolumn{3}{c}{\textbf{Without camera optimizer}} \\
 \hline
-$\mathcal{N}(0, 0.0)$   & 23.412970 & 0.713507 & 0.320640 & 24.702831 & 0.792646 & 0.179289 \\
+$\mathcal{N}(0, 0.0)$   & 23.412970 & 0.713507 & 0.320640 &\cellcolor{green} 24.702831 &\cellcolor{green} 0.792646 &\cellcolor{green} 0.179289 \\
 $\mathcal{N}(0, 0.1^2)$ & 22.513981 & 0.674136 & 0.321364 & 22.463675 & 0.677371 & 0.280633 \\
 $\mathcal{N}(0, 0.2^2)$ & 21.343519 & 0.616709 & 0.338266 & 21.212559 & 0.601917 & 0.366598 \\
 $\mathcal{N}(0, 0.3^2)$ & 20.520330 & 0.577203 & 0.345663 & 20.468809 & 0.560959 & 0.399360 \\
 $\mathcal{N}(0, 0.5^2)$ & 19.075649 & 0.501499 & 0.371572 & 19.366894 & 0.499264 & 0.474444 \\
 $\mathcal{N}(0, 1.0^2)$ & 17.670620 & 0.433909 & 0.432940 & 18.207266 & 0.444120 & 0.560452 \\
-$\mathcal{N}(0, 3.0^2)$ & 16.662760 & 0.408036 & 0.637326 & 16.322678 & 0.385614 & 0.647966 \\
+$\mathcal{N}(0, 3.0^2)$ & 16.662760 & 0.408036 & 0.637326 &\cellcolor{red} 16.322678 &\cellcolor{red} 0.385614 &\cellcolor{red} 0.647966 \\
 \hline
 & \multicolumn{6}{c}{\textbf{Shorter segment}} \\
 \hline
 & \multicolumn{3}{c}{\textbf{With camera optimizer}} & \multicolumn{3}{c}{\textbf{Without camera optimizer}} \\
 \hline
-$\mathcal{N}(0, 0.0)$   & 24.831890 & 0.824606 & 0.102266 & 25.677803 & 0.861634 & 0.076989 \\ 
+$\mathcal{N}(0, 0.0)$   & 24.831890 & 0.824606 & 0.102266 &\cellcolor{green} 25.677803 &\cellcolor{green} 0.861634 &\cellcolor{green} 0.076989 \\ 
 $\mathcal{N}(0, 0.1^2)$ & 23.028709 & 0.752731 & 0.114806 & 23.318026 & 0.755237 & 0.146877 \\ 
 $\mathcal{N}(0, 0.2^2)$ & 20.674553 & 0.613583 & 0.148965 & 21.383156 & 0.628668 & 0.209283 \\ 
 $\mathcal{N}(0, 0.3^2)$ & 20.502602 & 0.595552 & 0.154787 & 21.101936 & 0.612378 & 0.232985 \\ 
 $\mathcal{N}(0, 0.5^2)$ & 19.059755 & 0.482721 & 0.197262 & 20.071671 & 0.513037 & 0.299472 \\ 
 $\mathcal{N}(0, 1.0^2)$ & 18.085838 & 0.406564 & 0.338364 & 18.290358 & 0.417969 & 0.404933 \\ 
-$\mathcal{N}(0, 3.0^2)$ & 15.709220 & 0.344876 & 0.612587 & 15.077240 & 0.362973 & 0.698665 \\ 
+$\mathcal{N}(0, 3.0^2)$ & 15.709220 &\cellcolor{red} 0.344876 & 0.612587 &\cellcolor{red} 15.077240 & 0.362973 &\cellcolor{red} 0.698665 \\ 
 \hline
 \end{tabular}
 \caption[Full results for experiment 2: Simulated Noise Conditions]{Results for Simulated Noise Condition experiment on both the baseline and shorter segments. The shorter segments are 10\% the size of the baseline segment, approximately 50m in length.}
@@ -219,10 +271,10 @@ $\mathcal{N}(0, 3.0^2)$ & 15.709220 & 0.344876 & 0.612587 & 15.077240 & 0.362973
 \hline
 \textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
 \hline
-Segment 1 & 24.960262 & 0.815270 & 0.161623 \\
-Segment 2 & 25.660400 & 0.824085 & 0.164296 \\
-Segment 3 & 23.914209 & 0.755183 & 0.194245 \\
-Segment 4 & 23.363695 & 0.764547 & 0.216242 \\
+Segment 1 & 24.960262 & 0.815270 &\cellcolor{green} 0.161623 \\
+Segment 2 &\cellcolor{green} 25.660400 &\cellcolor{green} 0.824085 & 0.164296 \\
+Segment 3 & 23.914209 &\cellcolor{red} 0.755183 & 0.194245 \\
+Segment 4 &\cellcolor{red} 23.363695 & 0.764547 &\cellcolor{red} 0.216242 \\
 \hline
 \end{tabular}
 \caption[Full results for experiment 4: Block-NeRF on 4-segment dataset]{Results for each segment when the baseline-segment spanning the entire block has been split into 4 Block-NeRFs.}
@@ -271,13 +323,13 @@ Average metrics of 1 Block-NeRF & \cellcolor{red} 22.515461 & \cellcolor{red} 0.
 \textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} & \textbf{Time processing} \\
 \hline
 COLMAP w/ optimizer           & 19.937267 & 0.723673 & 0.534969 & 00:10:25 \\
-COLMAP w/o optimizer          & 20.990921 & 0.757042 & 0.467530 & 00:10:25 \\
+COLMAP w/o optimizer          &\cellcolor{green} 20.990921 & 0.757042 & 0.467530 & 00:10:25 \\
 COLMAP w/ optimizer, 4 BNs    & 20.365336 & 0.75952125 & 0.427666 & 00:10:25 \\
-COLMAP w/o optimizer, 4 BNs   & 20.45474375 & 0.761062 & 0.4253 & 00:10:25 \\
+COLMAP w/o optimizer, 4 BNs   & 20.45474375 &\cellcolor{green} 0.761062 &\cellcolor{green} 0.4253 & 00:10:25 \\
 GPS w/ optimizer              & 18.877967 & 0.710520 & 0.573053 & 00:00:00 \\
 GPS w/o optimizer             & 15.288701 & 0.692639 & 0.649337 & 00:00:00 \\
 GPS w/ optimizer, 4 BNs       & 18.4146345 & 0.69007725 & 0.560061 & 00:00:00 \\
-GPS w/o optimizer, 4 BNs      & 14.578463 & 0.6671365 & 0.65638525 & 00:00:00 \\
+GPS w/o optimizer, 4 BNs      &\cellcolor{red} 14.578463 &\cellcolor{red} 0.6671365 &\cellcolor{red} 0.65638525 & 00:00:00 \\
 \hline
 \end{tabular}
 \caption[Full results for experiment 5: Real data, dataset 2]{Data from dataset 2 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
@@ -295,11 +347,11 @@ GPS w/o optimizer, 4 BNs      & 14.578463 & 0.6671365 & 0.65638525 & 00:00:00 \\
 COLMAP w/ optimizer           & 19.839231 & 0.681580 & 0.542084 & 00:08:45 \\
 COLMAP w/o optimizer          & 22.312044 & 0.751723 & 0.431454 & 00:08:45 \\
 COLMAP w/ optimizer, 4 BNs    & 20.97288575 & 0.6987495 & 0.3971635 & 00:08:45 \\
-COLMAP w/o optimizer, 4 BNs    & 23.39594125 & 0.794048 & 0.32915525 & 00:08:45 \\
+COLMAP w/o optimizer, 4 BNs    &\cellcolor{green} 23.39594125 &\cellcolor{green} 0.794048 &\cellcolor{green} 0.32915525 & 00:08:45 \\
 GPS w/ optimizer              & 18.165668 & 0.653362 & 0.597592 & 00:00:00 \\
-GPS w/o optimizer             & 13.796535 & 0.626601 & 0.719307 & 00:00:00 \\
+GPS w/o optimizer             &\cellcolor{red} 13.796535 & 0.626601 & 0.719307 & 00:00:00 \\
 GPS w/ optimizer, 4 BNs       & 18.401476 & 0.6379955 & 0.5449655 & 00:00:00 \\
-GPS w/o optimizer, 4 BNs       & 14.37125725 & 0.6192 & 0.68332825 & 00:00:00 \\
+GPS w/o optimizer, 4 BNs       & 14.37125725 &\cellcolor{red} 0.6192 &\cellcolor{red} 0.68332825 & 00:00:00 \\
 \hline
 \end{tabular}
 \caption[Full results for experiment 5: Real data, dataset 3]{Data from dataset 3 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
