@@ -582,12 +582,12 @@ The quantitative results indicate that there are no significant differences betw
 
 \section{Experiment 4: Large-Scale NeRF}
 
-The naive Block-NeRF implementation allows for the captured scene to be split into an arbitrary number of segments. In this experiment, we would like to explore the impact of splitting the scene on the overall quality of the generated results. In particular, we compare the performance of Block-NeRF to that of a single NeRF trained on the entire scene. \autoref{tab:exp_combined_baseline_block_nerf} shows the result of splitting the baseline-scene into 4 segments, while \autoref{tab:exp_block_nerf_long_path_2-block_10} shows the result of splitting a larger scene, a trajectory of approximately 1200 meters, into 12 segments. The qualitative results of the 12-segment run can be seen in \autoref{fig:block-nerf-comparison}.
+The naive Block-NeRF implementation allows for the captured scene to be split into an arbitrary number of segments. In this experiment, we would like to explore the impact of splitting the scene on the overall quality of the generated results. In particular, we compare the performance of the naive Block-NeRF to that of a single NeRF trained on the entire scene. \autoref{tab:exp_combined_baseline_block_nerf} shows the result of splitting the baseline-scene into 4 segments, while \autoref{tab:exp_block_nerf_long_path_2-block_10} shows the result of splitting a larger scene, a trajectory of approximately 1200 meters, into 12 segments. The qualitative results of the 12-segment run can be seen in \autoref{fig:block-nerf-comparison}.
 
 %By splitting the scene into smaller segments, the combined scene generates better results than when the entire scene is trained within a single NeRF. The average PSNR is 24.4746 - which is 0.2768 better than the entire scene in one. Block-NeRF's high quality will sustain large scenes, where a single NeRF will start deteriorating as the scene size increases.
 
 \begin{table}[ht]
-\caption[Results for experiment 4: Block-NeRF on 4-segment dataset]{The average metrics across the four segments compared to the metrics for a single NeRF trained on the same scene. The full overview of each segment's metrics can be viewed in the appendix in \autoref{tab:block-nerf-four-segments-full}.}
+\caption[Results for experiment 4: Naive Block-NeRF on 4-segment dataset]{The average metrics across the four segments compared to the metrics for a single NeRF trained on the same scene. The full overview of each segment's metrics can be viewed in the appendix in \autoref{tab:block-nerf-four-segments-full}.}
 \label{tab:exp_combined_baseline_block_nerf}
 \centering
 \setlength{\tabcolsep}{6pt}
@@ -605,7 +605,7 @@ Single NeRF &\cellcolor{red} 24.197817 &\cellcolor{red} 0.766733 &\cellcolor{gre
 
 
 \begin{table}[ht]
-\caption[Results for experiment 4: Block-NeRF on 12-segment dataset]{The average metrics across the twelve segments compared to the metrics for a single NeRF trained on the same scene. The full overview of each segment's metrics can be viewed in the appendix in \autoref{tab:block-nerf-twelve-segments-full}.}
+\caption[Results for experiment 4: Naive Block-NeRF on 12-segment dataset]{The average metrics across the twelve segments compared to the metrics for a single NeRF trained on the same scene. The full overview of each segment's metrics can be viewed in the appendix in \autoref{tab:block-nerf-twelve-segments-full}.}
 \label{tab:exp_block_nerf_long_path_2-block_10}
 \centering
 \setlength{\tabcolsep}{6pt}
@@ -621,17 +621,17 @@ Single NeRF & \cellcolor{red} 22.515461 & \cellcolor{red} 0.654036 & \cellcolor{
 \end{table}
 \input{figures/block-nerf-comparison}
 
-The experimental findings indicate that the naive Block-NeRF implementation enables high-quality image synthesis across large scenes, while a single NeRF trained on the same large scene experiences a decline in performance, resulting in poor image synthesis quality. These results suggest that Block-NeRF represents a promising approach for generating high-quality results for large-scale scenes.
+The experimental findings indicate that the naive Block-NeRF implementation enables high-quality image synthesis across large scenes, while a single NeRF trained on the same large scene experiences a decline in performance, resulting in poor image synthesis quality. These results suggest that the naive Block-NeRF represents a promising approach for generating high-quality results for large-scale scenes.
 
 \subsection{Experiment 4.1: Removing Artifacts}
-Despite the significantly lower quality of the single NeRF implementation compared to the Block-NeRF implementation, the resulting render exhibits clear coherence without sudden changes in detail or the abrupt appearance of artifacts. In contrast, the naive Block-NeRF implementation suffers from this issue, as illustrated in \autoref{fig:block-nerf-frame-comparison}.
+Despite the significantly lower quality of the single NeRF implementation compared to the naive Block-NeRF implementation, the resulting render exhibits clear coherence without sudden changes in detail or the abrupt appearance of artifacts. In contrast, the naive Block-NeRF implementation suffers from this issue, as illustrated in \autoref{fig:block-nerf-frame-comparison}.
 
 \input{figures/block-nerf-frame-comparison}
 
 This issue could possibly be attributed to the hard cutoff between each Block-NeRF, in which $\text{Block-NeRF}_i$ only trains on a single data-bin $\text{data}_i$ where each data-bin is a disjunct collection of images and corresponding camera poses. A possible solution to the issue is to include an overlap of data from the previous and successive data-bin. Let $\text{data}_i$ be the $i$-th data-bin with the corresponding interval $[i, {i+1}]$. Then, the new interval for $\text{Block-NeRF}_i$ with overlap can be defined as $[i - \delta, {i+1} + \delta]$ where $\delta$ is the size of the overlap. In other words, the new interval includes not only the data-bin $\text{data}_i$, but also a portion of the previous data-bin $\text{data}_{i-1}$ and a portion of the successive data-bin $\text{data}_{i+2}$. A quantitative and qualitative comparison of the effects from this can be seen in \autoref{tab:block-nerf-overlap-comparison} and \autoref{fig:overlap} respectively.
 
 \begin{table}[ht]
-\caption[Results for experiment 4.1: Removing Artifacts]{Average across different Block-NeRF overlap configurations. The overlap becomes less visible with higher overlap values, but it comes at the cost of the previously explored capacity issue.}
+\caption[Results for experiment 4.1: Removing Artifacts]{Average across different naive Block-NeRF overlap configurations. The overlap becomes less visible with higher overlap values, but it comes at the cost of the previously explored capacity issue.}
 \label{tab:block-nerf-overlap-comparison}
 \centering
 \setlength{\tabcolsep}{6pt}
@@ -668,12 +668,12 @@ As shown in \autoref{fig:overlap}, an increase in $\delta$ results in a signific
 
 
 \section{Experiment 5: Real Data}
-The implementation of the real data-capture pipeline and the subsequent \texttt{NAPLabDataParser} allows the end-to-end pipeline to be run with data captured from the \acrshort{naplab} car. The real data captured was split into three datasets and is presented in \autoref{fig:naplab-dataset}. With the ability to conduct experiments on real data, we want to investigate the quality of the capture, if the captured data is suitable for training NeRFs, how the camera poses estimated from the \acrshort{gps} compare to the camera poses approximated with COLMAP, how splitting up the data and leveraging a Block-NeRF approach affects performance, and how camera optimization affects the results.
+The implementation of the real data-capture pipeline and the subsequent \texttt{NAPLabDataParser} allows the end-to-end pipeline to be run with data captured from the \acrshort{naplab} car. The real data captured was split into three datasets and is presented in \autoref{fig:naplab-dataset}. With the ability to conduct experiments on real data, we want to investigate the quality of the capture, if the captured data is suitable for training NeRFs, how the camera poses estimated from the \acrshort{gps} compare to the camera poses approximated with COLMAP, how splitting up the data and leveraging a naive Block-NeRF approach affects performance, and how camera optimization affects the results.
 
 In order to test the aforementioned aspects, eight different pipeline runs are conducted on the three datasets previously presented in \autoref{fig:naplab-dataset}. The experimental results for dataset 1 are presented in \autoref{tab:trip086-results}. As the results for datasets 2 and 3 show similar results, they have been moved to \autoref{app:real-data}.
 
 \begin{table}[ht]
-\caption[Results from experiment 5: Real data]{Results from training NeRF on dataset 1. The transformation matrices are approximated with COLMAP or estimated from \acrshort{gps}-readings. "BN" is an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
+\caption[Results from experiment 5: Real data]{Results from training NeRF on dataset 1. The transformation matrices are approximated with COLMAP or estimated from \acrshort{gps}-readings. "BN" is an abbreviation of the naive Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
 \label{tab:trip086-results}
 \centering
 \setlength{\tabcolsep}{6pt}
@@ -700,7 +700,7 @@ COLMAP w/o optimizer, 4 BNs   &\cellcolor{green} 27.264171 &\cellcolor{green} 0.
 
 
 
-The results highlight interesting trade-offs between the applied approaches. Notably, the Block-NeRF runs with camera poses approximated by COLMAP without further optimization, yielded the best metrics across all the experiments. Disregarding both Block-NeRF runs, the NeRF trained on images with camera poses approximated by COLMAP without further optimization yielded the best quantitative results. In contrast, the experiments leveraging \acrshort{gps} readings for camera pose approximations with or without optimization were less successful across all metrics, with the non-optimized \acrshort{gps} approach scoring the lowest across all three metrics.
+The results highlight interesting trade-offs between the applied approaches. Notably, the naive Block-NeRF runs with camera poses approximated by COLMAP without further optimization, yielded the best metrics across all the experiments. Disregarding both Block-NeRF runs, the NeRF trained on images with camera poses approximated by COLMAP without further optimization yielded the best quantitative results. In contrast, the experiments leveraging \acrshort{gps} readings for camera pose approximations with or without optimization were less successful across all metrics, with the non-optimized \acrshort{gps} approach scoring the lowest across all three metrics.
 
 
 % Of the runs that don't leverage the naive Block-NeRF approach, the run with camera poses approximated with COLMAP and further optimized camera poses achieves the significantly best PSNR. The COLMAP run without optimizer achieves best SSIM and LPIPS, although the metrics are very similar to the run with optimizer. The qualitative results from the two runs are very different. The run with optimized camera poses appear much more blurry than the one without optimized camera poses.
