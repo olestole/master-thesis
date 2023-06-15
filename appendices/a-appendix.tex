@@ -155,6 +155,8 @@ DF: Maximum resolution of the hashmap (density field 2)         & 256 \\
 
 
 \begin{table}[ht]
+\caption[Overview of the default Instant-ngp model's parameters]{An overview of the parameters in the default Instant-ngp model}
+\label{tab:instant-ngp-parameter-overview}
 \centering
 \begin{tabularx}{\textwidth}{|X|l|}
 \hline
@@ -174,11 +176,11 @@ How far along ray to stop sampling. & 1e3 \\
 Whether to use an appearance embedding. & False \\
 Whether to randomize the background color. & True \\ \hline
 \end{tabularx}
-\caption[Overview of the default Instant-ngp model's parameters]{An overview of the parameters in the default Instant-ngp model}
-\label{tab:instant-ngp-parameter-overview}
 \end{table}
 
 \begin{table}[ht]
+\caption[Overview of the default Mip-NeRF model's parameters]{An overview of the parameters in the default Mip-NeRF model}
+\label{tab:mip-nerf-parameter-overview}
 \centering
 \begin{tabularx}{\textwidth}{|X|l|}
 \hline
@@ -196,8 +198,6 @@ The loss coeficcient for the fine MLP.              & 1.0 \\
 Number of rays per chunk during eval                & 1024 \\
 \hline
 \end{tabularx}
-\caption[Overview of the default Mip-NeRF model's parameters]{An overview of the parameters in the default Mip-NeRF model}
-\label{tab:mip-nerf-parameter-overview}
 \end{table}
 
 
@@ -224,6 +224,8 @@ This section presents the complete results of the experiments where some results
 \subsection{Simulated Noise Conditions} \label{app:noise}
 
 \begin{table}[H]
+\caption[Full results for experiment 2: Simulated Noise Conditions]{Results for Simulated Noise Condition experiment on both the baseline and shorter segments. The shorter segments are 10\% the size of the baseline segment, approximately 50m in length.}
+\label{tab:exp-gaussian-noise-full}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -256,14 +258,14 @@ $\mathcal{N}(0, 1.0^2)$ & 18.085838 & 0.406564 & 0.338364 & 18.290358 & 0.417969
 $\mathcal{N}(0, 3.0^2)$ & 15.709220 &\cellcolor{red} 0.344876 & 0.612587 &\cellcolor{red} 15.077240 & 0.362973 &\cellcolor{red} 0.698665 \\ 
 \hline
 \end{tabular}
-\caption[Full results for experiment 2: Simulated Noise Conditions]{Results for Simulated Noise Condition experiment on both the baseline and shorter segments. The shorter segments are 10\% the size of the baseline segment, approximately 50m in length.}
-\label{tab:exp-gaussian-noise-full}
 \end{table}
 
 \subsection{Block-NeRF}
 % The full Block-NeRF evaluation table. Only the condensed version containing the average across the different segments are included in the result-section
 
 \begin{table}[H]
+\caption[Full results for experiment 4: Block-NeRF on 4-segment dataset]{Results for each segment when the baseline-segment spanning the entire block has been split into 4 Block-NeRFs.}
+\label{tab:block-nerf-four-segments-full}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -277,12 +279,12 @@ Segment 3 & 23.914209 &\cellcolor{red} 0.755183 & 0.194245 \\
 Segment 4 &\cellcolor{red} 23.363695 & 0.764547 &\cellcolor{red} 0.216242 \\
 \hline
 \end{tabular}
-\caption[Full results for experiment 4: Block-NeRF on 4-segment dataset]{Results for each segment when the baseline-segment spanning the entire block has been split into 4 Block-NeRFs.}
-\label{tab:block-nerf-four-segments-full}
 \end{table}
 
 
 \begin{table}[H]
+\caption[Full results for experiment 4: Block-NeRF on 12-segment dataset]{Results for each segment when the larger segment spanning approximately 1.2km has been split into 12 Block-NeRFs.}
+\label{tab:block-nerf-twelve-segments-full}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -307,14 +309,14 @@ Average metrics of 12 Block-NeRF & \cellcolor{green} 24.774259 & \cellcolor{gree
 Average metrics of 1 Block-NeRF & \cellcolor{red} 22.515461 & \cellcolor{red} 0.654036 & \cellcolor{red} 0.424356 \\
 \hline
 \end{tabular}
-\caption[Full results for experiment 4: Block-NeRF on 12-segment dataset]{Results for each segment when the larger segment spanning approximately 1.2km has been split into 12 Block-NeRFs.}
-\label{tab:block-nerf-twelve-segments-full}
 \end{table}
 
 
 \subsection{Real data} \label{app:real-data}
 
 \begin{table}[H]
+\caption[Full results for experiment 5: Real data, dataset 2]{Data from dataset 2 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
+\label{tab:trip088-results}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -332,11 +334,11 @@ GPS w/ optimizer, 4 BNs       & 18.4146345 & 0.69007725 & 0.560061 & 00:00:00 \\
 GPS w/o optimizer, 4 BNs      &\cellcolor{red} 14.578463 &\cellcolor{red} 0.6671365 &\cellcolor{red} 0.65638525 & 00:00:00 \\
 \hline
 \end{tabular}
-\caption[Full results for experiment 5: Real data, dataset 2]{Data from dataset 2 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
-\label{tab:trip088-results}
 \end{table}
 
 \begin{table}[H]
+\caption[Full results for experiment 5: Real data, dataset 3]{Data from dataset 3 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
+\label{tab:trip094-results}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -354,8 +356,6 @@ GPS w/ optimizer, 4 BNs       & 18.401476 & 0.6379955 & 0.5449655 & 00:00:00 \\
 GPS w/o optimizer, 4 BNs       & 14.37125725 &\cellcolor{red} 0.6192 &\cellcolor{red} 0.68332825 & 00:00:00 \\
 \hline
 \end{tabular}
-\caption[Full results for experiment 5: Real data, dataset 3]{Data from dataset 3 with transformation matrix approximated with COLMAP or GPS-readings. BNs an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
-\label{tab:trip094-results}
 \end{table}
 
 % Not sure if I should include the results for Trip067 as it hasn't been introduced as a dataset

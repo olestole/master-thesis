@@ -21,7 +21,10 @@ By establishing this baseline, it can be used as a reference point for improving
 The CARLA configurations held constant for the respective experiments are depicted in \autoref{tab:combined-baseline-constant-parameters}.
 
 \begin{table}[ht]
+\caption[Constant parameters for the experiments conducted to define a baseline]{Overview of the configurations that were kept constant for each experiment conducted to define the baseline. The configurations that were selected to be part of the baseline data capture configuration, based on the results from the experiments, are highlighted in \ulcolor[blue]{blue}}
+\label{tab:combined-baseline-constant-parameters}
 \centering
+
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
 \begin{tabular}{c | c c c c c}
@@ -37,8 +40,6 @@ Experiment & Camera setup & Distance & Image freq. & Image res. & Speed \\
 \hyperref[sec:exp-combined-baseline]{1.6} &\cellcolor{blue} $[-10^{\circ}, 10^{\circ}]$ yaw     &\cellcolor{blue} 4 turns   &\cellcolor{blue} $2^{\text{nd}}$ frame     &\cellcolor{blue} $400 \times 300$  &\cellcolor{blue} 50\% \\
 \hline
 \end{tabular}
-\caption[Constant parameters for the experiments conducted to define a baseline]{Overview of the configurations that were kept constant for each experiment conducted to define the baseline. The configurations that were selected to be part of the baseline data capture configuration, based on the results from the experiments, are highlighted in \ulcolor[blue]{blue}}
-\label{tab:combined-baseline-constant-parameters}
 \end{table}
 
 
@@ -60,6 +61,8 @@ The CARLA simulator provides a convenient way to attach multiple cameras with va
 \end{itemize}
 
 \begin{table}[ht]
+\caption[Results for experiment 1.1: Camera setup]{Comparison of different camera setups' impact on the NeRF's performance.}
+\label{tab:exp_camera_setup}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -76,8 +79,7 @@ Three cameras,  $[-50^{\circ}, 0^{\circ}, 50^{\circ}]$ yaw & 23.785522 & 0.76368
 Three cameras,  $[-70^{\circ}, 0^{\circ}, 70^{\circ}]$ yaw & 23.684502 & 0.754842 & \cellcolor{red} 0.176524 \\
 \hline
 \end{tabular}
-\caption[Results for experiment 1.1: Camera setup]{Comparison of different camera setups' impact on the NeRF's performance.}
-\label{tab:exp_camera_setup}
+
 \end{table}
 
 \begin{comment}
@@ -122,6 +124,8 @@ As discussed in \autoref{sec:block-nerf} and \autoref{sec:method-block-nerf}, th
 
 
 \begin{table}[ht]
+\caption[Results for experiment 1.2: Capacity.]{Comparison of different segment lengths' impact on the NeRF's performance.}
+\label{tab:exp_capacity-2}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -136,9 +140,6 @@ As discussed in \autoref{sec:block-nerf} and \autoref{sec:method-block-nerf}, th
 \cellcolor{blue}4 turns & \cellcolor{red} 22.500532 & \cellcolor{red} 0.695553 & \cellcolor{red} 0.240513 \\
 \hline
 \end{tabular}
-\caption[Results for experiment 1.2: Capacity.]{Comparison of different segment lengths' impact on the NeRF's performance.}
-\label{tab:exp_capacity-2}
-
 \end{table}
 
 \begin{comment}
@@ -186,6 +187,8 @@ The results, presented in \autoref{tab:exp_capacity-2}, show that the quality of
 A NeRF's dataset is comprised of images and corresponding camera poses. The size of this dataset determines the amount of information available for the NeRF to learn the underlying 3D scene's structure and appearance. A larger dataset can provide more diverse and detailed information about the scene, which can help the NeRF to capture fine-grained details and generalize better to novel views. Given that the NeRF is set to sample batches across all input images, a larger set of input images should result in higher-quality image synthesis. To test this hypothesis, we conducted an experiment in which we varied the number of frames captured from a CARLA run, resulting in different-sized datasets. The results of this experiment are shown in \autoref{tab:exp_frames-2}.
 
 \begin{table}[ht]
+\caption[Results for experiment 1.3: Number of frames]{Comparison of different data capture frequencies' impact on the NeRF's performance}
+\label{tab:exp_frames-2}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -200,8 +203,6 @@ Capture data every 4$^{\text{th}}$ frame & 22.219042 & 0.685168 & 0.250390 \\
 Capture data every 5$^{\text{th}}$ frame & \cellcolor{red} 21.917959 & \cellcolor{red} 0.678348 & \cellcolor{red} 0.258932 \\
 \hline
 \end{tabular}
-\caption[Results for experiment 1.3: Number of frames]{Comparison of different data capture frequencies' impact on the NeRF's performance}
-\label{tab:exp_frames-2}
 \end{table}
 
 \begin{comment}
@@ -242,6 +243,8 @@ The results indicate that the trained NeRF performs better when trained on a lar
 CARLA allows the configurations of image resolution outputted by mounted cameras. To evaluate the impact of input image resolution on the output image synthesis, data was captured from CARLA at five increasingly higher image resolutions. The obtained results are presented in \autoref{tab:exp_image_size-2}.
 
 \begin{table}[ht]
+\caption[Results for experiment 1.4: Image resolution]{Comparison of different image resolutions' impact on the NeRF's performance.}
+\label{tab:exp_image_size-2}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -256,8 +259,6 @@ Image resolution of $1200 \times 900$ & 23.073208 & 0.731756 & 0.232993 \\
 Image resolution of $1600 \times 1200$ & \cellcolor{red} 22.822489 & \cellcolor{red} 0.727354 & \cellcolor{red} 0.267016 \\
 \hline
 \end{tabular}
-\caption[Results for experiment 1.4: Image resolution]{Comparison of different image resolutions' impact on the NeRF's performance.}
-\label{tab:exp_image_size-2}
 \end{table}
 
 \begin{comment}
@@ -302,6 +303,8 @@ Higher vehicle speeds result in the capture of larger portions of the scene in a
 
 
 \begin{table}[ht]
+\caption[Results for experiment 1.5: Vehicle speed]{Comparison of different vehicle speeds' impact on the NeRF's performance. CARLA convention conveys speed as a percentage of the default speed of 30 km\/h.}
+\label{tab:exp_speed-2}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -320,8 +323,6 @@ Higher vehicle speeds result in the capture of larger portions of the scene in a
 150\% speed & 23.411259 & 0.742473 & 0.189968 \\
 200\% speed & \cellcolor{red} 22.717318 & \cellcolor{red} 0.713858 & \cellcolor{red} 0.200099 \\
 \end{tabular}
-\caption[Results for experiment 1.5: Vehicle speed]{Comparison of different vehicle speeds' impact on the NeRF's performance. CARLA convention conveys speed as a percentage of the default speed of 30 km\/h.}
-\label{tab:exp_speed-2}
 \end{table}
 
 \begin{comment}
@@ -373,6 +374,8 @@ The baseline's high scores across all three metrics demonstrate that this config
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
+\caption[Results for experiment 1.6: Combined baseline]{The baseline metrics for a Nerfacto model trained on synthetic data captured from CARLA, with the configurations depicted in \autoref{tab:exp-combined-baseline-stable-variables}.}
+\label{tab:exp_combined_baseline_2-0}
 \begin{tabular}{l | C{2.2} C{1.3} C{1.3}}
 \hline
 \textbf{Description} & \textbf{PSNR $\uparrow$} & \textbf{SSIM $\uparrow$} & \textbf{LPIPS $\downarrow$} \\
@@ -380,13 +383,13 @@ The baseline's high scores across all three metrics demonstrate that this config
 Combined baseline & 24.197817 & 0.766733 & 0.168807 \\
 \hline
 \end{tabular}
-\caption[Results for experiment 1.6: Combined baseline]{The baseline metrics for a Nerfacto model trained on synthetic data captured from CARLA, with the configurations depicted in \autoref{tab:exp-combined-baseline-stable-variables}.}
-\label{tab:exp_combined_baseline_2-0}
 
 \vspace{0.5cm}
 
 \setlength{\tabcolsep}{12pt}
 \renewcommand{\arraystretch}{1.5}
+\caption[Configurations for the baseline data capture]{Overview of the configurations that were selected to be part of the baseline data capture configuration, based on the results from the previous experiments.}
+\label{tab:exp-combined-baseline-stable-variables}
 \begin{tabular}{l | l}
 \hline
 \textbf{Parameter} & \textbf{Value} \\
@@ -398,8 +401,7 @@ Combined baseline & 24.197817 & 0.766733 & 0.168807 \\
 \cellcolor{blue}Speed &\cellcolor{blue}50\% speed \\
 \hline
 \end{tabular}
-\caption[Configurations for the baseline data capture]{Overview of the configurations that were selected to be part of the baseline data capture configuration, based on the results from the previous experiments.}
-\label{tab:exp-combined-baseline-stable-variables}
+
 \end{table}
 
 
@@ -424,6 +426,8 @@ During the capture of images and corresponding camera poses from a vehicle in a 
 
 % I've tried combining both the baseline and shorter segments into single table.
 \begin{table}[ht]
+\caption[Results for experiment 2: Adding noise]{Results for Gaussian Noise experiment on both the baseline and shorter segments. The shorter segment is 10\% the size of the baseline segment, approximately 50m in length.}
+\label{tab:exp-gaussian-noise}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -452,8 +456,6 @@ $\mathcal{N}(0, 1.0^2)$ & 18.085838 & 0.406564 & 0.338364 & 18.290358 & 0.417969
 $\mathcal{N}(0, 3.0^2)$ & 15.709220 &\cellcolor{red} 0.344876 & 0.612587 &\cellcolor{red} 15.077240 & 0.362973 &\cellcolor{red} 0.698665 \\ 
 \hline
 \end{tabular}
-\caption[Results for experiment 2: Adding noise]{Results for Gaussian Noise experiment on both the baseline and shorter segments. The shorter segment is 10\% the size of the baseline segment, approximately 50m in length.}
-\label{tab:exp-gaussian-noise}
 \end{table}
 
 %\input{figures/noise-baseline-segments}
@@ -478,6 +480,8 @@ https://junipersys.com/support/article/6614#:~:text=Just%20as%20a%20general%20ob
 The camera optimization in the previous experiment shows promising results. In order to further investigate the effect of direct camera optimization on vehicle-captured data, a comparison to COLMAP's result on the same dataset is conducted. \autoref{tab:colmap-vs-poses} presents the results from the NeRF trained on the same images as in \hyperref[sec:gaussian-noise]{Experiment 2}, but with camera poses approximated with the \acrshort{sfm} tool, COLMAP.
 
 \begin{table}[ht]
+\caption[Results for experiment 2.1: COLMAP]{Results for approximating camera poses with COLMAP for the baseline and short segment.}
+\label{tab:colmap-vs-poses}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -489,8 +493,6 @@ COLMAP - Baseline segment   & 24.18618  & 0.758549  & 0.159935  & 01:12:15 \\
 COLMAP - Shorter segment    & 25.227386 & 0.8273112 & 0.0932542 & 00:02:00 \\
 \hline
 \end{tabular}
-\caption[Results for experiment 2.1: COLMAP]{Results for approximating camera poses with COLMAP for the baseline and short segment.}
-\label{tab:colmap-vs-poses}
 \end{table}
 
 \begin{comment}
@@ -549,6 +551,8 @@ Comparing the results in \autoref{tab:colmap-vs-poses} and \autoref{tab:exp-gaus
 Nerfstudio has implemented multiple well-known NeRF-models including Instant-ngp \cite{muller_instant_2022} and Mip-NeRF \cite{barron_mip-nerf_2021}. In this experiment, we investigate the model's impact on the output. The comparison of the different models is presented in \autoref{tab:different-models} and \autoref{fig:different-models}.
 
 \begin{table}[ht]
+\caption[Results for experiment 3: Different models]{The result of training different models implemented in the Nerfstudio framework on the combined baseline dataset.}
+\label{tab:different-models}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -562,8 +566,6 @@ Nerfacto-big    & 23.5648784     & 0.74144792     & 0.2829464 & 100'000 \\
 Mip-NeRF        &\cellcolor{red} 9.487646 &\cellcolor{red} 0.165382 &\cellcolor{red} 0.775073 & 300'000 \\
 \hline
 \end{tabular}
-\caption[Results for experiment 3: Different models]{The result of training different models implemented in the Nerfstudio framework on the combined baseline dataset.}
-\label{tab:different-models}
 \end{table}
 
 \input{figures/different-models}
@@ -585,6 +587,8 @@ The naive Block-NeRF implementation allows for the captured scene to be split in
 %By splitting the scene into smaller segments, the combined scene generates better results than when the entire scene is trained within a single NeRF. The average PSNR is 24.4746 - which is 0.2768 better than the entire scene in one. Block-NeRF's high quality will sustain large scenes, where a single NeRF will start deteriorating as the scene size increases.
 
 \begin{table}[ht]
+\caption[Results for experiment 4: Block-NeRF on 4-segment dataset]{The average metrics across the four segments compared to the metrics for a single NeRF trained on the same scene. The full overview of each segment's metrics can be viewed in the appendix in \autoref{tab:block-nerf-four-segments-full}.}
+\label{tab:exp_combined_baseline_block_nerf}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -597,12 +601,12 @@ Single NeRF &\cellcolor{red} 24.197817 &\cellcolor{red} 0.766733 &\cellcolor{gre
 \hline
 %Average difference from one NeRF &\cellcolor{green} 0.2768 &\cellcolor{green} 0.02277125 &  \cellcolor{red} -0.015 % Unsure if I'll include this
 \end{tabular}
-\caption[Results for experiment 4: Block-NeRF on 4-segment dataset]{The average metrics across the four segments compared to the metrics for a single NeRF trained on the same scene. The full overview of each segment's metrics can be viewed in the appendix in \autoref{tab:block-nerf-four-segments-full}.}
-\label{tab:exp_combined_baseline_block_nerf}
 \end{table}
 
 
 \begin{table}[ht]
+\caption[Results for experiment 4: Block-NeRF on 12-segment dataset]{The average metrics across the twelve segments compared to the metrics for a single NeRF trained on the same scene. The full overview of each segment's metrics can be viewed in the appendix in \autoref{tab:block-nerf-twelve-segments-full}.}
+\label{tab:exp_block_nerf_long_path_2-block_10}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -614,8 +618,6 @@ Average across 12 Block-NeRFs & \cellcolor{green} 24.774259 & \cellcolor{green} 
 Single NeRF & \cellcolor{red} 22.515461 & \cellcolor{red} 0.654036 & \cellcolor{red} 0.424356 \\
 \hline
 \end{tabular}
-\caption[Results for experiment 4: Block-NeRF on 12-segment dataset]{The average metrics across the twelve segments compared to the metrics for a single NeRF trained on the same scene. The full overview of each segment's metrics can be viewed in the appendix in \autoref{tab:block-nerf-twelve-segments-full}.}
-\label{tab:exp_block_nerf_long_path_2-block_10}
 \end{table}
 \input{figures/block-nerf-comparison}
 
@@ -629,6 +631,8 @@ Despite the significantly lower quality of the single NeRF implementation compar
 This issue could possibly be attributed to the hard cutoff between each Block-NeRF, in which $\text{Block-NeRF}_i$ only trains on a single data-bin $\text{data}_i$ where each data-bin is a disjunct collection of images and corresponding camera poses. A possible solution to the issue is to include an overlap of data from the previous and successive data-bin. Let $\text{data}_i$ be the $i$-th data-bin with the corresponding interval $[i, {i+1}]$. Then, the new interval for $\text{Block-NeRF}_i$ with overlap can be defined as $[i - \delta, {i+1} + \delta]$ where $\delta$ is the size of the overlap. In other words, the new interval includes not only the data-bin $\text{data}_i$, but also a portion of the previous data-bin $\text{data}_{i-1}$ and a portion of the successive data-bin $\text{data}_{i+2}$. A quantitative and qualitative comparison of the effects from this can be seen in \autoref{tab:block-nerf-overlap-comparison} and \autoref{fig:overlap} respectively.
 
 \begin{table}[ht]
+\caption[Results for experiment 4.1: Removing Artifacts]{Average across different Block-NeRF overlap configurations. The overlap becomes less visible with higher overlap values, but it comes at the cost of the previously explored capacity issue.}
+\label{tab:block-nerf-overlap-comparison}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -641,8 +645,6 @@ Average metrics with $\delta = 50$  & 24.3081965833 & 0.7760105833 & 0.206340333
 Average metrics with $\delta = 0$ &\cellcolor{green}24.7952365 &\cellcolor{green}0.8017453333 &\cellcolor{green}0.157845 \\
 \hline
 \end{tabular}
-\caption[Results for experiment 4.1: Removing Artifacts]{Average across different Block-NeRF overlap configurations. The overlap becomes less visible with higher overlap values, but it comes at the cost of the previously explored capacity issue.}
-\label{tab:block-nerf-overlap-comparison}
 \end{table}
 
 \input{figures/overlap}
@@ -671,6 +673,8 @@ The implementation of the real data-capture pipeline and the subsequent \texttt{
 In order to test the aforementioned aspects, eight different pipeline runs are conducted on the three datasets previously presented in \autoref{fig:naplab-dataset}. The experimental results for dataset 1 are presented in \autoref{tab:trip086-results}. As the results for datasets 2 and 3 show similar results, they have been moved to \autoref{app:real-data}.
 
 \begin{table}[ht]
+\caption[Results from experiment 5: Real data]{Results from training NeRF on dataset 1. The transformation matrices are approximated with COLMAP or estimated from \acrshort{gps}-readings. "BN" is an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
+\label{tab:trip086-results}
 \centering
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
@@ -688,8 +692,6 @@ COLMAP w/o optimizer, 4 BNs   &\cellcolor{green} 27.264171 &\cellcolor{green} 0.
 \acrshort{gps} w/o optimizer, 4 BNs      & 19.37362825 &\cellcolor{red} 0.73673875 & 0.5112605    & 00:00:00 \\
 \hline
 \end{tabular}
-\caption[Results from experiment 5: Real data]{Results from training NeRF on dataset 1. The transformation matrices are approximated with COLMAP or estimated from \acrshort{gps}-readings. "BN" is an abbreviation of Block-NeRF and the resulting metric score is averaged across the 4 NeRFs evaluations.}
-\label{tab:trip086-results}
 \end{table}
 
 
